@@ -522,6 +522,11 @@ automation:
         {{ ([[d, tmin] | max, tmax] | min) | round(1) }}
       huidig: "{{ state_attr('climate.thermostat_1', 'temperature') | float }}"
       nieuw: >
+        {# Ver van het doel (> 2 °C, bijv. na een vreemd setpoint van buitenaf):
+           direct naar het doel. Kleine verschillen gaan rustig in stappen. #}
+        {% if (doel - huidig) | abs > 2 %}
+          {{ doel }}
+        {% else %}
         {% set delta = doel - huidig %}
         {% set delta = [[delta, max_stap] | min, -max_stap] | max %}
         {% set n = ((huidig + delta) / stap_thermostaat) | round(0) * stap_thermostaat %}
@@ -529,6 +534,7 @@ automation:
           {% set n = huidig + (stap_thermostaat if doel > huidig else -stap_thermostaat) %}
         {% endif %}
         {{ n | round(1) }}
+        {% endif %}
       wachttijd_voorbij: >
         {% set ts = state_attr('input_datetime.wp_laatste_wijziging', 'timestamp') %}
         {{ ts is none or (now().timestamp() - ts) >= states('input_number.wp_wachttijd') | float(30) * 60 }}
@@ -586,6 +592,31 @@ automation:
     actions:
       - variables:
           nieuw: "{{ trigger.to_state.attributes.temperature }}"
+      # Beveiliging: een setpoint onder 15 °C (bijv. 5 °C van een oude
+      # automatisering of vorstbeveiliging) is geen comfortkeuze. Niet pauzeren,
+      # maar de regeling binnen 5 minuten laten herstellen en een melding geven.
+      - if:
+          - condition: template
+            value_template: "{{ nieuw | float(0) < 15 }}"
+        then:
+          - action: timer.cancel
+            target:
+              entity_id: timer.wp_handmatig
+          - action: input_datetime.set_datetime
+            target:
+              entity_id: input_datetime.wp_laatste_wijziging
+            data:
+              timestamp: 0
+          - action: persistent_notification.create
+            data:
+              notification_id: wp_slim_laag_setpoint
+              title: "Warmtepomp: setpoint {{ nieuw }} °C van buitenaf"
+              message: >
+                Iets anders dan de slimme regeling zette climate.thermostat_1 op
+                {{ nieuw }} °C ({{ now().strftime('%H:%M') }}). De regeling zet hem
+                terug naar de basistemperatuur. Zoek in het logboek van de
+                thermostaat welke automatisering dit deed en zet die uit.
+          - stop: "Setpoint onder 15 °C hersteld"
       - if:
           - condition: state
             entity_id: input_boolean.wp_handmatig_wordt_basis
