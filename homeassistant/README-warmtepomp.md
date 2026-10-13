@@ -61,14 +61,14 @@ Instellingen → Apparaten & diensten → Victron GX → Entiteiten.
 
 | Placeholder in het pakket | Wat | Bron in Home Assistant | Eenheid / teken |
 |---|---|---|---|
-| `climate.thermostat_1` | Thermostaat | Je thermostaat-integratie | Attributen `temperature`, `min_temp`, `max_temp` |
+| `climate.thermostat_1` | Thermostaat | InComfort (*Thermostaat*) | Attributen `temperature`, `min_temp`, `max_temp` |
 | `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | Kwartierprijs + `forecast` | Zonneplan ONE (HACS) → *Current quarter hourly electricity tariff* | €/kWh |
-| `sensor.victron_battery_soc` | Batterij-SoC | Victron GX → **DC battery charge** | % |
-| `sensor.victron_grid_power` | Netvermogen totaal | Victron GX → **Grid power L1** (+ L2 + L3) | W, **afname = positief** |
-| `sensor.victron_pv_power` | PV totaal | Victron GX → **PV power** (DC) + **PV on grid power L1–L3** + **PV on output power L1–L3** | W |
-| `sensor.victron_ac_consumption` | Huisverbruik totaal, incl. warmtepomp | Victron GX → **Consumption power L1** (+ L2 + L3) | W |
-| `number.victron_ess_min_soc_limit` | ESS-minimum (optioneel) | Victron GX → **ESS min SoC limit** | % |
-| `sensor.victron_dynamic_ess_minimum_soc` | DESS-minimum (optioneel) | Victron GX → **Dynamic ESS minimum SoC** | % |
+| `sensor.ac_system_0_dc_battery_charge` | Batterij-SoC | Victron GX → **DC battery charge** | % |
+| `sensor.wp_netvermogen` (som van `sensor.ac_system_0_grid_power_l1/l2/l3`, maakt het pakket zelf) | Netvermogen totaal | Victron GX → **Grid power L1** (+ L2 + L3) | W, **afname = positief** |
+| `sensor.ac_system_0_pv_power` | PV totaal | Victron GX → **PV power** (DC) + **PV on grid power L1–L3** + **PV on output power L1–L3** | W |
+| `sensor.huisverbruik_totaal` (eigen somhelper) | Huisverbruik totaal, incl. warmtepomp | Victron GX → **Consumption power L1** (+ L2 + L3) | W |
+| `number.ac_system_0_ess_min_soc_limit` | ESS-minimum | Victron GX → **ESS min SoC limit** | % |
+| `sensor.ac_system_0_dynamic_ess_minimum_soc` | DESS-minimum | Victron GX → **Dynamic ESS minimum SoC** | % |
 
 ### Per fase optellen
 
@@ -130,20 +130,8 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
      packages: !include_dir_named packages
    ```
 3. Maak de map `packages` aan in `/config` en zet `warmtepomp_slim.yaml` daarin.
-4. **Vervang de entity-ID's** (zoek en vervang in het hele bestand):
-
-   | In het bestand | Vervang door | Waar vind je het |
-   |---|---|---|
-   | `climate.thermostat_1` | al ingevuld | **Niet** `climate.intergas_xtend_…`: dat entiteit kan alleen uitlezen |
-   | `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | meestal al juist | Zoek op "quarter" |
-   | `sensor.victron_battery_soc` | DC battery charge | Victron GX |
-   | `sensor.victron_grid_power` | somhelper *Victron net totaal* | Teken andersom? Vervang dan in de zon-sensor `-net` door `net`. |
-   | `sensor.victron_pv_power` | somhelper *Victron PV totaal* | |
-   | `sensor.victron_ac_consumption` | somhelper *Victron verbruik totaal* | |
-   | `number.victron_ess_min_soc_limit` | ESS min SoC limit | Optioneel |
-   | `sensor.victron_dynamic_ess_minimum_soc` | Dynamic ESS minimum SoC | Optioneel |
-
-   Draai daarna de [invoercheck](#controleren-in-home-assistant).
+4. **Entity-ID's zijn al ingevuld** voor jouw installatie (zie [Benodigde waarden](#benodigde-waarden)).
+   Draai na de herstart de [invoercheck](#controleren-in-home-assistant).
 
 5. Ga naar **Ontwikkelhulpmiddelen → YAML** (sinds 2026.8: **Hulpmiddelen → YAML**) →
    **Configuratie controleren**. Pas als die groen is: **Herstarten**.

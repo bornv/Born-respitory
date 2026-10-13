@@ -20,20 +20,16 @@
 #   - Het praat niet rechtstreeks met de Xtend. De Xtend volgt de warmtevraag
 #     van de thermostaat (OpenTherm).
 #
-# VERVANG VOOR GEBRUIK deze entity-ID's (zoek en vervang in dit hele bestand):
-#   climate.thermostat_1                       -> je thermostaat
-#   sensor.zonneplan_current_quarter_hourly_electricity_tariff
-#                                           -> Zonneplan-kwartierprijs (HACS-integratie
-#                                              "Zonneplan ONE"; meestal al juist)
-#   sensor.victron_battery_soc              -> SoC van de Victron-batterij (%)
-#   sensor.victron_grid_power               -> netvermogen in W (+ = afname, - = teruglevering)
-#   sensor.victron_pv_power                 -> totaal PV-vermogen in W
-#   sensor.victron_ac_consumption           -> totaal huisverbruik in W (incl. warmtepomp)
-#   number.victron_ess_min_soc_limit        -> Victron 'ESS min SoC limit' (%); optioneel
-#   sensor.victron_dynamic_ess_minimum_soc  -> Victron 'Dynamic ESS minimum SoC' (%); optioneel
-#                                              (ontbreken ze, dan geldt 'WP minimale SoC')
-#   Welke Victron-sensoren je precies nodig hebt en hoe je per fase optelt:
-#   zie homeassistant/README-warmtepomp.md, sectie 'Benodigde waarden'.
+# Gebruikte entiteiten (installatie Born, gecontroleerd 13-10-2026):
+#   climate.thermostat_1                          -> kamerthermostaat (InComfort)
+#   sensor.zonneplan_current_quarter_hourly_electricity_tariff -> Zonneplan ONE
+#   sensor.ac_system_0_dc_battery_charge          -> Victron DC battery charge (%)
+#   sensor.ac_system_0_grid_power_l1/l2/l3        -> Victron Grid power per fase (W),
+#                                                    opgeteld in sensor.wp_netvermogen
+#   sensor.ac_system_0_pv_power                   -> Victron PV power (W)
+#   sensor.huisverbruik_totaal                    -> eigen somhelper Consumption power L1-L3 (W)
+#   number.ac_system_0_ess_min_soc_limit          -> Victron ESS min SoC limit (%)
+#   sensor.ac_system_0_dynamic_ess_minimum_soc    -> Victron Dynamic ESS minimum SoC (%)
 #
 # Installatie: zie homeassistant/README-warmtepomp.md
 # =============================================================================
@@ -285,12 +281,23 @@ script:
           value: 800
 
 sensor:
+  # Netvermogen = som van de drie fasen (W, + = afname, - = teruglevering).
+  - platform: min_max
+    name: "WP netvermogen"
+    unique_id: wp_netvermogen
+    type: sum
+    round_digits: 0
+    entity_ids:
+      - sensor.ac_system_0_grid_power_l1
+      - sensor.ac_system_0_grid_power_l2
+      - sensor.ac_system_0_grid_power_l3
+
   # Tijdgewogen gemiddeld huisverbruik over 24 uur. Wordt gebruikt om te
   # schatten hoeveel energie de dure periode kost.
   - platform: statistics
     name: "WP gemiddeld huisverbruik"
     unique_id: wp_gemiddeld_huisverbruik
-    entity_id: sensor.victron_ac_consumption
+    entity_id: sensor.huisverbruik_totaal
     state_characteristic: average_linear
     max_age:
       hours: 24
@@ -311,9 +318,9 @@ template:
         unique_id: wp_zonneoverschot
         icon: mdi:solar-power
         state: >
-          {% set pv = states('sensor.victron_pv_power') | float(0) %}
-          {% set verbruik = states('sensor.victron_ac_consumption') | float(0) %}
-          {% set net = states('sensor.victron_grid_power') | float(0) %}
+          {% set pv = states('sensor.ac_system_0_pv_power') | float(0) %}
+          {% set verbruik = states('sensor.huisverbruik_totaal') | float(0) %}
+          {% set net = states('sensor.wp_netvermogen') | float(0) %}
           {% set overschot = pv - verbruik %}
           {% if this.state == 'on' %}
             {{ overschot > -(states('input_number.wp_zon_uit_marge') | float(300)) }}
@@ -324,9 +331,9 @@ template:
         delay_on: "00:10:00"
         delay_off: "00:15:00"
         availability: >
-          {{ has_value('sensor.victron_pv_power')
-             and has_value('sensor.victron_ac_consumption')
-             and has_value('sensor.victron_grid_power') }}
+          {{ has_value('sensor.ac_system_0_pv_power')
+             and has_value('sensor.huisverbruik_totaal')
+             and has_value('sensor.wp_netvermogen') }}
 
   # ---------------------------------------------------------------------------
   # Kern: bepaalt elke 5 minuten de gewenste regelmodus en de verschuiving.
@@ -348,8 +355,8 @@ template:
           - input_number.wp_min_prijsverschil
           - input_number.wp_batterij_capaciteit
           - input_number.wp_batterij_min_soc
-          - number.victron_ess_min_soc_limit
-          - sensor.victron_dynamic_ess_minimum_soc
+          - number.ac_system_0_ess_min_soc_limit
+          - sensor.ac_system_0_dynamic_ess_minimum_soc
       - trigger: homeassistant
         event: start
       - trigger: event
@@ -398,12 +405,12 @@ template:
             {% set ns2.uren = ns2.uren + p[1] %}
           {% endfor %}
           {% set benodigd = ns2.uren * verbruik_w / 1000 %}
-          {% set soc = states('sensor.victron_battery_soc') | float(0) %}
+          {% set soc = states('sensor.ac_system_0_dc_battery_charge') | float(0) %}
           {# Ondergrens = hoogste van: eigen helper, Victron 'ESS min SoC limit' en
              'Dynamic ESS minimum SoC'. Ontbreekt een Victron-waarde, dan telt hij niet mee. #}
           {% set min_soc = [states('input_number.wp_batterij_min_soc') | float(20),
-                            states('number.victron_ess_min_soc_limit') | float(0),
-                            states('sensor.victron_dynamic_ess_minimum_soc') | float(0)] | max %}
+                            states('number.ac_system_0_ess_min_soc_limit') | float(0),
+                            states('sensor.ac_system_0_dynamic_ess_minimum_soc') | float(0)] | max %}
           {% set cap = states('input_number.wp_batterij_capaciteit') | float(0) %}
           {% set beschikbaar = ([soc - min_soc, 0] | max) / 100 * cap %}
           {% set batterij_dekt_straks = beschikbaar >= benodigd %}

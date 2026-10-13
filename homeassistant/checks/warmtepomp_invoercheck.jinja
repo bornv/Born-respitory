@@ -3,12 +3,12 @@
 {% set e = {
   'thermostaat': 'climate.thermostat_1',
   'prijs': 'sensor.zonneplan_current_quarter_hourly_electricity_tariff',
-  'soc': 'sensor.victron_battery_soc',
-  'net': 'sensor.victron_grid_power',
-  'pv': 'sensor.victron_pv_power',
-  'verbruik': 'sensor.victron_ac_consumption',
-  'ess_min': 'number.victron_ess_min_soc_limit',
-  'dess_min': 'sensor.victron_dynamic_ess_minimum_soc',
+  'soc': 'sensor.ac_system_0_dc_battery_charge',
+  'net': 'sensor.wp_netvermogen',
+  'pv': 'sensor.ac_system_0_pv_power',
+  'verbruik': 'sensor.huisverbruik_totaal',
+  'ess_min': 'number.ac_system_0_ess_min_soc_limit',
+  'dess_min': 'sensor.ac_system_0_dynamic_ess_minimum_soc',
 } %}
 {% set ok, fout, let = '✅', '❌', '⚠️' %}
 == Thermostaat ({{ e.thermostaat }}) ==
@@ -59,4 +59,10 @@
 {{ ok }} Geen zon en net positief: teken klopt (afname = positief)
 {%- else -%}
 {{ let }} Teken van het netvermogen niet automatisch te bepalen nu er zon is. Controleer 's avonds: afname moet POSITIEF zijn.
+{%- endif %}
+{% set rs = ['sensor.multi_rs_l1_pv_power_total', 'sensor.multi_rs_l2_lvs_pv_power_total', 'sensor.multi_rs_l3_lvs_pv_power_total'] | map('states') | map('float', 0) | sum -%}
+{% if pv < 50 and rs < 50 -%}
+{{ let }} PV-vergelijking pas overdag mogelijk (systeem {{ pv }} W, Multi RS samen {{ rs }} W)
+{%- else -%}
+{{ ok if (pv - rs) | abs <= [100, rs * 0.1] | max else fout }} PV systeem {{ pv }} W vs. Multi RS L1+L2+L3 {{ rs | round(0) }} W{{ '' if (pv - rs) | abs <= [100, rs * 0.1] | max else ' → systeem-PV mist een bron, meld dit' }}
 {%- endif %}
