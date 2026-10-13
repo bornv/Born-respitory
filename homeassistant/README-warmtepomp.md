@@ -221,3 +221,18 @@ entities:
 | WP bruikbare batterijcapaciteit | 16 kWh | BYD 312 Ah × 51,2 V ≈ 16 kWh |
 | WP minimale SoC | 20 % | Gelijk houden aan Victron ESS |
 | WP verwacht verbruik als meting ontbreekt | 800 W | Reservewaarde als er nog geen 24-uursgemiddelde is |
+| WP veiligheidsmarge verbruik dure uren | 1,30 | Verbruik in dure uren = 24-uursgemiddelde × deze factor |
+| WP rendement batterij naar huis | 90 % | Omzettingsverlies batterij → huis |
+
+## Beveiligingen
+
+| Situatie | Gedrag |
+|---|---|
+| Batterij-SoC ontbreekt of is meer dan 1 uur niet gemeld, of een Victron-ondergrens ontbreekt | Rekent met **0 kWh** beschikbaar (voorzichtig) |
+| Cv-ketel brandt (InComfort `hvac_action: heating`) langer dan 3 minuten | 2 uur geen *voorverwarmen* of *zon* |
+| Thermostaat bevestigt een nieuw setpoint niet binnen 2 minuten | Melding + nieuwe poging binnen 5 minuten |
+| Setpoint onder 15 °C van buitenaf | Geen pauze; binnen 5 minuten terug naar basis + melding |
+| Verschil met doel groter dan 2 °C | In één keer naar het doel (herstel) |
+| Regeling uitgezet terwijl het setpoint nog een verhoging bevat | Terug naar de basistemperatuur (niet als je zelf iets had ingesteld) |
+| PV-meting langer dan 15 minuten niet gemeld | Zon-modus niet beschikbaar |
+| Afronding op thermostaatstappen | Nooit een grotere stap dan *WP maximale stap* (minimaal één thermostaatstap) |

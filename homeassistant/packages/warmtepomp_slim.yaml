@@ -156,6 +156,19 @@ input_number:
     step: 50
     unit_of_measurement: "W"
     icon: mdi:home-lightning-bolt
+  wp_verbruik_marge:
+    name: "WP veiligheidsmarge verbruik dure uren"
+    min: 1
+    max: 2.5
+    step: 0.05
+    icon: mdi:shield-plus
+  wp_batterij_rendement:
+    name: "WP rendement batterij naar huis"
+    min: 50
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:battery-sync
   # Intern: laatste setpoint dat deze regeling heeft gestuurd. Hiermee wordt
   # een handmatige wijziging herkend. Niet zelf aanpassen.
   wp_laatst_ingesteld:
@@ -279,6 +292,16 @@ script:
           entity_id: input_number.wp_verbruik_reserve
         data:
           value: 800
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_verbruik_marge
+        data:
+          value: 1.3
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_batterij_rendement
+        data:
+          value: 90
 
 sensor:
   # Netvermogen = som van de drie fasen (W, + = afname, - = teruglevering).
@@ -331,9 +354,25 @@ template:
         delay_on: "00:10:00"
         delay_off: "00:15:00"
         availability: >
-          {{ has_value('sensor.ac_system_0_pv_power')
+          {% set pv = states.sensor.ac_system_0_pv_power %}
+          {{ pv is not none
+             and (now() - pv.last_reported).total_seconds() < 900
+             and has_value('sensor.ac_system_0_pv_power')
              and has_value('sensor.huisverbruik_totaal')
              and has_value('sensor.wp_netvermogen') }}
+
+  # ---------------------------------------------------------------------------
+  # Ketelbijstook. De InComfort-thermostaat meldt hvac_action 'heating' als de
+  # cv-ketel brandt én pompt. Aan na 3 minuten branden; blijft daarna nog 2 uur
+  # aan, zodat er in die tijd niet extra wordt voorverwarmd.
+  # ---------------------------------------------------------------------------
+  - binary_sensor:
+      - name: "WP ketel springt bij"
+        unique_id: wp_ketel_bijstook
+        icon: mdi:fire-alert
+        state: "{{ is_state_attr('climate.thermostat_1', 'hvac_action', 'heating') }}"
+        delay_on: "00:03:00"
+        delay_off: "02:00:00"
 
   # ---------------------------------------------------------------------------
   # Kern: bepaalt elke 5 minuten de gewenste regelmodus en de verschuiving.
@@ -347,6 +386,9 @@ template:
         entity_id:
           - sensor.zonneplan_current_quarter_hourly_electricity_tariff
           - binary_sensor.wp_zonneoverschot
+          - binary_sensor.wp_ketel_bijstook
+          - input_number.wp_verbruik_marge
+          - input_number.wp_batterij_rendement
           - input_number.wp_voorverwarm_verhoging
           - input_number.wp_zon_verhoging
           - input_number.wp_besparen_verlaging
@@ -391,7 +433,8 @@ template:
         {% set n = ns.venster | count %}
         {% if ns.prijs_nu is none or n < 8 %}
           {{ {'modus': 'comfort', 'reden': 'Te weinig prijsdata', 'prijs_nu': ns.prijs_nu,
-              'laag': none, 'hoog': none, 'benodigd_kwh': 0, 'beschikbaar_kwh': none} }}
+              'laag': none, 'hoog': none, 'benodigd_kwh': 0, 'beschikbaar_kwh': none,
+              'batterij_ok': none} }}
         {% else %}
           {% set gesorteerd = ns.venster | sort %}
           {% set laag = gesorteerd[(n * 0.25) | int] %}
@@ -404,18 +447,33 @@ template:
           {% for p in ns.duur_uren if verschil_ok and p[0] >= hoog %}
             {% set ns2.uren = ns2.uren + p[1] %}
           {% endfor %}
-          {% set benodigd = ns2.uren * verbruik_w / 1000 %}
+          {% set marge = states('input_number.wp_verbruik_marge') | float(1.3) %}
+          {% set rendement = [states('input_number.wp_batterij_rendement') | float(90), 50] | max / 100 %}
+          {# Verbruik in dure uren = 24-uursgemiddelde x veiligheidsmarge (winteravond
+             ligt hoger dan het gemiddelde), plus omzettingsverlies batterij -> huis. #}
+          {% set benodigd = ns2.uren * verbruik_w * marge / 1000 / rendement %}
+          {# Batterijgegevens zijn alleen bruikbaar als SoC én beide Victron-
+             ondergrenzen een waarde hebben en de SoC in het afgelopen uur is gemeld.
+             Anders rekent de regeling voorzichtig met 0 kWh beschikbaar. #}
+          {% set soc_st = states.sensor.ac_system_0_dc_battery_charge %}
+          {% set batterij_ok = soc_st is not none
+               and has_value('sensor.ac_system_0_dc_battery_charge')
+               and (now() - soc_st.last_reported).total_seconds() < 3600
+               and has_value('number.ac_system_0_ess_min_soc_limit')
+               and has_value('sensor.ac_system_0_dynamic_ess_minimum_soc') %}
           {% set soc = states('sensor.ac_system_0_dc_battery_charge') | float(0) %}
-          {# Ondergrens = hoogste van: eigen helper, Victron 'ESS min SoC limit' en
-             'Dynamic ESS minimum SoC'. Ontbreekt een Victron-waarde, dan telt hij niet mee. #}
           {% set min_soc = [states('input_number.wp_batterij_min_soc') | float(20),
-                            states('number.ac_system_0_ess_min_soc_limit') | float(0),
-                            states('sensor.ac_system_0_dynamic_ess_minimum_soc') | float(0)] | max %}
+                            states('number.ac_system_0_ess_min_soc_limit') | float(100),
+                            states('sensor.ac_system_0_dynamic_ess_minimum_soc') | float(100)] | max %}
           {% set cap = states('input_number.wp_batterij_capaciteit') | float(0) %}
-          {% set beschikbaar = ([soc - min_soc, 0] | max) / 100 * cap %}
+          {% set beschikbaar = (([soc - min_soc, 0] | max) / 100 * cap) if batterij_ok else 0 %}
+          {% set ketel = is_state('binary_sensor.wp_ketel_bijstook', 'on') %}
           {% set batterij_dekt_straks = beschikbaar >= benodigd %}
           {% set batterij_dekt_nu = beschikbaar >= verbruik_w / 1000 * 0.5 %}
-          {% if is_state('binary_sensor.wp_zonneoverschot', 'on') %}
+          {% if ketel and (is_state('binary_sensor.wp_zonneoverschot', 'on') or ns.prijs_nu <= 0
+                           or (goedkoop and benodigd > 0 and not batterij_dekt_straks)) %}
+            {% set modus, reden = 'comfort', 'Ketel sprong bij: 2 uur geen extra verwarmen' %}
+          {% elif is_state('binary_sensor.wp_zonneoverschot', 'on') %}
             {% set modus, reden = 'zon', 'Zonneoverschot' %}
           {% elif ns.prijs_nu <= 0 %}
             {% set modus, reden = 'voorverwarmen', 'Negatieve of nul stroomprijs' %}
@@ -432,7 +490,8 @@ template:
           {% endif %}
           {{ {'modus': modus, 'reden': reden, 'prijs_nu': ns.prijs_nu | round(4),
               'laag': laag | round(4), 'hoog': hoog | round(4),
-              'benodigd_kwh': benodigd | round(2), 'beschikbaar_kwh': beschikbaar | round(2)} }}
+              'benodigd_kwh': benodigd | round(2), 'beschikbaar_kwh': beschikbaar | round(2),
+              'batterij_ok': batterij_ok} }}
         {% endif %}
     sensor:
       - name: "WP regelmodus"
@@ -456,6 +515,7 @@ template:
           grens_duur: "{{ plan.hoog }}"
           benodigd_dure_periode_kwh: "{{ plan.benodigd_kwh }}"
           batterij_beschikbaar_kwh: "{{ plan.beschikbaar_kwh }}"
+          batterijgegevens_betrouwbaar: "{{ plan.batterij_ok }}"
 
 automation:
   # ---------------------------------------------------------------------------
@@ -527,13 +587,15 @@ automation:
         {% if (doel - huidig) | abs > 2 %}
           {{ doel }}
         {% else %}
-        {% set delta = doel - huidig %}
-        {% set delta = [[delta, max_stap] | min, -max_stap] | max %}
-        {% set n = ((huidig + delta) / stap_thermostaat) | round(0) * stap_thermostaat %}
-        {% if n == huidig and doel != huidig %}
-          {% set n = huidig + (stap_thermostaat if doel > huidig else -stap_thermostaat) %}
-        {% endif %}
-        {{ n | round(1) }}
+          {# Naar beneden afronden op hele thermostaatstappen, zodat de stap nooit
+             groter is dan 'WP maximale stap'. Is die kleiner dan één thermostaat-
+             stap, dan is één thermostaatstap het minimum. Nooit voorbij het doel. #}
+          {% set richting = 1 if doel > huidig else -1 %}
+          {% set ruimte = [(doel - huidig) | abs, max_stap] | min %}
+          {% set k = [((ruimte + 0.001) / stap_thermostaat) | round(0, 'floor'), 1] | max %}
+          {% set n = huidig + richting * k * stap_thermostaat %}
+          {% set n = doel if richting * (n - doel) > 0 else n %}
+          {{ n | round(1) }}
         {% endif %}
       wachttijd_voorbij: >
         {% set ts = state_attr('input_datetime.wp_laatste_wijziging', 'timestamp') %}
@@ -560,6 +622,79 @@ automation:
           entity_id: climate.thermostat_1
         data:
           temperature: "{{ nieuw }}"
+      # Controleren of de gateway het nieuwe setpoint terugmeldt.
+      - wait_template: >
+          {{ (state_attr('climate.thermostat_1', 'temperature') | float(-99) - nieuw | float) | abs < 0.05 }}
+        timeout: "00:02:00"
+        continue_on_timeout: true
+      - if:
+          - condition: template
+            value_template: "{{ not wait.completed }}"
+        then:
+          # Niet bevestigd: wachttijd vrijgeven zodat de volgende ronde (binnen
+          # 5 minuten) het opnieuw probeert, en een melding geven.
+          - action: input_datetime.set_datetime
+            target:
+              entity_id: input_datetime.wp_laatste_wijziging
+            data:
+              timestamp: 0
+          - action: persistent_notification.create
+            data:
+              notification_id: wp_slim_geen_bevestiging
+              title: "Warmtepomp: thermostaat bevestigt setpoint niet"
+              message: >
+                De regeling stuurde {{ nieuw }} °C naar climate.thermostat_1
+                ({{ now().strftime('%H:%M') }}), maar de thermostaat meldt
+                {{ state_attr('climate.thermostat_1', 'temperature') }} °C.
+                Controleer de InComfort-gateway. De regeling probeert het
+                binnen 5 minuten opnieuw.
+        else:
+          - action: persistent_notification.dismiss
+            data:
+              notification_id: wp_slim_geen_bevestiging
+
+  # ---------------------------------------------------------------------------
+  # Uitschakelen: staat de thermostaat nog op een setpoint van deze regeling
+  # (dus niet handmatig gewijzigd), dan terug naar de basistemperatuur.
+  # ---------------------------------------------------------------------------
+  - id: wp_slim_uitschakelen_herstel
+    alias: "WP slim – bij uitschakelen terug naar basis"
+    description: >
+      Als de regeling wordt uitgezet terwijl het setpoint nog een verhoging of
+      verlaging van de regeling bevat, zet deze automatisering de thermostaat
+      terug op de basistemperatuur. Een handmatige stand blijft ongemoeid.
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.wp_slim_actief
+        from: "on"
+        to: "off"
+    conditions:
+      - condition: state
+        entity_id: timer.wp_handmatig
+        state: idle
+      - condition: template
+        value_template: >
+          {% set huidig = state_attr('climate.thermostat_1', 'temperature') %}
+          {% set basis = states('input_number.wp_basistemperatuur') | float(0) %}
+          {{ huidig is number and basis >= 15
+             and (huidig - states('input_number.wp_laatst_ingesteld') | float(0)) | abs < 0.05
+             and (huidig - basis) | abs >= 0.05 }}
+    actions:
+      - variables:
+          basis: >
+            {% set stap = [states('input_number.wp_thermostaat_stap') | float(0.5), 0.1] | max %}
+            {{ ((states('input_number.wp_basistemperatuur') | float(20) / stap) | round(0) * stap) | round(1) }}
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_laatst_ingesteld
+        data:
+          value: "{{ basis }}"
+      - action: climate.set_temperature
+        target:
+          entity_id: climate.thermostat_1
+        data:
+          temperature: "{{ basis }}"
 
   # ---------------------------------------------------------------------------
   # Herkent een wijziging aan de thermostaat die niet van deze regeling komt
