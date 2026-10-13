@@ -145,7 +145,7 @@ In `page.json` → `objects`:
 
 ## Eigen thema registreren
 
-Twee items in `report.json`:
+Twee plekken in `report.json`: `themeCollection.customTheme` (de rest van `themeCollection` laat je staan) en een item in de bestaande array `resourcePackages`.
 
 ```json
 "themeCollection": {
