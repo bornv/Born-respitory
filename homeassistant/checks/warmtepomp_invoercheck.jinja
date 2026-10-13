@@ -7,7 +7,8 @@
   'net': 'sensor.victron_grid_power',
   'pv': 'sensor.victron_pv_power',
   'verbruik': 'sensor.victron_ac_consumption',
-  'soc_limiet': 'sensor.victron_active_soc_limit',
+  'ess_min': 'number.victron_ess_min_soc_limit',
+  'dess_min': 'sensor.victron_dynamic_ess_minimum_soc',
 } %}
 {% set ok, fout, let = '✅', '❌', '⚠️' %}
 == Thermostaat ({{ e.thermostaat }}) ==
@@ -38,10 +39,10 @@
 {%- endif %}
 
 == Victron ==
-{% for key, label, unit in [('soc', 'Batterij SoC', '%'), ('net', 'Netvermogen', 'W'), ('pv', 'PV-vermogen totaal', 'W'), ('verbruik', 'Huisverbruik totaal', 'W'), ('soc_limiet', 'Active SoC limit (optioneel)', '%')] -%}
+{% for key, label, unit in [('soc', 'Batterij SoC', '%'), ('net', 'Netvermogen', 'W'), ('pv', 'PV-vermogen totaal', 'W'), ('verbruik', 'Huisverbruik totaal', 'W'), ('ess_min', 'ESS min SoC limit (optioneel)', '%'), ('dess_min', 'Dynamic ESS minimum SoC (optioneel)', '%')] -%}
 {% set id = e[key] %}{% set u = state_attr(id, 'unit_of_measurement') -%}
 {% if not has_value(id) -%}
-{{ let if key == 'soc_limiet' else fout }} {{ label }} ({{ id }}): {{ states(id) }}
+{{ let if key in ['ess_min', 'dess_min'] else fout }} {{ label }} ({{ id }}): {{ states(id) }}
 {% else -%}
 {{ ok if u == unit else fout }} {{ label }} ({{ id }}): {{ states(id) }} {{ u }}{{ '' if u == unit else ' → eenheid moet ' ~ unit ~ ' zijn' }}
 {% endif -%}

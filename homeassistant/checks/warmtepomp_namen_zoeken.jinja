@@ -1,0 +1,30 @@
+{# Plak in Ontwikkelhulpmiddelen → Template. Toont de entity-ID's die de warmtepompregeling nodig heeft. #}
+{% set zoek = ['DC battery charge', 'Grid power L', 'Consumption power L', 'PV power', 'PV on grid power', 'PV on output power', 'ESS min SoC limit', 'Dynamic ESS minimum SoC'] -%}
+== Victron ==
+{% for id in integration_entities('victron_gx') | sort -%}
+{% set n = state_attr(id, 'friendly_name') or '' -%}
+{% if zoek | select('in', n) | list | count > 0 -%}
+{{ '✅' if has_value(id) else '❌' }} {{ id }} | {{ n }} | {{ states(id) }} {{ state_attr(id, 'unit_of_measurement') or '' }}
+{% endif -%}
+{% endfor %}
+== Thermostaten ==
+{% for s in states.climate -%}
+{{ '✅' if s.state not in ['unavailable', 'unknown'] else '❌' }} {{ s.entity_id }} | {{ s.name }} | {{ s.state }} | setpoint {{ s.attributes.temperature }}
+{% endfor %}
+== Zonneplan ==
+{% for s in states.sensor if 'quarter' in s.entity_id and 'tariff' in s.entity_id -%}
+{{ '✅' if s.attributes.forecast is defined else '❌ geen forecast' }} {{ s.entity_id }} | {{ s.state }}
+{% endfor %}
+== Jouw helpers ==
+{% for id in ['sensor.huisverbruik_totaal', 'sensor.consumption', 'sensor.netvermogen_totaal', 'input_number.xtend_basistemperatuur', 'sensor.xtend_prijsniveau'] -%}
+{{ '✅' if has_value(id) else '❌' }} {{ id }} | {{ states(id) }} {{ state_attr(id, 'unit_of_measurement') or '' }}
+{% endfor %}
+== Ter vergelijking: som van de werkende Victron-fasen ==
+{% set ns = namespace(net=0, verbruik=0) -%}
+{% for id in integration_entities('victron_gx') if has_value(id) -%}
+{% set n = state_attr(id, 'friendly_name') or '' -%}
+{% if 'Grid power L' in n %}{% set ns.net = ns.net + states(id) | float(0) %}{% endif -%}
+{% if 'Consumption power L' in n %}{% set ns.verbruik = ns.verbruik + states(id) | float(0) %}{% endif -%}
+{% endfor -%}
+Netvermogen L1+L2+L3: {{ ns.net | round(1) }} W  (moet gelijk zijn aan sensor.netvermogen_totaal)
+Verbruik L1+L2+L3: {{ ns.verbruik | round(1) }} W  (moet gelijk zijn aan je verbruikshelper)

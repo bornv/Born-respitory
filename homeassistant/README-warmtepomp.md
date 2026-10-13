@@ -65,7 +65,8 @@ Instellingen → Apparaten & diensten → Victron GX → Entiteiten.
 | `sensor.victron_grid_power` | Netvermogen totaal | Victron GX → **Grid power L1** (+ L2 + L3) | W, **afname = positief** |
 | `sensor.victron_pv_power` | PV totaal | Victron GX → **PV power** (DC) + **PV on grid power L1–L3** + **PV on output power L1–L3** | W |
 | `sensor.victron_ac_consumption` | Huisverbruik totaal, incl. warmtepomp | Victron GX → **Consumption power L1** (+ L2 + L3) | W |
-| `sensor.victron_active_soc_limit` | Ondergrens die Victron nu hanteert (optioneel) | Victron GX → **Active SoC limit** | % |
+| `number.victron_ess_min_soc_limit` | ESS-minimum (optioneel) | Victron GX → **ESS min SoC limit** | % |
+| `sensor.victron_dynamic_ess_minimum_soc` | DESS-minimum (optioneel) | Victron GX → **Dynamic ESS minimum SoC** | % |
 
 ### Per fase optellen
 
@@ -84,7 +85,13 @@ totaalsensor. Maak daarom per totaal een somhelper:
 
 3. Gebruik de entity-ID's van deze helpers in het pakket.
 
-Heb je één fase en maar één PV-bron? Dan kun je de Victron-sensor direct gebruiken.
+Heb je één fase en maar één PV-bron? Dan kun je de Victron-sensor direct gebruiken. Alleen
+DC-PV (MPPT's) en geen *PV on grid/output*-sensoren? Gebruik dan **PV power** direct.
+
+**Dubbele sensoren:** zie je elke Victron-sensor twee keer, waarvan één *Niet beschikbaar*? Dan
+zijn er oude entiteiten blijven staan (bijvoorbeeld na het opnieuw toevoegen van de integratie).
+Gebruik altijd de entiteit **met** waarde. Controleer ook of je somhelpers die gebruiken: één
+niet-beschikbare invoer maakt de hele som `unknown`.
 
 **Let op:** een somhelper wordt `unknown` zodra één invoer `unknown` is. Neem daarom alleen
 sensoren op die bij jou echt een waarde hebben (PV on output bestaat bijvoorbeeld alleen bij een
@@ -96,9 +103,9 @@ PV-omvormer op AC-out).
   Multi/Quattro. De warmtepomp telt dus mee, waar hij ook is aangesloten. Gebruik **niet**
   *AC loads* of *Critical loads*: dat is maar één van de twee.
 - **DC battery charge** is de SoC die het Victron-systeem zelf gebruikt (`Dc/Battery/Soc`).
-- **Active SoC limit** is de ondergrens die ESS op dit moment echt toepast (minimum-SoC of
-  BatteryLife). Het pakket neemt de hoogste van deze waarde en **WP minimale SoC**. Ontbreekt de
-  sensor, dan geldt alleen de helper.
+- **ESS min SoC limit** en **Dynamic ESS minimum SoC** zijn de ondergrenzen die Victron hanteert.
+  Het pakket neemt de hoogste van deze twee en **WP minimale SoC**. Ontbreekt een Victron-waarde,
+  dan telt die niet mee. (*Active SoC limit* wordt niet bij elke installatie geleverd.)
 - **Bruikbare batterijcapaciteit (kWh)** levert Victron niet als kWh. Die vul je zelf in.
 
 ### Controleren in Home Assistant
@@ -131,7 +138,8 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
    | `sensor.victron_grid_power` | somhelper *Victron net totaal* | Teken andersom? Vervang dan in de zon-sensor `-net` door `net`. |
    | `sensor.victron_pv_power` | somhelper *Victron PV totaal* | |
    | `sensor.victron_ac_consumption` | somhelper *Victron verbruik totaal* | |
-   | `sensor.victron_active_soc_limit` | Active SoC limit | Optioneel |
+   | `number.victron_ess_min_soc_limit` | ESS min SoC limit | Optioneel |
+   | `sensor.victron_dynamic_ess_minimum_soc` | Dynamic ESS minimum SoC | Optioneel |
 
    Draai daarna de [invoercheck](#controleren-in-home-assistant).
 
@@ -142,7 +150,7 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
 7. Controleer en pas aan:
    - **WP basistemperatuur**: staat op 20,0 °C;
    - **WP bruikbare batterijcapaciteit**: bruikbare kWh van je Victron-batterij;
-   - **WP minimale SoC**: dezelfde waarde als de minimale SoC in Victron ESS (met *Active SoC limit* gekoppeld neemt het pakket automatisch de hoogste);
+   - **WP minimale SoC**: dezelfde waarde als de minimale SoC in Victron ESS (met de Victron-minima gekoppeld neemt het pakket automatisch de hoogste);
    - **WP stapgrootte thermostaat**: 0,5 of 0,1, afhankelijk van wat je thermostaat accepteert.
 8. Zet **WP slimme regeling actief** aan.
 
