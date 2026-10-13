@@ -9,3 +9,9 @@
 Claude Code laadt skills in `.claude/skills/` automatisch wanneer je in deze repo werkt.
 De Home Assistant-skill wordt actief bij vragen over automations, scripts, scenes,
 dashboards, blueprints, helpers, templates, AppDaemon en back-ups.
+
+## Home Assistant
+
+| Onderdeel | Map |
+|---|---|
+| Slimme warmtepompregeling Intergas Xtend (Zonneplan-prijzen, zon, Victron-SoC) | [`homeassistant/`](homeassistant/README-warmtepomp.md) |

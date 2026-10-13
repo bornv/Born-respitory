@@ -1,0 +1,594 @@
+# =============================================================================
+# Slimme warmtepompregeling – Intergas Xtend via de kamerthermostaat
+# =============================================================================
+#
+# Wat dit pakket doet
+#   Het pakket verschuift het setpoint van je thermostaat een klein beetje rond
+#   je basistemperatuur:
+#     comfort        -> basistemperatuur
+#     voorverwarmen  -> basis + kleine verhoging (goedkoop kwartier, er komt een
+#                       dure periode aan en de Victron-batterij kan die niet dekken)
+#     zon            -> basis + kleine verhoging (er is zonneoverschot)
+#     besparen       -> basis - verlaging (duur kwartier en batterij leeg;
+#                       standaard 0,0 °C, dus de basistemperatuur blijft gelden)
+#   Wijzigingen gaan in kleine stappen met een minimale wachttijd, zodat de
+#   warmtepomp rustig doorloopt en de cv-ketel niet bijspringt.
+#
+# Wat dit pakket NIET doet
+#   - Het stuurt de batterij niet aan. Laden en ontladen blijft bij Victron
+#     (ESS / Dynamic ESS). Het pakket leest alleen de SoC.
+#   - Het praat niet rechtstreeks met de Xtend. De Xtend volgt de warmtevraag
+#     van de thermostaat (OpenTherm).
+#
+# VERVANG VOOR GEBRUIK deze entity-ID's (zoek en vervang in dit hele bestand):
+#   climate.woonkamer                       -> je thermostaat
+#   sensor.zonneplan_current_quarter_hourly_electricity_tariff
+#                                           -> Zonneplan-kwartierprijs (HACS-integratie
+#                                              "Zonneplan ONE"; meestal al juist)
+#   sensor.victron_battery_soc              -> SoC van de Victron-batterij (%)
+#   sensor.victron_grid_power               -> netvermogen in W (+ = afname, - = teruglevering)
+#   sensor.victron_pv_power                 -> totaal PV-vermogen in W
+#   sensor.victron_ac_consumption           -> totaal huisverbruik in W (incl. warmtepomp)
+#
+# Installatie: zie homeassistant/README-warmtepomp.md
+# =============================================================================
+
+input_boolean:
+  wp_slim_actief:
+    name: "WP slimme regeling actief"
+    icon: mdi:heat-pump
+  wp_handmatig_wordt_basis:
+    name: "WP handmatige wijziging wordt nieuwe basis"
+    icon: mdi:hand-back-right
+
+input_number:
+  wp_basistemperatuur:
+    name: "WP basistemperatuur"
+    min: 15
+    max: 23
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:home-thermometer
+    mode: box
+  wp_voorverwarm_verhoging:
+    name: "WP verhoging bij voorverwarmen"
+    min: 0
+    max: 1.5
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer-chevron-up
+  wp_zon_verhoging:
+    name: "WP verhoging bij zonneoverschot"
+    min: 0
+    max: 1.5
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:solar-power
+  wp_besparen_verlaging:
+    name: "WP verlaging bij dure stroom en lege batterij"
+    min: 0
+    max: 1
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer-chevron-down
+  wp_max_stap:
+    name: "WP maximale stap per wijziging"
+    min: 0.1
+    max: 1
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:stairs
+  wp_thermostaat_stap:
+    name: "WP stapgrootte thermostaat"
+    min: 0.1
+    max: 1
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:ruler
+  wp_wachttijd:
+    name: "WP minimale tijd tussen wijzigingen"
+    min: 10
+    max: 120
+    step: 5
+    unit_of_measurement: "min"
+    icon: mdi:timer-sand
+  wp_handmatig_duur:
+    name: "WP pauze na handmatige wijziging"
+    min: 0.5
+    max: 12
+    step: 0.5
+    unit_of_measurement: "h"
+    icon: mdi:hand-back-right
+  wp_prijs_horizon:
+    name: "WP prijsvenster vooruit"
+    min: 4
+    max: 24
+    step: 1
+    unit_of_measurement: "h"
+    icon: mdi:chart-timeline-variant
+  wp_voorverwarm_horizon:
+    name: "WP vooruitkijken naar dure periode"
+    min: 1
+    max: 12
+    step: 1
+    unit_of_measurement: "h"
+    icon: mdi:clock-fast
+  wp_min_prijsverschil:
+    name: "WP minimaal prijsverschil goedkoop/duur"
+    min: 0
+    max: 0.5
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+    icon: mdi:cash-minus
+  wp_zon_drempel:
+    name: "WP zonneoverschot aan vanaf"
+    min: 200
+    max: 5000
+    step: 100
+    unit_of_measurement: "W"
+    icon: mdi:solar-power-variant
+  wp_zon_uit_marge:
+    name: "WP zonneoverschot uit bij tekort van"
+    min: 0
+    max: 2000
+    step: 50
+    unit_of_measurement: "W"
+    icon: mdi:solar-power-variant-outline
+  wp_batterij_capaciteit:
+    name: "WP bruikbare batterijcapaciteit"
+    min: 0
+    max: 60
+    step: 0.5
+    unit_of_measurement: "kWh"
+    icon: mdi:battery-high
+  wp_batterij_min_soc:
+    name: "WP minimale SoC (gelijk aan Victron ESS)"
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    icon: mdi:battery-low
+  wp_verbruik_reserve:
+    name: "WP verwacht verbruik als meting ontbreekt"
+    min: 100
+    max: 5000
+    step: 50
+    unit_of_measurement: "W"
+    icon: mdi:home-lightning-bolt
+  # Intern: laatste setpoint dat deze regeling heeft gestuurd. Hiermee wordt
+  # een handmatige wijziging herkend. Niet zelf aanpassen.
+  wp_laatst_ingesteld:
+    name: "WP laatst ingesteld setpoint (intern)"
+    min: 5
+    max: 30
+    step: 0.1
+    unit_of_measurement: "°C"
+    icon: mdi:robot
+    mode: box
+
+input_datetime:
+  wp_laatste_wijziging:
+    name: "WP laatste setpointwijziging (intern)"
+    has_date: true
+    has_time: true
+    icon: mdi:clock-outline
+
+timer:
+  wp_handmatig:
+    name: "WP handmatige pauze"
+    restore: true
+    icon: mdi:hand-back-right
+
+script:
+  # Eenmalig uitvoeren na installatie (en wanneer je terug wilt naar de
+  # aanbevolen instellingen). Nieuwe input_number-helpers starten anders op
+  # hun minimum, bijvoorbeeld een basistemperatuur van 15 °C.
+  wp_standaardwaarden_instellen:
+    alias: "WP slim – standaardwaarden instellen"
+    icon: mdi:restore
+    mode: single
+    sequence:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.wp_slim_actief
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_basistemperatuur
+        data:
+          value: 20
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_laatst_ingesteld
+        data:
+          value: >
+            {{ state_attr('climate.woonkamer', 'temperature') | float(20) }}
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_voorverwarm_verhoging
+        data:
+          value: 0.5
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_zon_verhoging
+        data:
+          value: 0.5
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_besparen_verlaging
+        data:
+          value: 0
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_max_stap
+        data:
+          value: 0.5
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_thermostaat_stap
+        data:
+          value: 0.5
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_wachttijd
+        data:
+          value: 30
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_handmatig_duur
+        data:
+          value: 3
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_prijs_horizon
+        data:
+          value: 12
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_voorverwarm_horizon
+        data:
+          value: 6
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_min_prijsverschil
+        data:
+          value: 0.06
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_zon_drempel
+        data:
+          value: 1000
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_zon_uit_marge
+        data:
+          value: 300
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_batterij_capaciteit
+        data:
+          value: 10
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_batterij_min_soc
+        data:
+          value: 20
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_verbruik_reserve
+        data:
+          value: 800
+
+sensor:
+  # Tijdgewogen gemiddeld huisverbruik over 24 uur. Wordt gebruikt om te
+  # schatten hoeveel energie de dure periode kost.
+  - platform: statistics
+    name: "WP gemiddeld huisverbruik"
+    unique_id: wp_gemiddeld_huisverbruik
+    entity_id: sensor.victron_ac_consumption
+    state_characteristic: average_linear
+    max_age:
+      hours: 24
+    sampling_size: 20000
+    precision: 0
+
+template:
+  # ---------------------------------------------------------------------------
+  # Zonneoverschot met hysterese.
+  # Aan:  PV - huisverbruik > drempel én er wordt echt teruggeleverd.
+  #       (De terugleverings-check voorkomt dat 'zon' aangaat als Victron de
+  #       batterij naar het net ontlaadt.)
+  # Uit:  PV - huisverbruik zakt onder -marge, dus het extra stoken wordt
+  #       duidelijk niet meer door de zon gedekt.
+  # ---------------------------------------------------------------------------
+  - binary_sensor:
+      - name: "WP zonneoverschot"
+        unique_id: wp_zonneoverschot
+        icon: mdi:solar-power
+        state: >
+          {% set pv = states('sensor.victron_pv_power') | float(0) %}
+          {% set verbruik = states('sensor.victron_ac_consumption') | float(0) %}
+          {% set net = states('sensor.victron_grid_power') | float(0) %}
+          {% set overschot = pv - verbruik %}
+          {% if this.state == 'on' %}
+            {{ overschot > -(states('input_number.wp_zon_uit_marge') | float(300)) }}
+          {% else %}
+            {{ overschot > states('input_number.wp_zon_drempel') | float(1000)
+               and -net > states('input_number.wp_zon_drempel') | float(1000) / 2 }}
+          {% endif %}
+        delay_on: "00:10:00"
+        delay_off: "00:15:00"
+        availability: >
+          {{ has_value('sensor.victron_pv_power')
+             and has_value('sensor.victron_ac_consumption')
+             and has_value('sensor.victron_grid_power') }}
+
+  # ---------------------------------------------------------------------------
+  # Kern: bepaalt elke 5 minuten de gewenste regelmodus en de verschuiving.
+  # Prijzen: Zonneplan-forecast, bedrag / 10.000.000 = €/kWh incl. btw.
+  # ---------------------------------------------------------------------------
+  - triggers:
+      - trigger: time_pattern
+        minutes: "/5"
+        seconds: 15
+      - trigger: state
+        entity_id:
+          - sensor.zonneplan_current_quarter_hourly_electricity_tariff
+          - binary_sensor.wp_zonneoverschot
+          - input_number.wp_voorverwarm_verhoging
+          - input_number.wp_zon_verhoging
+          - input_number.wp_besparen_verlaging
+          - input_number.wp_prijs_horizon
+          - input_number.wp_voorverwarm_horizon
+          - input_number.wp_min_prijsverschil
+          - input_number.wp_batterij_capaciteit
+          - input_number.wp_batterij_min_soc
+      - trigger: homeassistant
+        event: start
+      - trigger: event
+        event_type: event_template_reloaded
+    variables:
+      plan: >
+        {% set fc = state_attr('sensor.zonneplan_current_quarter_hourly_electricity_tariff', 'forecast') %}
+        {% set nu = now() %}
+        {% set horizon = now() + timedelta(hours=states('input_number.wp_prijs_horizon') | float(12)) %}
+        {% set vooruit = now() + timedelta(hours=states('input_number.wp_voorverwarm_horizon') | float(6)) %}
+        {% set ns = namespace(venster=[], prijs_nu=none, duur_uren=[]) %}
+        {% if fc is iterable and fc is not string %}
+          {% for k in fc %}
+            {% set start = as_datetime(k.start_date | string) %}
+            {% set eind = as_datetime(k.end_date | string) if k.end_date is defined and k.end_date else none %}
+            {% set eind = eind if eind else start + timedelta(minutes=15) %}
+            {% set bedrag = k.price_tax_included.amount if k.price_tax_included is defined else none %}
+            {% if start and bedrag is number %}
+              {% set prijs = bedrag / 10000000 %}
+              {% if start <= nu < eind %}
+                {% set ns.prijs_nu = prijs %}
+              {% endif %}
+              {% if eind > nu and start < horizon %}
+                {% set ns.venster = ns.venster + [prijs] %}
+              {% endif %}
+              {% if start > nu and start < vooruit %}
+                {% set ns.duur_uren = ns.duur_uren + [[prijs, (eind - start).total_seconds() / 3600]] %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% set n = ns.venster | count %}
+        {% if ns.prijs_nu is none or n < 8 %}
+          {{ {'modus': 'comfort', 'reden': 'Te weinig prijsdata', 'prijs_nu': ns.prijs_nu,
+              'laag': none, 'hoog': none, 'benodigd_kwh': 0, 'beschikbaar_kwh': none} }}
+        {% else %}
+          {% set gesorteerd = ns.venster | sort %}
+          {% set laag = gesorteerd[(n * 0.25) | int] %}
+          {% set hoog = gesorteerd[[(n * 0.75) | int, n - 1] | min] %}
+          {% set verschil_ok = (hoog - laag) >= states('input_number.wp_min_prijsverschil') | float(0.06) %}
+          {% set goedkoop = verschil_ok and ns.prijs_nu <= laag %}
+          {% set duur = verschil_ok and ns.prijs_nu >= hoog %}
+          {% set verbruik_w = states('sensor.wp_gemiddeld_huisverbruik') | float(states('input_number.wp_verbruik_reserve') | float(800)) %}
+          {% set ns2 = namespace(uren=0) %}
+          {% for p in ns.duur_uren if verschil_ok and p[0] >= hoog %}
+            {% set ns2.uren = ns2.uren + p[1] %}
+          {% endfor %}
+          {% set benodigd = ns2.uren * verbruik_w / 1000 %}
+          {% set soc = states('sensor.victron_battery_soc') | float(0) %}
+          {% set min_soc = states('input_number.wp_batterij_min_soc') | float(20) %}
+          {% set cap = states('input_number.wp_batterij_capaciteit') | float(0) %}
+          {% set beschikbaar = ([soc - min_soc, 0] | max) / 100 * cap %}
+          {% set batterij_dekt_straks = beschikbaar >= benodigd %}
+          {% set batterij_dekt_nu = beschikbaar >= verbruik_w / 1000 * 0.5 %}
+          {% if is_state('binary_sensor.wp_zonneoverschot', 'on') %}
+            {% set modus, reden = 'zon', 'Zonneoverschot' %}
+          {% elif ns.prijs_nu <= 0 %}
+            {% set modus, reden = 'voorverwarmen', 'Negatieve of nul stroomprijs' %}
+          {% elif goedkoop and benodigd > 0 and not batterij_dekt_straks %}
+            {% set modus, reden = 'voorverwarmen', 'Goedkoop nu, dure periode komt en batterij dekt die niet' %}
+          {% elif duur and not batterij_dekt_nu %}
+            {% set modus, reden = 'besparen', 'Dure stroom en batterij (bijna) leeg' %}
+          {% elif goedkoop and benodigd > 0 %}
+            {% set modus, reden = 'comfort', 'Goedkoop, maar batterij dekt de dure periode' %}
+          {% elif duur %}
+            {% set modus, reden = 'comfort', 'Duur, batterij levert' %}
+          {% else %}
+            {% set modus, reden = 'comfort', 'Normale prijs' %}
+          {% endif %}
+          {{ {'modus': modus, 'reden': reden, 'prijs_nu': ns.prijs_nu | round(4),
+              'laag': laag | round(4), 'hoog': hoog | round(4),
+              'benodigd_kwh': benodigd | round(2), 'beschikbaar_kwh': beschikbaar | round(2)} }}
+        {% endif %}
+    sensor:
+      - name: "WP regelmodus"
+        unique_id: wp_regelmodus
+        icon: mdi:heat-pump-outline
+        state: "{{ plan.modus }}"
+        attributes:
+          verschuiving: >
+            {% if plan.modus in ['voorverwarmen'] %}
+              {{ states('input_number.wp_voorverwarm_verhoging') | float(0) }}
+            {% elif plan.modus == 'zon' %}
+              {{ states('input_number.wp_zon_verhoging') | float(0) }}
+            {% elif plan.modus == 'besparen' %}
+              {{ 0 - states('input_number.wp_besparen_verlaging') | float(0) }}
+            {% else %}
+              0
+            {% endif %}
+          reden: "{{ plan.reden }}"
+          prijs_nu: "{{ plan.prijs_nu }}"
+          grens_goedkoop: "{{ plan.laag }}"
+          grens_duur: "{{ plan.hoog }}"
+          benodigd_dure_periode_kwh: "{{ plan.benodigd_kwh }}"
+          batterij_beschikbaar_kwh: "{{ plan.beschikbaar_kwh }}"
+
+automation:
+  # ---------------------------------------------------------------------------
+  # Stuurt het thermostaat-setpoint naar basis + verschuiving, in kleine
+  # stappen en met een minimale wachttijd tussen wijzigingen.
+  # ---------------------------------------------------------------------------
+  - id: wp_slim_setpoint_toepassen
+    alias: "WP slim – setpoint toepassen"
+    description: >
+      Zet de thermostaat op basistemperatuur + verschuiving uit 'WP regelmodus'.
+      Stapt rustig (max. stap per keer, minimale wachttijd) en doet niets tijdens
+      een handmatige pauze.
+    mode: single
+    max_exceeded: silent
+    triggers:
+      - trigger: state
+        entity_id: sensor.wp_regelmodus
+        attribute: verschuiving
+        id: regeling
+      - trigger: time_pattern
+        minutes: "/5"
+        id: regeling
+      - trigger: state
+        entity_id: input_number.wp_basistemperatuur
+        id: direct
+      - trigger: timer.finished
+        target:
+          entity_id: timer.wp_handmatig
+        id: direct
+      - trigger: state
+        entity_id: input_boolean.wp_slim_actief
+        to: "on"
+        id: direct
+      - trigger: homeassistant
+        event: start
+        id: regeling
+    conditions:
+      - condition: state
+        entity_id: input_boolean.wp_slim_actief
+        state: "on"
+      - condition: state
+        entity_id: timer.wp_handmatig
+        state: idle
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: climate.woonkamer
+            state:
+              - "off"
+              - unavailable
+              - unknown
+      - condition: template
+        value_template: "{{ state_attr('climate.woonkamer', 'temperature') is number }}"
+    variables:
+      thermostaat: climate.woonkamer
+      stap_thermostaat: "{{ [states('input_number.wp_thermostaat_stap') | float(0.5), 0.1] | max }}"
+      max_stap: "{{ states('input_number.wp_max_stap') | float(0.5) }}"
+      tmin: "{{ state_attr('climate.woonkamer', 'min_temp') | float(5) }}"
+      tmax: "{{ state_attr('climate.woonkamer', 'max_temp') | float(30) }}"
+      doel: >
+        {% set basis = states('input_number.wp_basistemperatuur') | float(20) %}
+        {% set versch = state_attr('sensor.wp_regelmodus', 'verschuiving') | float(0) %}
+        {% set d = ((basis + versch) / stap_thermostaat) | round(0) * stap_thermostaat %}
+        {{ ([[d, tmin] | max, tmax] | min) | round(1) }}
+      huidig: "{{ state_attr('climate.woonkamer', 'temperature') | float }}"
+      nieuw: >
+        {% set delta = doel - huidig %}
+        {% set delta = [[delta, max_stap] | min, -max_stap] | max %}
+        {% set n = ((huidig + delta) / stap_thermostaat) | round(0) * stap_thermostaat %}
+        {% if n == huidig and doel != huidig %}
+          {% set n = huidig + (stap_thermostaat if doel > huidig else -stap_thermostaat) %}
+        {% endif %}
+        {{ n | round(1) }}
+      wachttijd_voorbij: >
+        {% set ts = state_attr('input_datetime.wp_laatste_wijziging', 'timestamp') %}
+        {{ ts is none or (now().timestamp() - ts) >= states('input_number.wp_wachttijd') | float(30) * 60 }}
+    actions:
+      - condition: template
+        value_template: "{{ (doel - huidig) | abs >= 0.05 }}"
+      - condition: template
+        value_template: "{{ trigger.id == 'direct' or wachttijd_voorbij }}"
+      # Eerst vastleggen wat we sturen, zodat de herkenning van handmatige
+      # wijzigingen onze eigen wijziging negeert.
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.wp_laatst_ingesteld
+        data:
+          value: "{{ nieuw }}"
+      - action: input_datetime.set_datetime
+        target:
+          entity_id: input_datetime.wp_laatste_wijziging
+        data:
+          timestamp: "{{ now().timestamp() }}"
+      - action: climate.set_temperature
+        target:
+          entity_id: climate.woonkamer
+        data:
+          temperature: "{{ nieuw }}"
+
+  # ---------------------------------------------------------------------------
+  # Herkent een wijziging aan de thermostaat die niet van deze regeling komt
+  # (aan de thermostaat zelf, in de app of in het HA-dashboard).
+  # ---------------------------------------------------------------------------
+  - id: wp_slim_handmatige_wijziging
+    alias: "WP slim – handmatige wijziging herkennen"
+    description: >
+      Als het setpoint afwijkt van wat de regeling het laatst stuurde, is het
+      handmatig gewijzigd. Dan pauzeert de regeling (timer) of wordt de nieuwe
+      waarde de basistemperatuur, afhankelijk van de schakelaar.
+    mode: restart
+    triggers:
+      - trigger: state
+        entity_id: climate.woonkamer
+        attribute: temperature
+    conditions:
+      - condition: state
+        entity_id: input_boolean.wp_slim_actief
+        state: "on"
+      - condition: template
+        value_template: >
+          {% set nieuw = trigger.to_state.attributes.temperature
+                         if trigger.to_state is not none else none %}
+          {% set oud = trigger.from_state.attributes.temperature
+                       if trigger.from_state is not none else none %}
+          {{ nieuw is number and oud is number
+             and (nieuw - states('input_number.wp_laatst_ingesteld') | float(0)) | abs
+                 > [states('input_number.wp_thermostaat_stap') | float(0.5) / 2, 0.15] | max }}
+    actions:
+      - variables:
+          nieuw: "{{ trigger.to_state.attributes.temperature }}"
+      - if:
+          - condition: state
+            entity_id: input_boolean.wp_handmatig_wordt_basis
+            state: "on"
+        then:
+          # De handmatige waarde wordt de nieuwe basistemperatuur. De regeling
+          # gaat daarna gewoon verder vanaf die basis.
+          - action: input_number.set_value
+            target:
+              entity_id: input_number.wp_laatst_ingesteld
+            data:
+              value: "{{ nieuw }}"
+          - action: input_number.set_value
+            target:
+              entity_id: input_number.wp_basistemperatuur
+            data:
+              value: "{{ [[nieuw, 15] | max, 23] | min }}"
+        else:
+          # Tijdelijke handmatige stand: regeling pauzeert en neemt daarna
+          # rustig weer over.
+          - action: timer.start
+            target:
+              entity_id: timer.wp_handmatig
+            data:
+              duration: "{{ (states('input_number.wp_handmatig_duur') | float(3) * 3600) | int }}"
