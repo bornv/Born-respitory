@@ -77,7 +77,9 @@ Een Viewer kan `getDefinition` niet aanroepen (403). Gebruik dan alleen paramete
 Querynamen uit `mashup.pq` halen:
 
 ```bash
-echo "$MASHUP" | grep -oE '^shared [^=]+' | sed 's/^shared //'
+az rest --method post --resource "$RES" --url "$API/workspaces/$WS_ID/dataflows/$DF_ID/getDefinition" \
+  | jq -r '.definition.parts[] | select(.path=="mashup.pq") | .payload' \
+  | base64 --decode | grep -oP '(?<=shared )\w+(?= =)'
 ```
 
 ## Parameters
