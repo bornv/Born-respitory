@@ -1,7 +1,7 @@
 {# Plak in Ontwikkelhulpmiddelen → Template. Toont de entity-ID's die de warmtepompregeling nodig heeft. #}
 {% set zoek = ['DC battery charge', 'Grid power L', 'Consumption power L', 'PV power', 'PV on grid power', 'PV on output power', 'ESS min SoC limit', 'Dynamic ESS minimum SoC'] -%}
 == Victron ==
-{% for id in integration_entities('victron_gx') | sort -%}
+{% for id in (integration_entities('victron_mqtt') + integration_entities('victron_gx')) | unique | sort -%}
 {% set n = state_attr(id, 'friendly_name') or '' -%}
 {% if zoek | select('in', n) | list | count > 0 -%}
 {{ '✅' if has_value(id) else '❌' }} {{ id }} | {{ n }} | {{ states(id) }} {{ state_attr(id, 'unit_of_measurement') or '' }}
@@ -21,7 +21,7 @@
 {% endfor %}
 == Ter vergelijking: som van de werkende Victron-fasen ==
 {% set ns = namespace(net=0, verbruik=0) -%}
-{% for id in integration_entities('victron_gx') if has_value(id) -%}
+{% for id in (integration_entities('victron_mqtt') + integration_entities('victron_gx')) | unique if has_value(id) -%}
 {% set n = state_attr(id, 'friendly_name') or '' -%}
 {% if 'Grid power L' in n %}{% set ns.net = ns.net + states(id) | float(0) %}{% endif -%}
 {% if 'Consumption power L' in n %}{% set ns.verbruik = ns.verbruik + states(id) | float(0) %}{% endif -%}

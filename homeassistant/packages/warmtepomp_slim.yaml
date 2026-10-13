@@ -271,7 +271,8 @@ script:
         target:
           entity_id: input_number.wp_batterij_capaciteit
         data:
-          value: 10
+          # BYD: 312 Ah x 51,2 V = ca. 16 kWh (4 modules)
+          value: 16
       - action: input_number.set_value
         target:
           entity_id: input_number.wp_batterij_min_soc

@@ -52,7 +52,9 @@ handig om COP, compressor en ketelinzet te volgen, maar is niet nodig.
 ## Benodigde waarden
 
 Het pakket gebruikt zeven waarden van buitenaf. De Victron-namen hieronder zijn de namen uit de
-officiële **Victron GX**-integratie (Home Assistant 2026.5+, via MQTT op de Cerbo GX). Ik heb ze
+officiële **Victron GX**-integratie (Home Assistant 2026.5+, via MQTT op de Cerbo GX) en de
+HACS-integratie **Victron MQTT Integration** (`victron_mqtt`) van dezelfde maker: beide gebruiken
+de bibliotheek `victron-mqtt`, dus de namen zijn gelijk. Ik heb ze
 gecontroleerd in de broncode van de integratie (`victron-mqtt` 2026.9.5). De entity-ID's zelf
 hangen af van de apparaatnaam in jouw installatie. Zoek dus op de **weergavenaam** onder
 Instellingen → Apparaten & diensten → Victron GX → Entiteiten.
@@ -221,6 +223,6 @@ entities:
 | WP minimaal prijsverschil | € 0,06/kWh | Onder dit verschil wordt er niet verschoven |
 | WP zonneoverschot aan vanaf | 1000 W | Overschot dat nodig is om de zon-modus te starten |
 | WP zonneoverschot uit bij tekort van | 300 W | Zon-modus stopt als het tekort groter wordt dan dit |
-| WP bruikbare batterijcapaciteit | 10 kWh | Bruikbare capaciteit van je Victron-batterij |
+| WP bruikbare batterijcapaciteit | 16 kWh | BYD 312 Ah × 51,2 V ≈ 16 kWh |
 | WP minimale SoC | 20 % | Gelijk houden aan Victron ESS |
 | WP verwacht verbruik als meting ontbreekt | 800 W | Reservewaarde als er nog geen 24-uursgemiddelde is |
