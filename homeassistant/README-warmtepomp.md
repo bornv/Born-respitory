@@ -40,7 +40,7 @@ iets te vaak voor, maar nooit te weinig.
 
 | Onderdeel | Integratie | Status |
 |---|---|---|
-| Thermostaat als `climate.*` met instelbaar setpoint | bijv. Intergas gateway (InComfort), OpenTherm Gateway of je eigen thermostaat-integratie | **Zelf invullen** |
+| Thermostaat `climate.thermostat_1` | Waarschijnlijk Intergas gateway (InComfort): die noemt kamers *Thermostat 1* | Ingevuld |
 | Zonneplan-kwartierprijzen met `forecast`-attribuut | HACS: [Zonneplan ONE (fsaris)](https://github.com/fsaris/home-assistant-zonneplan-one) | Gecontroleerd in de broncode |
 | Victron SoC, netvermogen, PV-vermogen, huisverbruik | Victron GX (officieel, HA 2026.5+) | Zie [Benodigde waarden](#benodigde-waarden) |
 
@@ -61,7 +61,7 @@ Instellingen → Apparaten & diensten → Victron GX → Entiteiten.
 
 | Placeholder in het pakket | Wat | Bron in Home Assistant | Eenheid / teken |
 |---|---|---|---|
-| `climate.woonkamer` | Thermostaat | Je thermostaat-integratie | Attributen `temperature`, `min_temp`, `max_temp` |
+| `climate.thermostat_1` | Thermostaat | Je thermostaat-integratie | Attributen `temperature`, `min_temp`, `max_temp` |
 | `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | Kwartierprijs + `forecast` | Zonneplan ONE (HACS) → *Current quarter hourly electricity tariff* | €/kWh |
 | `sensor.victron_battery_soc` | Batterij-SoC | Victron GX → **DC battery charge** | % |
 | `sensor.victron_grid_power` | Netvermogen totaal | Victron GX → **Grid power L1** (+ L2 + L3) | W, **afname = positief** |
@@ -134,7 +134,7 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
 
    | In het bestand | Vervang door | Waar vind je het |
    |---|---|---|
-   | `climate.woonkamer` | je thermostaat | Instellingen → Apparaten & diensten → Entiteiten, zoek op "climate" |
+   | `climate.thermostat_1` | al ingevuld | **Niet** `climate.intergas_xtend_…`: dat entiteit kan alleen uitlezen |
    | `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | meestal al juist | Zoek op "quarter" |
    | `sensor.victron_battery_soc` | DC battery charge | Victron GX |
    | `sensor.victron_grid_power` | somhelper *Victron net totaal* | Teken andersom? Vervang dan in de zon-sensor `-net` door `net`. |
@@ -157,6 +157,13 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
 8. Zet **WP slimme regeling actief** aan.
 
 ## Thermostaat en Xtend instellen
+
+**InComfort-gateway:** een setpoint vanuit Home Assistant wordt een *override* op de thermostaat.
+Schakelt het klokprogramma van de thermostaat naar een volgende stap, dan vervalt die override en
+ziet het pakket dat als handmatige wijziging (pauze van 3 uur). Zet het programma daarom op een
+vaste temperatuur. Gebruik de integratie-optie *legacy setpoint status* alleen als je thermostaat
+de override niet goed terugmeldt.
+
 
 Deze punten zijn advies en niet getest op jouw installatie:
 
@@ -203,7 +210,7 @@ entities:
   - entity: timer.wp_handmatig
   - entity: input_number.wp_basistemperatuur
   - entity: input_boolean.wp_handmatig_wordt_basis
-  - entity: climate.woonkamer
+  - entity: climate.thermostat_1
 ```
 
 ## Alle instellingen

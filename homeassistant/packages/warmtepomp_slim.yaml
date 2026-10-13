@@ -21,7 +21,7 @@
 #     van de thermostaat (OpenTherm).
 #
 # VERVANG VOOR GEBRUIK deze entity-ID's (zoek en vervang in dit hele bestand):
-#   climate.woonkamer                       -> je thermostaat
+#   climate.thermostat_1                       -> je thermostaat
 #   sensor.zonneplan_current_quarter_hourly_electricity_tariff
 #                                           -> Zonneplan-kwartierprijs (HACS-integratie
 #                                              "Zonneplan ONE"; meestal al juist)
@@ -206,7 +206,7 @@ script:
           entity_id: input_number.wp_laatst_ingesteld
         data:
           value: >
-            {{ state_attr('climate.woonkamer', 'temperature') | float(20) }}
+            {{ state_attr('climate.thermostat_1', 'temperature') | float(20) }}
       - action: input_number.set_value
         target:
           entity_id: input_number.wp_voorverwarm_verhoging
@@ -495,25 +495,25 @@ automation:
       - condition: not
         conditions:
           - condition: state
-            entity_id: climate.woonkamer
+            entity_id: climate.thermostat_1
             state:
               - "off"
               - unavailable
               - unknown
       - condition: template
-        value_template: "{{ state_attr('climate.woonkamer', 'temperature') is number }}"
+        value_template: "{{ state_attr('climate.thermostat_1', 'temperature') is number }}"
     variables:
-      thermostaat: climate.woonkamer
+      thermostaat: climate.thermostat_1
       stap_thermostaat: "{{ [states('input_number.wp_thermostaat_stap') | float(0.5), 0.1] | max }}"
       max_stap: "{{ states('input_number.wp_max_stap') | float(0.5) }}"
-      tmin: "{{ state_attr('climate.woonkamer', 'min_temp') | float(5) }}"
-      tmax: "{{ state_attr('climate.woonkamer', 'max_temp') | float(30) }}"
+      tmin: "{{ state_attr('climate.thermostat_1', 'min_temp') | float(5) }}"
+      tmax: "{{ state_attr('climate.thermostat_1', 'max_temp') | float(30) }}"
       doel: >
         {% set basis = states('input_number.wp_basistemperatuur') | float(20) %}
         {% set versch = state_attr('sensor.wp_regelmodus', 'verschuiving') | float(0) %}
         {% set d = ((basis + versch) / stap_thermostaat) | round(0) * stap_thermostaat %}
         {{ ([[d, tmin] | max, tmax] | min) | round(1) }}
-      huidig: "{{ state_attr('climate.woonkamer', 'temperature') | float }}"
+      huidig: "{{ state_attr('climate.thermostat_1', 'temperature') | float }}"
       nieuw: >
         {% set delta = doel - huidig %}
         {% set delta = [[delta, max_stap] | min, -max_stap] | max %}
@@ -544,7 +544,7 @@ automation:
           timestamp: "{{ now().timestamp() }}"
       - action: climate.set_temperature
         target:
-          entity_id: climate.woonkamer
+          entity_id: climate.thermostat_1
         data:
           temperature: "{{ nieuw }}"
 
@@ -561,7 +561,7 @@ automation:
     mode: restart
     triggers:
       - trigger: state
-        entity_id: climate.woonkamer
+        entity_id: climate.thermostat_1
         attribute: temperature
     conditions:
       - condition: state
