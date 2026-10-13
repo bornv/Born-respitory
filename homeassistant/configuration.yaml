@@ -1,0 +1,15 @@
+# Standaardset integraties van Home Assistant. Niet verwijderen.
+default_config:
+
+# Thema's uit de map themes laden
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Bestanden die de UI-editors gebruiken
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Packages (o.a. warmtepomp_slim.yaml) uit de map Packages laden (let op hoofdletter P)
+homeassistant:
+  packages: !include_dir_named Packages

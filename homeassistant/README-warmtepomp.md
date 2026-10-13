@@ -127,7 +127,7 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
    Voeg daarna onder `homeassistant:` het volgende toe (staat er al `packages:`, dan sla je deze stap over):
    ```yaml
    homeassistant:
-     packages: !include_dir_named packages
+     packages: !include_dir_named Packages
    ```
 3. Maak de map `packages` aan in `/config` en zet `warmtepomp_slim.yaml` daarin.
 4. **Entity-ID's zijn al ingevuld** voor jouw installatie (zie [Benodigde waarden](#benodigde-waarden)).
