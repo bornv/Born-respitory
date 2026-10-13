@@ -211,5 +211,5 @@ Met `FabricGitSource` volgt de extensie de taal: `.py` (PySpark/Python), `.sql` 
 | `.platform`-wijziging komt niet door | `?updateMetadata=true` ontbreekt | Parameter toevoegen |
 | Lege of onvolledige definitie | `202` niet gepold | Operatie pollen, dan `/result` ophalen |
 | Rapport-update geweigerd | `byPath`-verwijzing in `definition.pbir` | `byConnection` gebruiken |
-| Warehouse-definitie niet op te halen | Warehouse heeft geen definitie-API | Andere route (bijv. SQL) gebruiken |
+| Warehouse-definitie niet op te halen | Warehouse heeft geen definitie-API | Niet via definities werken; bij vergelijken alleen op aanwezigheid letten |
 | Body afgekapt of leeg | Shell-escaping / PowerShell inline body | Body naar bestand, `--body @bestand.json` |
