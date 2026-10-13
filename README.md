@@ -32,7 +32,7 @@ Verschillen met het origineel:
 
 ### data-goblin/power-bi-agentic-development (GPL-3.0)
 
-De vier aanvullende skills zijn Nederlandse bewerkingen van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (commit `4936264`, 11 oktober 2026), © Kurt Buhler, GPL-3.0. Daardoor vallen deze bewerkingen ook onder GPL-3.0; elke map bevat de volledige licentietekst in `LICENSE`. Voor eigen en intern gebruik heeft dat geen gevolgen. Geef je zo'n skillmap aan anderen, lever dan de licentie en de (bewerkte) bron mee. Ze bevatten bewust alleen wat de Microsoft-skills niet dekken; overlappende onderwerpen verwijzen naar de `fabric-*`-skills.
+De vier aanvullende skills zijn Nederlandse bewerkingen van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (commit `4936264`, 11 oktober 2026), auteur Kurt Buhler (data-goblins.com), GPL-3.0. Daardoor vallen deze bewerkingen ook onder GPL-3.0; elke map bevat de volledige licentietekst in `LICENSE`. Voor eigen en intern gebruik heeft dat geen gevolgen. Geef je zo'n skillmap aan anderen, lever dan de licentie en de (bewerkte) bron mee. Ze bevatten bewust alleen wat de Microsoft-skills niet dekken; overlappende onderwerpen verwijzen naar de `fabric-*`-skills.
 
 ## Installeren
 
