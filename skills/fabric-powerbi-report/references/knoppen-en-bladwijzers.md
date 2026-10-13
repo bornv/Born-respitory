@@ -57,14 +57,10 @@ Een `actionButton` heeft **geen datarollen**: alles is opmaak (`objects`) plus d
     "visualContainerObjects": {
       "background": [ { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } } ],
       "border":     [ { "properties": { "show": { "expr": { "Literal": { "Value": "false" } } } } } ],
-      "visualLink": [
-        {
-          "properties": {
-            "show": { "expr": { "Literal": { "Value": "true" } } },
-            "type": { "expr": { "Literal": { "Value": "'<ActionType>'" } } }
-          }
-        }
-      ]
+      "visualLink": [ { "properties": {
+        "show": { "expr": { "Literal": { "Value": "true" } } },
+        "type": { "expr": { "Literal": { "Value": "'<ActionType>'" } } }
+      } } ]
     },
     "drillFilterOtherVisuals": true
   },
@@ -123,14 +119,7 @@ Opmaakobjecten van een knop gebruiken **twee entries**:
 1. Entry zonder selector: alleen de schakelaar `show` (geldt voor alle statussen).
 2. Entry met `{ "id": "<status>" }`: de opmaak voor die status.
 
-```json
-"fill": [
-  { "properties": { "show": { "expr": { "Literal": { "Value": "true" } } } } },
-  { "properties": { "fillColor": { "solid": { "color": { "expr": { "Literal": { "Value": "'#0078D4'" } } } } } }, "selector": { "id": "default" } }
-]
-```
-
-Alles in één entry (met of zonder selector) = opmaak valt stil weg; de knop toont standaardwaarden.
+Zie `fill`, `text` en `icon` in het [basissjabloon](#knop-basissjabloon). Alles in één entry (met of zonder selector) = opmaak valt stil weg; de knop toont standaardwaarden.
 
 | Object | Afwijking |
 |---|---|
@@ -209,22 +198,18 @@ Een knoplabel is één regel tekst die niet scrollt, krimpt of afbreekt: te smal
 
 ## Veelgebruikte knoppen
 
+### Terugknop
+
+Elke drillthrough-doelpagina krijgt een `actionButton` met `type: 'Back'` (zie [Actietypes](#actietypes)). Test hem door vanaf de bronpagina via een geselecteerd datapunt naar de doelpagina te gaan en dan op de knop te klikken.
+
+### Overzicht
+
 | Knop | `type` | Let op |
 |---|---|---|
-| Terugknop op drillthrough-pagina | `'Back'` | Elke drillthrough-doelpagina hoort er één te hebben; test via een datapunt op de bronpagina |
+| Terugknop | `'Back'` | Zie hierboven |
 | Navigatiebalk | `'PageNavigation'` | Eén knop per pagina, horizontaal, elk met eigen `navigationSection` |
 | Slicers wissen | `'ClearAllSlicers'` | Geldt voor de huidige pagina |
 | Drillthrough | `'Drillthrough'` | `drillthroughSection` = pagina-ID van de doelpagina |
-
-```json
-"visualLink": [{
-  "properties": {
-    "show": { "expr": { "Literal": { "Value": "true" } } },
-    "type": { "expr": { "Literal": { "Value": "'ClearAllSlicers'" } } },
-    "tooltip": { "expr": { "Literal": { "Value": "'Alle slicers op deze pagina wissen'" } } }
-  }
-}]
-```
 
 Gebruik een `shape` met actie alleen als je geen knopstatussen (hover/selected/disabled) nodig hebt; anders `actionButton`.
 
@@ -249,15 +234,8 @@ Roept een gepubliceerde Fabric **User Data Function** aan (translytical task flo
           "name": "<function_name>",
           "autoRefresh": true,
           "parameters": [
-            {
-              "name": "<param_name>",
-              "dataType": "string",
-              "isOptional": false,
-              "defaultValue": null,
-              "type": "SlicerParameter",
-              "slicer": "<slicer_visual_name>",
-              "autoClear": false
-            }
+            { "name": "<param_name>", "dataType": "string", "isOptional": false, "defaultValue": null,
+              "type": "SlicerParameter", "slicer": "<slicer_visual_name>", "autoClear": false }
           ]
         }
       }
@@ -300,30 +278,17 @@ definition/
 
 Bestandsnaam en `name` moeten gelijk zijn: `32e6a5dec73817815177.bookmark.json` ↔ `"name": "32e6a5dec73817815177"`.
 
-**Index zonder groep:**
+**Index** (één losse bladwijzer en één groep):
 
 ```json
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
   "items": [
-    { "name": "32e6a5dec73817815177" }
-  ]
-}
-```
-
-**Index met groep:**
-
-```json
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
-  "items": [
+    { "name": "a1c94e07d2b35f6e8812" },
     {
       "displayName": "View selector",
       "name": "b95e490160978ca1c3d9",
-      "children": [
-        "32e6a5dec73817815177",
-        "b7082154158c6ccc84be"
-      ]
+      "children": [ "32e6a5dec73817815177", "b7082154158c6ccc84be" ]
     }
   ]
 }
@@ -335,25 +300,7 @@ Bestandsnaam en `name` moeten gelijk zijn: `32e6a5dec73817815177.bookmark.json` 
 
 ## Bladwijzerstatus en opties
 
-```json
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
-  "displayName": "Show chart",
-  "name": "32e6a5dec73817815177",
-  "options": {
-    "targetVisualNames": [],
-    "suppressData": true,
-    "suppressDisplay": false,
-    "suppressActiveSection": true,
-    "applyOnlyToTargetVisuals": false
-  },
-  "explorationState": {
-    "version": "1.3",
-    "activeSection": "fb1f349df66655761237",
-    "sections": {}
-  }
-}
-```
+Een bladwijzerbestand heeft `$schema` (`.../item/report/definition/bookmark/2.1.0/schema.json` als er nog geen bladwijzers zijn), `displayName`, `name`, `options` en `explorationState` (`version: "1.3"`, `activeSection`, `sections`). Volledig voorbeeld: [Tonen/verbergen en grafiek wisselen](#tonenverbergen-en-grafiek-wisselen).
 
 PBIR slaat het **omgekeerde** op van de meeste vinkjes in Desktop:
 
@@ -388,10 +335,7 @@ Zichtbaarheid staat onder `explorationState.sections.<pageName>.visualContainers
   "displayName": "Show chart",
   "name": "32e6a5dec73817815177",
   "options": {
-    "targetVisualNames": [
-      "f0b7a9e5317ef5d3cb16",
-      "9f489283587461417621"
-    ],
+    "targetVisualNames": [ "f0b7a9e5317ef5d3cb16", "9f489283587461417621" ],
     "suppressData": true,
     "suppressDisplay": false,
     "suppressActiveSection": true,
@@ -403,16 +347,8 @@ Zichtbaarheid staat onder `explorationState.sections.<pageName>.visualContainers
     "sections": {
       "fb1f349df66655761237": {
         "visualContainers": {
-          "f0b7a9e5317ef5d3cb16": {
-            "singleVisual": {}
-          },
-          "9f489283587461417621": {
-            "singleVisual": {
-              "display": {
-                "mode": "hidden"
-              }
-            }
-          }
+          "f0b7a9e5317ef5d3cb16": { "singleVisual": {} },
+          "9f489283587461417621": { "singleVisual": { "display": { "mode": "hidden" } } }
         }
       }
     }
@@ -449,22 +385,12 @@ Neem `name`, `type`, expressie en predicaat over van het bijbehorende item in `f
       "filter": {
         "Version": 2,
         "From": [ { "Name": "c", "Entity": "Company", "Type": 0 } ],
-        "Where": [
-          {
-            "Condition": {
-              "In": {
-                "Expressions": [
-                  { "Column": { "Expression": { "SourceRef": { "Source": "c" } }, "Property": "Company" } }
-                ],
-                "Values": [ [ { "Literal": { "Value": "'Contoso'" } } ] ]
-              }
-            }
-          }
-        ]
+        "Where": [ { "Condition": { "In": {
+          "Expressions": [ { "Column": { "Expression": { "SourceRef": { "Source": "c" } }, "Property": "Company" } } ],
+          "Values": [ [ { "Literal": { "Value": "'Contoso'" } } ] ]
+        } } } ]
       },
-      "expression": {
-        "Column": { "Expression": { "SourceRef": { "Entity": "Company" } }, "Property": "Company" }
-      },
+      "expression": { "Column": { "Expression": { "SourceRef": { "Entity": "Company" } }, "Property": "Company" } },
       "howCreated": 1
     }
   ]
@@ -482,17 +408,13 @@ Neem `name`, `type`, expressie en predicaat over van het bijbehorende item in `f
 ## Knop naar bladwijzer en bladwijzernavigator
 
 ```json
-"visualContainerObjects": {
-  "visualLink": [
-    {
-      "properties": {
-        "show": { "expr": { "Literal": { "Value": "true" } } },
-        "type": { "expr": { "Literal": { "Value": "'Bookmark'" } } },
-        "bookmark": { "expr": { "Literal": { "Value": "'32e6a5dec73817815177'" } } }
-      }
-    }
-  ]
-}
+"visualLink": [{
+  "properties": {
+    "show": { "expr": { "Literal": { "Value": "true" } } },
+    "type": { "expr": { "Literal": { "Value": "'Bookmark'" } } },
+    "bookmark": { "expr": { "Literal": { "Value": "'32e6a5dec73817815177'" } } }
+  }
+}]
 ```
 
 Doel = bladwijzer-`name`, niet `displayName` (anders blijft de knop uitgeschakeld).
@@ -516,20 +438,7 @@ Doel = bladwijzer-`name`, niet `displayName` (anders blijft de knop uitgeschakel
 8. Elke knop aanklikken (in leesweergave of met Ctrl+klik) en controleren dat hij actief is.
 9. Opslaan, opnieuw openen en de ronde herhalen (Desktop normaliseert soms bij opslaan).
 
-Heb je de CLI, dan meldt `powerbi-report-author validate "<Rapport>.Report"` bladwijzerfouten met vaste codes:
-
-| Code | Betekenis |
-|---|---|
-| `PBIR_BOOKMARKS_METADATA_MISSING` | Bladwijzerbestanden zonder `bookmarks.json` |
-| `PBIR_BOOKMARK_NAME_FILE_MISMATCH` | `name` ≠ bestandsnaam |
-| `PBIR_BOOKMARK_NAME_DUPLICATE` | Meerdere bestanden met dezelfde `name` |
-| `PBIR_BOOKMARK_INDEX_REF_MISSING` | Index/groep verwijst naar ontbrekende bladwijzer |
-| `PBIR_BOOKMARK_INDEX_DUPLICATE_REFERENCE` | Bladwijzer meer dan eens in de index |
-| `PBIR_BOOKMARK_FILE_NOT_INDEXED` | Bladwijzerbestand niet in de index |
-| `PBIR_BOOKMARK_PAGE_REF_MISSING` | Status verwijst naar ontbrekende pagina |
-| `PBIR_BOOKMARK_VISUAL_REF_MISSING` | Doel of sectie verwijst naar ontbrekende visual |
-| `PBIR_BOOKMARK_ACTION_TARGET_MISSING` | Bladwijzeractie zonder doel |
-| `PBIR_BOOKMARK_ACTION_REF_MISSING` | Bladwijzeractie naar ontbrekende bladwijzer |
+Heb je de CLI, dan controleert `powerbi-report-author validate "<Rapport>.Report"` ook bladwijzers: ontbrekende `bookmarks.json`, `name` ≠ bestandsnaam, dubbele namen, ontbrekende of dubbele indexverwijzingen, niet-geïndexeerde bestanden, verwijzingen naar ontbrekende pagina's/visuals en knopacties zonder (geldig) doel (codes `PBIR_BOOKMARK_*`).
 
 ## Problemen
 

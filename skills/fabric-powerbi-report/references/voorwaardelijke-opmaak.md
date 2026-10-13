@@ -91,7 +91,7 @@ Rood/groen niet gebruiken voor pure hoeveelheden.
 ```json
 {
   "properties": { "fill": { "solid": { "color": { "expr": { "FillRule": {
-    "Input": { "Measure": { "Expression": { "SourceRef": { "Entity": "Deliveries" } }, "Property": "Late Deliveries" } } },
+    "Input": { "Measure": { "Expression": { "SourceRef": { "Entity": "Deliveries" } }, "Property": "Late Deliveries" } },
     "FillRule": { "linearGradient2": {
       "min": { "color": { "Literal": { "Value": "'#D0E8F5'" } } },
       "max": { "color": { "Literal": { "Value": "'#56B4E9'" } } },
