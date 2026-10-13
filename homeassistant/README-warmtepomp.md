@@ -42,12 +42,74 @@ iets te vaak voor, maar nooit te weinig.
 |---|---|---|
 | Thermostaat als `climate.*` met instelbaar setpoint | bijv. Intergas gateway (InComfort), OpenTherm Gateway of je eigen thermostaat-integratie | **Zelf invullen** |
 | Zonneplan-kwartierprijzen met `forecast`-attribuut | HACS: [Zonneplan ONE (fsaris)](https://github.com/fsaris/home-assistant-zonneplan-one) | Gecontroleerd in de broncode |
-| Victron SoC, netvermogen, PV-vermogen, huisverbruik | bijv. Victron GX via Modbus TCP of MQTT | **Zelf invullen** |
+| Victron SoC, netvermogen, PV-vermogen, huisverbruik | Victron GX (officieel, HA 2026.5+) | Zie [Benodigde waarden](#benodigde-waarden) |
 
 De Xtend-integraties die ik vond ([pepijnnichting/intergas-xtend](https://github.com/pepijnnichting/intergas-xtend),
 [svdlinde42/ha-intergas-xtend-local-ap](https://github.com/svdlinde42/ha-intergas-xtend-local-ap))
 zijn vooral uitleesintegraties. Daarom loopt de sturing via de thermostaat. Een Xtend-integratie is
 handig om COP, compressor en ketelinzet te volgen, maar is niet nodig.
+
+## Benodigde waarden
+
+Het pakket gebruikt zeven waarden van buitenaf. De Victron-namen hieronder zijn de namen uit de
+officiële **Victron GX**-integratie (Home Assistant 2026.5+, via MQTT op de Cerbo GX). Ik heb ze
+gecontroleerd in de broncode van de integratie (`victron-mqtt` 2026.9.5). De entity-ID's zelf
+hangen af van de apparaatnaam in jouw installatie. Zoek dus op de **weergavenaam** onder
+Instellingen → Apparaten & diensten → Victron GX → Entiteiten.
+
+| Placeholder in het pakket | Wat | Bron in Home Assistant | Eenheid / teken |
+|---|---|---|---|
+| `climate.woonkamer` | Thermostaat | Je thermostaat-integratie | Attributen `temperature`, `min_temp`, `max_temp` |
+| `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | Kwartierprijs + `forecast` | Zonneplan ONE (HACS) → *Current quarter hourly electricity tariff* | €/kWh |
+| `sensor.victron_battery_soc` | Batterij-SoC | Victron GX → **DC battery charge** | % |
+| `sensor.victron_grid_power` | Netvermogen totaal | Victron GX → **Grid power L1** (+ L2 + L3) | W, **afname = positief** |
+| `sensor.victron_pv_power` | PV totaal | Victron GX → **PV power** (DC) + **PV on grid power L1–L3** + **PV on output power L1–L3** | W |
+| `sensor.victron_ac_consumption` | Huisverbruik totaal, incl. warmtepomp | Victron GX → **Consumption power L1** (+ L2 + L3) | W |
+| `sensor.victron_active_soc_limit` | Ondergrens die Victron nu hanteert (optioneel) | Victron GX → **Active SoC limit** | % |
+
+### Per fase optellen
+
+De Victron GX-integratie levert netvermogen, verbruik en AC-PV **per fase**. Er is geen
+totaalsensor. Maak daarom per totaal een somhelper:
+
+1. Instellingen → Apparaten & diensten → **Helpers** → **Helper aanmaken** →
+   **Combineer de status van meerdere sensoren** (*Combine the state of several sensors*).
+2. Vul in:
+
+   | Helpernaam | Type | Invoersensoren |
+   |---|---|---|
+   | `Victron net totaal` | Som | Grid power L1, L2, L3 (wat je hebt) |
+   | `Victron verbruik totaal` | Som | Consumption power L1, L2, L3 |
+   | `Victron PV totaal` | Som | PV power (DC), PV on grid power L1–L3, PV on output power L1–L3 (alleen wat bij jou bestaat) |
+
+3. Gebruik de entity-ID's van deze helpers in het pakket.
+
+Heb je één fase en maar één PV-bron? Dan kun je de Victron-sensor direct gebruiken.
+
+**Let op:** een somhelper wordt `unknown` zodra één invoer `unknown` is. Neem daarom alleen
+sensoren op die bij jou echt een waarde hebben (PV on output bestaat bijvoorbeeld alleen bij een
+PV-omvormer op AC-out).
+
+### Waarom deze sensoren
+
+- **Consumption power** (`Ac/Consumption`) is het totale AC-verbruik op de in- én uitgang van de
+  Multi/Quattro. De warmtepomp telt dus mee, waar hij ook is aangesloten. Gebruik **niet**
+  *AC loads* of *Critical loads*: dat is maar één van de twee.
+- **DC battery charge** is de SoC die het Victron-systeem zelf gebruikt (`Dc/Battery/Soc`).
+- **Active SoC limit** is de ondergrens die ESS op dit moment echt toepast (minimum-SoC of
+  BatteryLife). Het pakket neemt de hoogste van deze waarde en **WP minimale SoC**. Ontbreekt de
+  sensor, dan geldt alleen de helper.
+- **Bruikbare batterijcapaciteit (kWh)** levert Victron niet als kWh. Die vul je zelf in.
+
+### Controleren in Home Assistant
+
+Plak [`checks/warmtepomp_invoercheck.jinja`](checks/warmtepomp_invoercheck.jinja) in
+**Ontwikkelhulpmiddelen → Template** (sinds 2026.8: **Hulpmiddelen → Template**), met dezelfde
+entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check kijkt naar:
+- of elke sensor bestaat;
+- of de eenheid klopt (W, niet kW);
+- of de Zonneplan-forecast leesbaar is en in kwartieren komt;
+- of het teken van het netvermogen klopt (afname = positief).
 
 ## Installatie
 
@@ -65,10 +127,13 @@ handig om COP, compressor en ketelinzet te volgen, maar is niet nodig.
    |---|---|---|
    | `climate.woonkamer` | je thermostaat | Instellingen → Apparaten & diensten → Entiteiten, zoek op "climate" |
    | `sensor.zonneplan_current_quarter_hourly_electricity_tariff` | meestal al juist | Zoek op "quarter" |
-   | `sensor.victron_battery_soc` | Victron batterij-SoC (%) | |
-   | `sensor.victron_grid_power` | netvermogen (W, **+ = afname**) | Is het teken bij jou andersom? Vervang dan in de zon-sensor `-net` door `net`. |
-   | `sensor.victron_pv_power` | totaal PV-vermogen (W) | Meerdere PV-bronnen? Maak eerst een *Combine the state of several sensors*-helper (som). |
-   | `sensor.victron_ac_consumption` | totaal huisverbruik (W), inclusief de warmtepomp | |
+   | `sensor.victron_battery_soc` | DC battery charge | Victron GX |
+   | `sensor.victron_grid_power` | somhelper *Victron net totaal* | Teken andersom? Vervang dan in de zon-sensor `-net` door `net`. |
+   | `sensor.victron_pv_power` | somhelper *Victron PV totaal* | |
+   | `sensor.victron_ac_consumption` | somhelper *Victron verbruik totaal* | |
+   | `sensor.victron_active_soc_limit` | Active SoC limit | Optioneel |
+
+   Draai daarna de [invoercheck](#controleren-in-home-assistant).
 
 5. Ga naar **Ontwikkelhulpmiddelen → YAML** (sinds 2026.8: **Hulpmiddelen → YAML**) →
    **Configuratie controleren**. Pas als die groen is: **Herstarten**.
@@ -77,7 +142,7 @@ handig om COP, compressor en ketelinzet te volgen, maar is niet nodig.
 7. Controleer en pas aan:
    - **WP basistemperatuur**: staat op 20,0 °C;
    - **WP bruikbare batterijcapaciteit**: bruikbare kWh van je Victron-batterij;
-   - **WP minimale SoC**: dezelfde waarde als de minimale SoC in Victron ESS;
+   - **WP minimale SoC**: dezelfde waarde als de minimale SoC in Victron ESS (met *Active SoC limit* gekoppeld neemt het pakket automatisch de hoogste);
    - **WP stapgrootte thermostaat**: 0,5 of 0,1, afhankelijk van wat je thermostaat accepteert.
 8. Zet **WP slimme regeling actief** aan.
 

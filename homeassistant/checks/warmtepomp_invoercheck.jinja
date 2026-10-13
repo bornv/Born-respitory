@@ -1,0 +1,61 @@
+{# Plak dit in Ontwikkelhulpmiddelen → Template (sinds 2026.8: Hulpmiddelen → Template).
+   Pas de entity-ID's hieronder aan zodat ze gelijk zijn aan die in warmtepomp_slim.yaml. #}
+{% set e = {
+  'thermostaat': 'climate.woonkamer',
+  'prijs': 'sensor.zonneplan_current_quarter_hourly_electricity_tariff',
+  'soc': 'sensor.victron_battery_soc',
+  'net': 'sensor.victron_grid_power',
+  'pv': 'sensor.victron_pv_power',
+  'verbruik': 'sensor.victron_ac_consumption',
+  'soc_limiet': 'sensor.victron_active_soc_limit',
+} %}
+{% set ok, fout, let = '✅', '❌', '⚠️' %}
+== Thermostaat ({{ e.thermostaat }}) ==
+{% if not has_value(e.thermostaat) -%}
+{{ fout }} Niet gevonden of niet beschikbaar
+{%- else -%}
+{{ ok }} Stand: {{ states(e.thermostaat) }} (modi: {{ state_attr(e.thermostaat, 'hvac_modes') }})
+{{ ok if state_attr(e.thermostaat, 'temperature') is number else fout }} Setpoint: {{ state_attr(e.thermostaat, 'temperature') }} °C
+{{ ok if state_attr(e.thermostaat, 'current_temperature') is number else let }} Kamertemperatuur: {{ state_attr(e.thermostaat, 'current_temperature') }} °C
+{{ ok if state_attr(e.thermostaat, 'target_temp_step') is number else let }} Stapgrootte: {{ state_attr(e.thermostaat, 'target_temp_step') or 'niet gemeld → zet WP stapgrootte thermostaat zelf (0,5 of 0,1)' }}
+{{ ok }} Bereik: {{ state_attr(e.thermostaat, 'min_temp') }} – {{ state_attr(e.thermostaat, 'max_temp') }} °C
+{%- endif %}
+
+== Zonneplan ({{ e.prijs }}) ==
+{% set fc = state_attr(e.prijs, 'forecast') -%}
+{% if not has_value(e.prijs) -%}
+{{ fout }} Niet gevonden of niet beschikbaar
+{%- elif fc is not iterable or fc is string or fc | count == 0 -%}
+{{ fout }} Geen 'forecast'-attribuut. Gebruik de HACS-integratie Zonneplan ONE (fsaris).
+{%- else -%}
+{% set eerste = fc[0] %}{% set laatste = fc[-1] -%}
+{{ ok }} Prijs nu: {{ states(e.prijs) }} {{ state_attr(e.prijs, 'unit_of_measurement') }}
+{{ ok if fc | count >= 8 else let }} Forecast: {{ fc | count }} blokken, {{ as_datetime(eerste.start_date | string) }} t/m {{ as_datetime(laatste.end_date | string) }}
+{% set duur = (as_datetime(eerste.end_date | string) - as_datetime(eerste.start_date | string)).total_seconds() / 60 -%}
+{{ ok if duur == 15 else let }} Blokduur: {{ duur | int }} min{{ '' if duur == 15 else ' (verwacht 15)' }}
+{% set p = eerste.price_tax_included.amount / 10000000 if eerste.price_tax_included is defined else none -%}
+{{ ok if p is number and -1 < p < 2 else fout }} Eerste prijs omgerekend: {{ p | round(4) if p is number else 'onleesbaar' }} €/kWh
+{%- endif %}
+
+== Victron ==
+{% for key, label, unit in [('soc', 'Batterij SoC', '%'), ('net', 'Netvermogen', 'W'), ('pv', 'PV-vermogen totaal', 'W'), ('verbruik', 'Huisverbruik totaal', 'W'), ('soc_limiet', 'Active SoC limit (optioneel)', '%')] -%}
+{% set id = e[key] %}{% set u = state_attr(id, 'unit_of_measurement') -%}
+{% if not has_value(id) -%}
+{{ let if key == 'soc_limiet' else fout }} {{ label }} ({{ id }}): {{ states(id) }}
+{% else -%}
+{{ ok if u == unit else fout }} {{ label }} ({{ id }}): {{ states(id) }} {{ u }}{{ '' if u == unit else ' → eenheid moet ' ~ unit ~ ' zijn' }}
+{% endif -%}
+{% endfor %}
+== Plausibiliteit ==
+{% set soc = states(e.soc) | float(-1) -%}
+{{ ok if 0 <= soc <= 100 else fout }} SoC tussen 0 en 100 %
+{% set v = states(e.verbruik) | float(-1) -%}
+{{ ok if v > 0 else fout }} Huisverbruik is positief (incl. warmtepomp)
+{% set pv = states(e.pv) | float(0) %}{% set net = states(e.net) | float(0) -%}
+{% if pv < 50 and net < -100 -%}
+{{ let }} Geen zon maar net is negatief: of de batterij levert terug (Dynamic ESS), of het teken is omgedraaid. Afname moet POSITIEF zijn.
+{%- elif pv < 50 and net > 0 -%}
+{{ ok }} Geen zon en net positief: teken klopt (afname = positief)
+{%- else -%}
+{{ let }} Teken van het netvermogen niet automatisch te bepalen nu er zon is. Controleer 's avonds: afname moet POSITIEF zijn.
+{%- endif %}

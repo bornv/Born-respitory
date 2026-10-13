@@ -29,6 +29,10 @@
 #   sensor.victron_grid_power               -> netvermogen in W (+ = afname, - = teruglevering)
 #   sensor.victron_pv_power                 -> totaal PV-vermogen in W
 #   sensor.victron_ac_consumption           -> totaal huisverbruik in W (incl. warmtepomp)
+#   sensor.victron_active_soc_limit         -> Victron 'Active SoC limit' (%); optioneel,
+#                                              ontbreekt hij, dan geldt 'WP minimale SoC'
+#   Welke Victron-sensoren je precies nodig hebt en hoe je per fase optelt:
+#   zie homeassistant/README-warmtepomp.md, sectie 'Benodigde waarden'.
 #
 # Installatie: zie homeassistant/README-warmtepomp.md
 # =============================================================================
@@ -342,6 +346,7 @@ template:
           - input_number.wp_min_prijsverschil
           - input_number.wp_batterij_capaciteit
           - input_number.wp_batterij_min_soc
+          - sensor.victron_active_soc_limit
       - trigger: homeassistant
         event: start
       - trigger: event
@@ -391,7 +396,10 @@ template:
           {% endfor %}
           {% set benodigd = ns2.uren * verbruik_w / 1000 %}
           {% set soc = states('sensor.victron_battery_soc') | float(0) %}
-          {% set min_soc = states('input_number.wp_batterij_min_soc') | float(20) %}
+          {# Victron 'Active SoC limit' is de ondergrens die Victron nu echt hanteert
+             (ESS minimum of BatteryLife). Ontbreekt die, dan geldt de helper. #}
+          {% set min_soc = [states('input_number.wp_batterij_min_soc') | float(20),
+                            states('sensor.victron_active_soc_limit') | float(0)] | max %}
           {% set cap = states('input_number.wp_batterij_capaciteit') | float(0) %}
           {% set beschikbaar = ([soc - min_soc, 0] | max) / 100 * cap %}
           {% set batterij_dekt_straks = beschikbaar >= benodigd %}
