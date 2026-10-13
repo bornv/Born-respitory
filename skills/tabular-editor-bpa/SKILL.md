@@ -237,7 +237,7 @@ Belangrijk bij `te`: wijzigingen zijn een dry run tot `--save`, `deploy`/`refres
 
 ## Documentatie
 
-- Officiële docs: https://docs.tabulareditor.com/ (BPA: `/getting-started/bpa.html`, `/features/views/bpa-view.html`, `/features/using-bpa-sample-rules-expressions.html`; scripting: `/te2/Advanced-Scripting.html`, `/features/CSharpScripts/csharp-script-library.html`).
+- Officiële docs: https://docs.tabulareditor.com/ (BPA: `/getting-started/bpa.html`, `/features/views/bpa-view.html`, `/features/using-bpa-sample-rules-expressions.html`; scripting: `/how-tos/Advanced-Scripting.html`, `/features/CSharpScripts/csharp-script-library.html`).
 - Regelsets: https://github.com/TabularEditor/BestPracticeRules en https://github.com/microsoft/Analysis-Services/tree/master/BestPracticeRules.
 - Na een reorganisatie geven oude doc-URL's 404; zie de redirecttabel en de uitleg van `.tmuo` en `Preferences.json` in [references/documentatie.md](references/documentatie.md).
 

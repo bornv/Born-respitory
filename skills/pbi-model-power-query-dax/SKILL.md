@@ -1,6 +1,6 @@
 ---
 name: pbi-model-power-query-dax
-description: "Praktijkregels voor Power BI semantische modellen: Power Query M in importpartities (query folding, volgorde van stappen, parameters, RangeStart/RangeEnd, valideren en stap-voor-stap debuggen), DAX-codeconventies en UDF's, een model opruimen/organiseren (display folders, naamgeving, beschrijvingen, verbergen, sortering, format strings), lineage/impactanalyse vóór wijzigingen en refreshstrategie plus troubleshooting. Gebruik bij Power Query, M, query folding, View Native Query, DAX, meting, measure optimaliseren, model opruimen, model organiseren, display folders, naamgeving, lineage, impactanalyse, downstream rapporten, refresh mislukt, vernieuwen mislukt, incremental refresh, dataOnly/calculate. Niet voor: DAX-performance met traces en patronencatalogus, TMDL en refresh via REST (fabric-semantic-model); Dataflow Gen2 en algemene M-taal (fabric-dataflows); rapportvisuals (fabric-powerbi-report)."
+description: "Praktijkregels voor Power BI semantische modellen: Power Query M in importpartities (query folding, stapvolgorde, parameters, RangeStart/RangeEnd, valideren, debuggen), DAX-codeconventies en UDF's, een model opruimen/organiseren (display folders, naamgeving, beschrijvingen, verbergen, sortering, format strings), lineage/impactanalyse vóór wijzigingen en refreshstrategie plus troubleshooting. Gebruik bij Power Query, M, query folding, View Native Query, DAX, meting, measure optimaliseren, model opruimen, model organiseren, display folders, naamgeving, lineage, impactanalyse, downstream rapporten, refresh mislukt, vernieuwen mislukt, incremental refresh, dataOnly/calculate. Niet voor: DAX-performance met traces en patronencatalogus, TMDL en refresh via REST (fabric-semantic-model); Dataflow Gen2 en algemene M-taal (fabric-dataflows); rapportvisuals (fabric-powerbi-report)."
 ---
 
 # Power BI-model: Power Query, DAX, organiseren en refresh
@@ -182,6 +182,8 @@ Snelle foutentabel (volledig in [refresh.md](references/refresh.md#troubleshooti
 | Gedrosseld | Te veel gelijktijdige refreshes | Schema's spreiden, buiten piekuren |
 
 Isoleer een falende tabel door tabellen één voor één te verversen: eerst dimensies, dan feiten, dan `calculate`.
+
+Groot model (Premium/Fabric)? Splits in twee fasen: `dataOnly` met `partialBatch` ([examples/refresh-fase1-dataonly.json](examples/refresh-fase1-dataonly.json)), daarna `calculate` met `transactional` ([examples/refresh-fase2-calculate.json](examples/refresh-fase2-calculate.json)). Bij `partialBatch` moet `applyRefreshPolicy` op `false`.
 
 ## Controle voor oplevering
 
