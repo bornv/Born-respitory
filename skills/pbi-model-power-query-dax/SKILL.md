@@ -5,7 +5,7 @@ description: "Praktijkregels voor Power BI semantische modellen: Power Query M i
 
 # Power BI-model: Power Query, DAX, organiseren en refresh
 
-> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (© Kurt Buhler, GPL-3.0), skills `power-query`, `dax`, `organize-semantic-model`, `lineage-analysis`, `refresh-semantic-model`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
+> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (auteur Kurt Buhler, GPL-3.0), skills `power-query`, `dax`, `organize-semantic-model`, `lineage-analysis`, `refresh-semantic-model`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
 > De DAX-optimalisatieskill van de bron is bijgedragen door [Justin Martin](https://daxnoob.blog).
 
 Deze skill bundelt de praktijkregels die je nodig hebt rond een bestaand semantisch model: de M-code in de importpartities, nette DAX, een model dat klaar is voor rapportbouwers, Excel en Copilot, weten wat er stukgaat vóór je iets wijzigt, en een refresh die slaagt. Claude levert M, DAX, C#-scripts voor Tabular Editor en commando's; **jij** voert ze uit in Power BI Desktop, Tabular Editor of een terminal.
@@ -76,7 +76,7 @@ Opslaan in het model vangt syntaxfouten (`let`/`in`, onbekende stapnaam, ongeldi
 
 ## DAX
 
-Voor DAX-regels in het algemeen en voor performance-tuning met server timings (baseline, tiers, patronen DAX001–DAX021, QRY, MDL, DL) is **fabric-semantic-model** leidend (`dax-richtlijnen.md`, `dax-performance.md`, `dax-performance-patronen.md`). Die catalogus komt uit dezelfde bijdrage van Justin Martin; herhaal hem hier niet.
+Voor DAX-regels in het algemeen en voor performance-tuning met server timings (baseline, tiers, patronen DAX001–DAX021, QRY, MDL, DL) is **fabric-semantic-model** leidend (`dax-richtlijnen.md`, `dax-performance.md`, `dax-performance-patronen.md`). Daar staat dezelfde catalogus (tiers en patroon-ID's) die ook de `dax`-skill van de bron gebruikt; herhaal hem hier niet.
 
 Wat deze skill toevoegt (details in [dax-code-en-udfs.md](references/dax-code-en-udfs.md)):
 

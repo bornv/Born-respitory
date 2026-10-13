@@ -132,7 +132,7 @@ In TMDL schrijf je een beschrijving als `///`-regel boven het object:
 measure 'Net Orders' =
 ```
 
-Copilot kapt beschrijvingen af na 200 tekens (zie **fabric-semantic-model**, AI-gereedheid).
+Copilot en data agents lezen alleen de eerste 200 tekens van een beschrijving; zet het belangrijkste vooraan (zie ook **fabric-semantic-model**, sectie AI-gereedheid).
 
 ## Pass 8: format strings
 
