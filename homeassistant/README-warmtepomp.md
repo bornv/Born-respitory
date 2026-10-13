@@ -138,7 +138,7 @@ entity-ID's als in het pakket. Je ziet per waarde ✅, ⚠️ of ❌. De check k
 6. Voer het script **WP slim – standaardwaarden instellen** één keer uit
    (Instellingen → Automatiseringen & scènes → Scripts).
 7. Controleer en pas aan:
-   - **WP basistemperatuur**: staat op 20,0 °C;
+   - **WP basistemperatuur**: staat op 21,0 °C;
    - **WP bruikbare batterijcapaciteit**: bruikbare kWh van je Victron-batterij;
    - **WP minimale SoC**: dezelfde waarde als de minimale SoC in Victron ESS (met de Victron-minima gekoppeld neemt het pakket automatisch de hoogste);
    - **WP stapgrootte thermostaat**: 0,5 of 0,1, afhankelijk van wat je thermostaat accepteert.
@@ -205,7 +205,7 @@ entities:
 
 | Helper | Standaard | Betekenis |
 |---|---|---|
-| WP basistemperatuur | 20,0 °C | De temperatuur die altijd wordt aangehouden |
+| WP basistemperatuur | 21,0 °C | De temperatuur die altijd wordt aangehouden |
 | WP verhoging bij voorverwarmen | 0,5 °C | Extra bij goedkope stroom vóór een dure periode |
 | WP verhoging bij zonneoverschot | 0,5 °C | Extra bij zonneoverschot |
 | WP verlaging bij dure stroom en lege batterij | 0,0 °C | 0 betekent: nooit onder de basis |

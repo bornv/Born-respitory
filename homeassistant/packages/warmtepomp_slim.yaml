@@ -209,7 +209,7 @@ script:
         target:
           entity_id: input_number.wp_basistemperatuur
         data:
-          value: 20
+          value: 21
       - action: input_number.set_value
         target:
           entity_id: input_number.wp_laatst_ingesteld
