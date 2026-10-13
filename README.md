@@ -11,6 +11,8 @@ Persoonlijke verzameling Claude-skills voor werk in warehouse/supply chain (Powe
 | [fabric-powerbi-report](skills/fabric-powerbi-report/SKILL.md) | Power BI-rapporten: planning en ontwerp, PBIR/visual.json, filters, slicers, thema's, voorwaardelijke opmaak, publiceren en rebinden | `powerbi-report-cli` |
 | [fabric-dataflows](skills/fabric-dataflows/SKILL.md) | Dataflow Gen2 en Power Query M: verbindingen, uitvoerbestemmingen, refresh, upgrade Gen1 → Gen2 | `dataflows-cli` |
 
+| [powerbi-modeling-mcp](skills/powerbi-modeling-mcp/SKILL.md) | Power BI Authoring MCP Server installeren, configureren en veilig gebruiken (Desktop, Fabric, PBIP) | `microsoft/powerbi-modeling-mcp` README en TROUBLESHOOTING |
+
 Aanvullende skills (GPL-3.0, zie hieronder):
 
 | Skill | Gebruik voor | Bron |
@@ -29,6 +31,8 @@ Verschillen met het origineel:
 - Nederlands, met Engelse code, API-paden, eigenschapsnamen en UI-labels ongewijzigd.
 - Zonder MCP-servers, lokale preview-/grafiekscripts en de verplichte telemetrie-header `x-ms-fabric-skill`.
 - Alleen de onderdelen die relevant zijn voor Power BI, Dataflows en algemeen Fabric-werk; migratie- (Synapse, Databricks, HDInsight), Spark-, Eventhouse-, Eventstream- en SQL-skills zijn niet overgenomen.
+
+De skill `powerbi-modeling-mcp` is gebaseerd op de documentatie van [microsoft/powerbi-modeling-mcp](https://github.com/microsoft/powerbi-modeling-mcp) (commit `2b25def`, MIT). De MCP-server zelf valt onder een aparte Microsoft-EULA en zit niet in deze repo.
 
 ### data-goblin/power-bi-agentic-development (GPL-3.0)
 
