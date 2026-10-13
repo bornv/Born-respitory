@@ -5,7 +5,7 @@ description: "Power BI-rapporten reviewen en ontwerpen: review/audit/health chec
 
 # Power BI-rapporten reviewen, ontwerpen en thema's aanpassen
 
-> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (© Kurt Buhler, GPL-3.0), skills `review-report`, `pbi-report-design`, `create-pbi-report`, `modifying-theme-json`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
+> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (auteur Kurt Buhler, GPL-3.0), skills `review-report`, `pbi-report-design`, `create-pbi-report`, `modifying-theme-json`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
 
 Deze skill geeft je het **oordeel** over een rapport: wat je controleert bij een review, welke ontwerpregels gelden, hoe je een nieuw rapport opzet voordat je bouwt en hoe je een thema beheert. Het **bouwen** in PBIR-bestanden (`visual.json`, `page.json`, filters, bladwijzers) staat in `fabric-powerbi-report`; hier wordt daarnaar verwezen in plaats van het te herhalen.
 
@@ -125,7 +125,7 @@ Details en onderbouwing: [ontwerp-principes.md](references/ontwerp-principes.md)
 
 1. **Business proces begrijpen.** Verken het model: welke tabellen, measures, hiërarchieën, welke tijdsgranulariteit?
 2. **Vage vraag verscherpen** met hooguit drie vragen: welke beslissingen ondersteunt het rapport, welke 2-3 cijfers zijn het belangrijkst, zijn er huisstijlwensen?
-3. **Ontwerpbrief** opstellen: doelgroep, doel, 2-5 beslisvragen, pagina's met elk één doel, ontwerpidentiteit, opleverdoel (app, paginaformaat, mobiel). Zie [examples/ontwerpbrief-voorbeeld.yaml](examples/ontwerpbrief-voorbeeld.yaml).
+3. **Ontwerpbrief** opstellen: doelgroep, doel, 2-5 beslisvragen, pagina's met elk één doel, ontwerpidentiteit, opleverdoel (app, paginaformaat, mobiel). Sjabloon: [rapport-maken.md](references/rapport-maken.md).
 4. **Akkoord vragen** en de brief daarna als bevroren behandelen; scope-wijziging = brief heropenen.
 5. **Ontbrekende modelobjecten** voorstellen: doel (vorig jaar, budget), baseline, rollend gemiddelde. Liefst in het model, niet als rapportmeasure.
 6. **Bouwen**: pagina's, visuals, binding, sortering, interacties, filters, opmaak → met `fabric-powerbi-report` (bestanden) of in Desktop.

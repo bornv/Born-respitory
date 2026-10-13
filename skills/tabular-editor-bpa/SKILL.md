@@ -5,7 +5,7 @@ description: "Werken met Tabular Editor (TE2, TE3 en de nieuwe te-CLI) voor Powe
 
 # Tabular Editor: BPA, C#-scripts en CLI
 
-> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (© Kurt Buhler, GPL-3.0), skills `bpa-rules`, `c-sharp-scripting`, `te-cli`, `te2-cli` en `te-docs`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
+> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (auteur Kurt Buhler, GPL-3.0), skills `bpa-rules`, `c-sharp-scripting`, `te-cli`, `te2-cli` en `te-docs`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
 
 Met Tabular Editor bewerk je de metadata van een semantisch model (measures, kolommen, relaties, rollen) buiten Power BI Desktop om. Deze skill gaat over drie onderdelen die de bron uitwerkt: **Best Practice Analyzer**-regels (automatische kwaliteitscontrole), **C#-scripts** (bulkwijzigingen) en de **command line**.
 

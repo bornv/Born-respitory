@@ -5,7 +5,7 @@ description: Kiezen en bouwen van visuals buiten de standaardset in Power BI én
 
 # Custom visuals en gepagineerde rapporten
 
-> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (© Kurt Buhler, GPL-3.0), skills `deneb-visuals`, `svg-visuals`, `python-visuals`, `r-visuals`, `powerbi-custom-visuals`, `paginated-report`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
+> Bewerking van [data-goblin/power-bi-agentic-development](https://github.com/data-goblin/power-bi-agentic-development) (auteur Kurt Buhler, GPL-3.0), skills `deneb-visuals`, `svg-visuals`, `python-visuals`, `r-visuals`, `powerbi-custom-visuals`, `paginated-report`, commit 4936264. Vertaald, ingekort en aangepast. Deze skill valt daardoor ook onder GPL-3.0; zie `LICENSE` in deze map.
 
 Deze skill helpt je kiezen tussen vier manieren om een visual te maken die Power BI standaard niet heeft, en bij het bouwen van een afdrukbaar, gepagineerd rapport (RDL). Een deel van de SVG-voorbeelden komt uit de PowerBI MacGuyver Toolbox (Kurt Buhler / Data Goblins); de bullet chart komt uit het SpaceParts-model.
 
