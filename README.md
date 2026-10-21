@@ -33,6 +33,12 @@ Finance en accounting (Apache-2.0, zie hieronder):
 | [finance-variantieanalyse](skills/finance-variantieanalyse/SKILL.md) | Budget tegenover werkelijk, prijs-, volume- en mixeffect, materialiteit, watervalgrafiek, toelichting voor het management | `variance-analysis` |
 | [finance-interne-controle](skills/finance-interne-controle/SKILL.md) | Beheersmaatregelen testen, steekproeven, werkdocumenten, tekortkomingen indelen, auditdossier en accountantsvragen | `sox-testing`, `audit-support` |
 
+Eigen projectskills:
+
+| Skill | Gebruik voor | Bron |
+|---|---|---|
+| [slijpkisten-service](skills/slijpkisten-service/SKILL.md) | Power BI-rapport Slijpkisten Service: LCV_DATA/Penta-bronnen (KPTM, PAJL, PKLK, PKLP), bedrijfsregels (GOB/GVR, robots, revisie, WaardeSlijpservice, marge), model en metingen, afsprakenlijst op SharePoint, refresh- en Oracle-fouten, dataflow-staging, PBIP-werkwijze | Eigen werk (samenvatting van de ontwikkelsessie; zonder klantdata) |
+
 ## Herkomst en licentie
 
 De Fabric-skills zijn Nederlandse, ingekorte bewerkingen van [microsoft/skills-for-fabric](https://github.com/microsoft/skills-for-fabric) (commit `bc42aaf`, 5 oktober 2026), MIT-licentie © Microsoft Corporation. De volledige licentietekst staat in [skills/THIRD-PARTY-LICENSE-skills-for-fabric.txt](skills/THIRD-PARTY-LICENSE-skills-for-fabric.txt).
