@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spreadsheet Auditor Findings",
+  "type": "object",
+  "required": ["audit_version", "workbook", "coverage", "findings"],
+  "properties": {
+    "audit_version": { "type": "string" },
+    "tool_version": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "python": { "type": ["string", "null"] },
+        "platform": { "type": ["string", "null"] },
+        "openpyxl": { "type": ["string", "null"] },
+        "defusedxml": { "type": ["string", "null"] },
+        "libreoffice": { "type": ["string", "null"] }
+      }
+    },
+    "workbook": {
+      "type": "object",
+      "required": ["path", "sha256", "sheets_analyzed", "formulas_scanned", "recalc_status"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "sheets_analyzed": { "type": "integer" },
+        "formulas_scanned": { "type": "integer" },
+        "recalc_status": { "type": "string" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "macros_present": { "type": "boolean" },
+        "macros_executed": { "const": false },
+        "external_links_present": { "type": "boolean" },
+        "unsupported_features": { "type": "array", "items": { "type": "string" } },
+        "limitations": { "type": "array", "items": { "type": "string" } },
+        "complete": {
+          "type": "boolean",
+          "description": "False when part of the workbook was not checked; the CLI then exits 6."
+        },
+        "incomplete": {
+          "type": "array",
+          "description": "Why part of the workbook was not checked. Each message also appears in limitations.",
+          "items": {
+            "type": "object",
+            "required": ["reason", "message", "rules"],
+            "properties": {
+              "reason": { "enum": ["check_failed", "timeout", "formula_cap", "cell_cap"] },
+              "message": { "type": "string" },
+              "rules": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Rules that were not checked, or were checked only in part; empty when every rule is affected."
+              }
+            }
+          }
+        },
+        "finding_counts": {
+          "type": "object",
+          "description": "Active findings counted before limits.max_reported_findings trims the list.",
+          "required": ["total", "shown", "suppressed", "by_severity", "by_rule"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "shown": { "type": "integer", "minimum": 0 },
+            "suppressed": { "type": "integer", "minimum": 0 },
+            "by_severity": { "type": "object", "additionalProperties": { "type": "integer" } },
+            "by_rule": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["rule_id", "severity", "error_confidence", "count"],
+                "properties": {
+                  "rule_id": { "type": "string" },
+                  "severity": { "type": "string" },
+                  "error_confidence": { "type": "string" },
+                  "count": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          }
+        },
+        "recalculation": {
+          "type": "object",
+          "properties": {
+            "status": { "type": ["string", "null"] },
+            "limitations": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "macros": {
+          "type": "object",
+          "properties": {
+            "present": { "type": "boolean" },
+            "executed": { "const": false }
+          }
+        },
+        "external_links": {
+          "type": "object",
+          "properties": {
+            "present": { "type": "boolean" },
+            "followed": { "const": false }
+          }
+        },
+        "truncated": {
+          "type": "object",
+          "properties": {
+            "formulas": { "type": "boolean" },
+            "findings": { "type": "boolean" },
+            "cells": { "type": "boolean" },
+            "timeout": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "rule_id", "severity", "error_confidence", "detection_mode", "location", "evidence", "suggested_fix", "suppressed"],
+        "properties": {
+          "id": { "type": "string" },
+          "fingerprint": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "severity": { "enum": ["Critical", "High", "Medium", "Low", "Info"] },
+          "error_confidence": { "enum": ["Defect", "Likely defect", "Review", "Info"] },
+          "confidence": { "type": "string" },
+          "detection_mode": { "enum": ["DET", "HEUR"] },
+          "mode": { "type": "string" },
+          "location": { "type": "string" },
+          "members": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Every cell the finding stands for, location first: the cells of a mistake repeated down a column, or of a list of repeated keys. A location suppression hides the finding only when it covers all of them."
+          },
+          "sheet": { "type": ["string", "null"] },
+          "cell": { "type": ["string", "null"] },
+          "range": { "type": ["string", "null"] },
+          "formula": { "type": ["string", "null"] },
+          "evidence": { "type": "array", "items": { "type": "string" } },
+          "impact": { "type": "object" },
+          "limitations": { "type": "array", "items": { "type": "string" } },
+          "suggested_fix": { "type": "string" },
+          "suppressed": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Victron Modbus"
+  short_description: "Interpret Victron Modbus register workbooks"
+  default_prompt: "Use $victron-modbus to interpret this Victron GX Modbus workbook and map the registers I need."

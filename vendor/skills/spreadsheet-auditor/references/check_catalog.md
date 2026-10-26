@@ -1,0 +1,84 @@
+# Check Catalog
+
+Use this catalog to interpret `findings.json` emitted by `scripts/audit.py`.
+
+## How Far To Trust Each Rule
+
+Measured on 2,729 real workbooks (SpreadsheetBench; per-rule numbers in the repository's `benchmarks/real_world_precision.md`). Use it to decide how hard to check a finding before calling it a mistake.
+
+| Trust | Rules | What the false alarms look like |
+|---|---|---|
+| Report after reading the formula | `LIVE_ERROR`, `BROKEN_REFERENCE`, `CIRCULAR_REFERENCE`, `HIDDEN_STRUCTURE_IN_TOTAL`, `NUMBERS_STORED_AS_TEXT`, `VOLATILE_FUNCTION`, `WHOLE_COLUMN_REFERENCE`, `RANGE_EXCLUSION`, `RANGE_LENGTH_MISMATCH` | Rare. A cycle can be a deliberate iterative calculation, and a hidden input can be intentional (still worth disclosing). |
+| Check the context card | `FORMULA_DRIFT`, `HARDCODE_IN_FORMULA_BLOCK`, `LITERAL_CONSTANT`, `WHITESPACE_KEY`, `IFERROR_MASK` | Right between three-fifths and three-quarters of the time. Drift: a totals, ratio or summary row that differs by design. Hardcode: an input column between formula columns, or a one-row table. Literal: codes an `IF` returns, calendar offsets. Whitespace: a header below the first rows, or prose. Error mask: a 0 that is the right answer when the lookup misses (an item absent from a site's list is 0 units there). |
+| Usually by design; check before reporting | `DUPLICATE_KEY` | Right about one time in four. A repeated key is often meant: another column decides the match (group and material, a validity date, a region), labels repeat as section headers in a grid, or the lookup is meant to take the first match. Report it only when the rows it repeats hold different values that the lookup can return. |
+| Off by default | `BLANK_PRECEDENT` | A blank in a debit/credit pair or an unused row is a zero by design; it was right in none of 25 sampled findings. Turn it on (`"checks": {"BLANK_PRECEDENT": "error"}`) only for data that must never have gaps. |
+| Not measured on real workbooks | `TOTAL_MISMATCH`, `CROSS_FOOT_FAILURE`, `RANGE_INCLUDES_SUBTOTAL`, `MERGED_CELL_IN_DATA_RANGE`, finance pack | Check the context card. |
+
+## Detection Modes
+
+- `DET`: the rule is a fixed structural test. It says how the finding was produced, not how likely it is to be right.
+- `HEUR`: the rule is a judgment call by design.
+
+## Confidence Levels
+
+- `Defect`: very likely wrong (Confirmed bucket in the report).
+- `Likely defect`: probably wrong or fragile (Likely bucket).
+- `Review`: suspicious, needs confirmation (Review bucket).
+- `Info`: informational notes (Info bucket; opt-in checks).
+
+## Formula Integrity
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| LIVE_ERROR | DET | Critical | A cell contains or evaluates to an Excel error value such as `#REF!`, `#DIV/0!`, or `#VALUE!`. Reported once at the root cell; cells that merely inherit the error, including cells fed by an error cycle, are listed as dependents. Roots that share a sheet, an error value and a relative formula (a formula filled down a column that errors in every row), or that hold the same error typed as a value, are one finding at their top-left cell, listing the others. |
+| BROKEN_REFERENCE | DET | High | A formula contains a deleted reference (`#REF!`), a missing sheet reference, or an out-of-bounds target; one finding per relative formula per sheet, listing the other cells. Links to an external workbook are inventoried as one Low/Info finding per source workbook per sheet, listing the linked cells. |
+| BLANK_PRECEDENT | DET | Medium | Off by default; turn it on with `"checks": {"BLANK_PRECEDENT": "error"}`. A formula uses a blank cell in arithmetic, as a lookup key, or in a date or rounding function without testing it for blank, and the blank is a gap in a column that is at least three-quarters filled around it, on a row that holds data. Positional uses (`ROW`, `COLUMNS`), guarded uses (`=""`, `ISBLANK`, comparisons, `IFERROR`), blank-tolerant functions (`SUM`, `MIN`, `MAX`, `&`), rows whose inputs are all blank (a day off on a timesheet), half-filled ledger columns, and template rows are not reported. |
+| CIRCULAR_REFERENCE | DET | High | Formula dependencies contain a cycle, including a total whose range includes its own cell. One finding per connected group of cells; cells that each reference only themselves with one relative formula (filled down a column) are one finding. References that only feed `ROW`, `ROWS`, `COLUMN`, `COLUMNS`, `ISREF`, `AREAS` or `CELL` are not dependencies, so a filled-down `ROWS(A$1:A3)` counter and the `CELL("filename",A1)` sheet-name idiom are not cycles. |
+| FORMULA_DRIFT | DET | High | A formula breaks the relative pattern used by neighboring formulas. A row or column total that aggregates its own neighbors is exempt and does not dilute the majority. A cell that agrees with a formula above or below it (a different column by design, judged on exact pattern, or on shape when it is a structurally different formula), the seed cell of a chain (an opening balance, year 0 of a projection), and a totals row where one column sums and the next averages the same block are not drift. Nor is a summary cell where its neighbors' formula would add up only text labels (a link heading a column of names), or one of a row of summaries over the same block with their own criteria (counts of 1, 2 and 3 over one range). |
+| IFERROR_MASK | HEUR | Medium | `IFERROR` or `IFNA` replaces an error from something that can really fail (a division, a lookup, an average, a text or date conversion, arithmetic on a cell) with a value that reads as data: a number, a number written as text, a cell, or a calculation. `IFNA` catches only `#N/A`, so only a lookup or text split that can miss counts inside it. A blank or a message fallback (`""`, `"n/a"`, `"Missing: "&C1`), a second lookup (`INDIRECT` and `OFFSET` included), `NA()`, a wrapped `IF` that already handles its cases, an error that an `ISNUMBER` or an inner `IFERROR` already absorbs, a text conversion that falls back to the cell it reads (`IFERROR(VALUE(A1),A1)`), and expressions that cannot fail (`COUNTIFS`, `SUM`) are not reported. Google Sheets placeholder formulas always are. One finding per formula pattern per sheet, listing the other cells that share it. |
+
+## Hardcodes And Inputs
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| LITERAL_CONSTANT | DET | Medium | A non-trivial numeric literal is embedded in a formula instead of referenced from an input cell. Literals in structural argument slots (a `VLOOKUP` column index, a `MID` length, a `WEEKDAY` type, date parts, rounding digits, a `TEXT` format, a `MOD` divisor) and unit constants (60, 3600) are skipped; a literal in the value being rounded or formatted is not (`ROUND(A1*1.0725,2)` reports 1.0725). One finding per formula pattern per sheet. |
+| HARDCODE_IN_FORMULA_BLOCK | DET | High | A constant interrupts a run of formulas that share one relative pattern on both sides of it. Inputs that an adjacent subtotal sums are not plugs, and neither is a constant whose own row or column is a line of constants between two lines of formulas (an input column between two running-sum columns; one of the four corner cells may itself hold a plug or a total). A text label between the two formulas ends the block. |
+
+## Reference And Range Errors
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| RANGE_EXCLUSION | DET | Critical | A total stops short of a plain number that sits between the range and the total. Text labels, headers, dates, and formula rows never count as excluded data; totals placed elsewhere and expanding running-total ranges (`$A$2:A2`) do not produce exclusion findings. |
+| RANGE_INCLUDES_SUBTOTAL | DET | High | An aggregate range includes a subtotal row or column whose own formula aggregates cells that are also in the range (a double count). "Subtotal + Other" totals and labeled rows or columns of constants (a total carried forward) stay quiet. |
+| RANGE_LENGTH_MISMATCH | DET | High | Peer aggregate formulas use inconsistent range lengths. One-cell aggregates (links such as `SUM(G5:G5)`) and peers whose ranges cover disjoint groups (debits beside credits) are not compared. |
+| HIDDEN_STRUCTURE_IN_TOTAL | DET | Medium | A hidden row, column, or sheet feeds visible formulas. One finding per hidden sheet, and per sheet for its hidden rows and for its hidden columns, naming them as runs (`columns R to X`) and listing the formulas they feed. `AGGREGATE` options 1/3/5/7 and `SUBTOTAL` 101-111 skip hidden rows by definition and are not dependents. |
+
+## Reconciliation And Consistency
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| TOTAL_MISMATCH | DET | Critical | Either a total adds a cell that its own `SUM` range already covers (`=SUM(B2:B5)+B5`, static, High/Likely defect), or a bare `=SUM(range)` has a cached value that differs from its numeric components (stale or inconsistent calculation, Critical/Defect). Other aggregates such as `AVERAGE` or `SUM(...)/1000` are never compared. |
+| CROSS_FOOT_FAILURE | DET | Critical | Row totals and column totals disagree in a rectangular table recognized from its formulas: a run of column totals defines the columns and rows, and each of those rows must carry a row total spanning exactly those columns. Stacked blocks sharing a total column are not confused. Value-dependent; requires cached or recalculated values. |
+
+## Logic, Structure, And Data Hygiene
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| VOLATILE_FUNCTION | DET | Medium | Formula uses `OFFSET`, `INDIRECT`, `RAND` or `RANDBETWEEN`; one finding per formula pattern per sheet. `TODAY` and `NOW` are the normal way to age a date and get one Low/Info note per sheet. |
+| WHOLE_COLUMN_REFERENCE | DET | Medium | A whole-column or whole-row reference is evaluated as an array: a comparison or arithmetic on it, `IF`, `SUMPRODUCT`, or `LOOKUP(2,1/(...))`. `COUNTIF`, `SUMIF`, `VLOOKUP`, `MATCH` and `INDEX` over whole columns bound themselves to the used range and are not reported, even inside an array formula. One finding per formula pattern per sheet. |
+| NUMBERS_STORED_AS_TEXT | DET | High | Numeric-looking text that a formula consumes as a number (arithmetic, or a bare argument of a `SUM`-style function; High/Likely defect; Low/Info when every such formula converts it explicitly with `--`, `*1`, `+0` or `VALUE`), or in a column that otherwise holds numbers (Medium/Review). One finding per column and kind, listing the other cells and their values. Text with a leading zero (an identifier), and text that lookups, criteria, comparisons or `DATE` read, are not reported. |
+| WHITESPACE_KEY | DET | Medium | A padded value among clean ones in a first-column label or a formula-referenced cell (Medium/Review); the padded values of one column are one finding that lists them. A column where at least three values, and four in five of them, are padded gets one Low/Info note (fixed-width export padding). Headers over data (the first row, or the second under a lone title), indentation of two or more leading spaces, and whitespace-only cells are not reported; a single stray leading space on a key still is. |
+| DUPLICATE_KEY | DET | Medium | Duplicate normalized keys in the column a first-match lookup searches: the first column of a `VLOOKUP` table, the first row of an `HLOOKUP` table, or the lookup array of `MATCH`, `XMATCH`, `XLOOKUP` or `LOOKUP`. Criteria ranges of `SUMIF`/`COUNTIF`-style functions are not keys. One finding per searched column, located at the first repeated key and listing the others. Error values such as `#N/A` are not keys. |
+| MERGED_CELL_IN_DATA_RANGE | DET | Medium | A merged region whose top-left cell holds a number lies inside a range that formulas read, or inside a table. Merged titles, headers, labels, blank spacers, merged formulas (net lines, ratios in totals rows), and merges that formulas only address directly are not reported. |
+
+## Finance-Specific (opt-in)
+
+These checks are off by default. Enable them by setting `finance.enabled: true`
+in your config; they are intentionally label-driven heuristics and report
+`Review`-confidence findings only.
+
+| Rule ID | Mode | Default severity | Description |
+|---|---:|---:|---|
+| BALANCE_SHEET_BALANCE | HEUR | Medium | "Total Assets" disagrees with "Total Liabilities + Equity" on the same sheet. |
+| SIGN_CONVENTION | HEUR | Medium | Row labelled as expense/cost has a positive value (or vice versa for revenue). |
+| PERIOD_MISMATCH | HEUR | Medium | Quarterly column headers (e.g. `Q1 2024 -> Q3 2024`) skip a period. |

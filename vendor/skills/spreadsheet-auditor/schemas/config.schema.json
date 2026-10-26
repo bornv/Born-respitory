@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spreadsheet Auditor Config",
+  "description": "The canonical form of an auditor config. The CLI exits 4 on a section, setting or rule name it does not know, or a setting of the wrong type; it drops a malformed suppression entry with a warning instead. It also accepts what this schema does not list: rule names and check settings in any case, whole-number settings written as 50000.0, and a section left empty (null).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "mode": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include_sheets": { "type": "array", "items": { "type": "string" } },
+        "exclude_sheets": { "type": "array", "items": { "type": "string" } },
+        "headline_outputs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "materiality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "absolute": { "type": "number" },
+        "relative": { "type": "number" },
+        "percent_points": { "type": "number" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_cells": { "type": "integer", "minimum": 0 },
+        "max_formulas": { "type": "integer", "minimum": 0 },
+        "max_range_expansion_cells": { "type": "integer", "minimum": 0 },
+        "max_reported_findings": { "type": "integer", "minimum": 0 },
+        "timeout_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "suppressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "anyOf": [
+          { "required": ["rule_id", "range", "reason"] },
+          { "required": ["fingerprint", "reason"] }
+        ],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "range": { "type": "string" },
+          "fingerprint": {
+            "type": "string",
+            "description": "The finding's fingerprint. With rule_id and range, it pins the suppression to that finding: the fingerprint decides the match, and range documents where the finding was accepted."
+          },
+          "reason": { "type": "string" },
+          "expiry": { "type": "string" },
+          "owner": { "type": "string" }
+        }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "description": "Rule ID (such as LIVE_ERROR) or its lowercase alias (such as live_errors) to setting; true means error and false means off. The CLI also accepts rule names and settings in any case (Live_Error: OFF); this schema lists their canonical spellings.",
+      "propertyNames": {
+        "enum": [
+          "BALANCE_SHEET_BALANCE", "BLANK_PRECEDENT", "BROKEN_REFERENCE", "CIRCULAR_REFERENCE",
+          "CROSS_FOOT_FAILURE", "DUPLICATE_KEY", "FORMULA_DRIFT", "HARDCODE_IN_FORMULA_BLOCK",
+          "HIDDEN_STRUCTURE_IN_TOTAL", "IFERROR_MASK", "LITERAL_CONSTANT", "LIVE_ERROR",
+          "MERGED_CELL_IN_DATA_RANGE", "NUMBERS_STORED_AS_TEXT", "PERIOD_MISMATCH", "RANGE_EXCLUSION",
+          "RANGE_INCLUDES_SUBTOTAL", "RANGE_LENGTH_MISMATCH", "SIGN_CONVENTION", "TOTAL_MISMATCH",
+          "VOLATILE_FUNCTION", "WHITESPACE_KEY", "WHOLE_COLUMN_REFERENCE",
+          "blank_precedent", "broken_reference", "circular_reference", "cross_foot_failure",
+          "duplicate_key", "formula_drift", "fragile_function", "hardcode_in_formula_block",
+          "hidden_rows_in_totals", "hidden_structure_in_total", "iferror_mask", "literal_constants",
+          "live_errors", "merged_cell", "merged_cell_in_data_range", "numbers_stored_as_text",
+          "range_exclusion", "range_includes_subtotal", "range_length_mismatch", "total_mismatch",
+          "volatile_function", "whitespace_key", "whole_column_reference"
+        ]
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": ["error", "on", "true", "warn", "warning", "review", "off", "false", "disabled", "disable"]
+          },
+          { "type": "boolean" }
+        ]
+      }
+    },
+    "recalc": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "timeout_seconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "finance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" }
+      }
+    }
+  }
+}

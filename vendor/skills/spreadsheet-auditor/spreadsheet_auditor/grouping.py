@@ -1,0 +1,47 @@
+"""Collapse per-cell findings that repeat one formula pattern into one finding per pattern.
+
+A formula filled across a block normalizes to a single relative pattern. A
+rule that fires on the pattern (an embedded literal, an IFERROR wrapper, a
+volatile function) would otherwise fire once per cell, and a schedule sheet
+turns into hundreds of identical findings. Reporting the pattern once, at its
+first cell, with the other cells listed as evidence and kept as the finding's
+``members``, keeps the report readable; suppressions and headline outputs
+still see every cell.
+"""
+
+from __future__ import annotations
+
+from .formula_parser import normalize_formula
+
+MAX_SHOWN = 8
+
+
+def group_by_pattern(cells: list[dict]) -> list[list[dict]]:
+    """Group formula cells by (sheet, relative formula pattern), keeping input order.
+
+    The first cell of each group leads it; the formula inventory is in sheet
+    order, so that is the top-left cell of the block.
+    """
+    groups: dict[tuple[str, str], list[dict]] = {}
+    for cell in cells:
+        key = (cell["sheet"], normalize_formula(cell["formula"], cell["row"], cell["col"]))
+        groups.setdefault(key, []).append(cell)
+    return list(groups.values())
+
+
+def locations(members: list[dict]) -> list[str]:
+    """The cells of a group, lead first: a finding's ``members``."""
+    return [cell["location"] for cell in members]
+
+
+def pattern_note(members: list[dict], does: str = "appears") -> str | None:
+    """Evidence line naming the other cells that share the leading cell's pattern.
+
+    ``does`` says what the formula does in each of them ("appears",
+    "evaluates to #N/A", "references its own cell").
+    """
+    if len(members) < 2:
+        return None
+    others = [cell["location"] for cell in members[1:]]
+    shown = ", ".join(others[:MAX_SHOWN]) + (f", and {len(others) - MAX_SHOWN} more" if len(others) > MAX_SHOWN else "")
+    return f"The same relative formula {does} in {len(members)} cells on this sheet; the others are {shown}."

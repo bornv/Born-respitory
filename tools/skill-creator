@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+skills_repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if [[ $# -eq 0 ]]; then
+    echo 'Gebruik: bash tools/skill-creator <quick_validate|package_skill|aggregate_benchmark|generate_report|improve_description|run_eval|run_loop> [argumenten]' >&2
+    exit 2
+fi
+skills_module=$1
+shift
+case "$skills_module" in
+    quick_validate|package_skill|aggregate_benchmark|generate_report|improve_description|run_eval|run_loop) ;;
+    *) echo "Onbekend Skill Creator-hulpmiddel: $skills_module" >&2; exit 2 ;;
+esac
+# De upstreamscripts importeren scripts.* vanaf de root van de bronskill.
+export PYTHONPATH="$skills_repo_root/vendor/skills/anthropics/skill-creator${PYTHONPATH:+:$PYTHONPATH}"
+exec bash "$skills_repo_root/tools/skills-python" -m "scripts.$skills_module" "$@"

@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install LibreOffice (enables recalculation + value-dependent checks)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-calc
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Lint (unused imports, undefined names)
+        run: python -m ruff check --select F,E9 spreadsheet_auditor tests scripts benchmarks examples
+
+      - name: Validate skill metadata (root)
+        run: python scripts/quick_validate.py .
+
+      - name: Healthcheck
+        run: spreadsheet-auditor --healthcheck
+
+      - name: Run tests
+        run: python -m pytest tests -q
+
+  package:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install LibreOffice (enables recalculation + value-dependent checks)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-calc
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+          pip install build
+
+      - name: Smoke-test demo and benchmark generators
+        # Regenerates the demo workbook + benchmark matrix to prove the
+        # generators run end-to-end. We intentionally do NOT diff against the
+        # committed copies: value-dependent checks depend on LibreOffice
+        # recalculation, whose results differ across LibreOffice versions and
+        # platforms, so a byte-exact drift gate would be flaky. The committed
+        # artifacts are doc/showcase copies refreshed by maintainers.
+        run: |
+          python examples/make_demo.py
+          python benchmarks/run_benchmark.py --strict
+
+      - name: Upload LibreOffice-backed demo and benchmark artifacts
+        # Maintainers download this bundle and commit it, so the checked-in
+        # demo report and benchmark matrix always come from a run with
+        # recalculation available, whatever machine the maintainer uses.
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated-artifacts
+          path: |
+            examples/demo_bad_budget.xlsx
+            examples/demo_audit_report.md
+            examples/demo_audit_report.html
+            examples/demo_findings.json
+            examples/demo_annotated.xlsx
+            spreadsheet_auditor/demo/demo_bad_budget.xlsx
+            benchmarks/seeded_defects_matrix.md
+          if-no-files-found: error
+
+      - name: Build distributable skill packages
+        run: python scripts/build_dist.py
+
+      - name: Validate built skill packages
+        run: |
+          python scripts/quick_validate.py dist/claude/spreadsheet-auditor
+          python scripts/quick_validate.py dist/codex/spreadsheet-auditor
+          python scripts/quick_validate.py dist/claude/spreadsheet-auditor.zip
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Validate installed wheel from a neutral directory
+        run: |
+          set -euo pipefail
+          # The demo audit returns 1 (findings present) or 2 (coverage
+          # limitations, e.g. no defusedxml in a clean venv). Those are valid
+          # audit outcomes, not failures; only treat exit codes > 2 (invalid
+          # input 4, internal error 5, incomplete audit 6) as a real failure.
+          run_ok() { set +e; "$@"; local c=$?; set -e; if [ "$c" -gt 2 ]; then echo "::error::Command exited $c: $*"; exit 1; fi; }
+          wheel="$(ls dist/spreadsheet_auditor-*.whl | head -n1)"
+          python -m venv /tmp/wheel-env
+          /tmp/wheel-env/bin/pip install --upgrade pip
+          /tmp/wheel-env/bin/pip install "${wheel}"
+          workdir="$(mktemp -d)"
+          cd "${workdir}"
+          run_ok "/tmp/wheel-env/bin/spreadsheet-auditor" --version
+          run_ok "/tmp/wheel-env/bin/spreadsheet-auditor" --demo --summary --fail-on None
+          run_ok "/tmp/wheel-env/bin/spreadsheet-auditor" --demo --format html --out report.html --fail-on None
+          run_ok "/tmp/wheel-env/bin/spreadsheet-auditor" --demo --format sarif --out report.sarif --fail-on None
+          test -s report.html
+          python -c "import json,sys; d=json.load(open('report.sarif')); assert d['version']=='2.1.0', d.get('version'); assert d['runs'][0]['results'], 'no results'"
+
+      - name: Validate unpacked Claude/Codex skills from a neutral directory
+        run: |
+          set -euo pipefail
+          run_ok() { set +e; "$@"; local c=$?; set -e; if [ "$c" -gt 2 ]; then echo "::error::Command exited $c: $*"; exit 1; fi; }
+          repo="${GITHUB_WORKSPACE}"
+          for variant in claude codex; do
+            workdir="$(mktemp -d)"
+            cp -r "${repo}/dist/${variant}/spreadsheet-auditor" "${workdir}/skill"
+            cd "${workdir}"
+            run_ok python "skill/scripts/audit.py" --demo --summary --fail-on None
+            cd "${repo}"
+          done
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: spreadsheet-auditor-dist
+          path: |
+            dist/claude/spreadsheet-auditor.zip
+            dist/claude/spreadsheet-auditor/**
+            dist/codex/spreadsheet-auditor/**
+            dist/spreadsheet_auditor-*.whl
+            dist/spreadsheet_auditor-*.tar.gz
+          if-no-files-found: error

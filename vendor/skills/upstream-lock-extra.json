@@ -1,0 +1,501 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "repository": "microsoft/power-platform-skills",
+      "commit": "a887c53f100f30c7882f567c5e480b91fe3312a",
+      "url": "https://github.com/microsoft/power-platform-skills",
+      "files": {
+        "vendor/skills/microsoft/power-platform-skills/LICENSE": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/.claude-plugin/plugin.json": "1aa6ebda372976b732c61558d064bf74529673c2eb225ffcc8a6cc92efebbe71",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/.mcp.json": "9a1518b69213fc53449c50983b5360b0efbe0205f48194bc46685f9f721c1a6c",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/.plugin/plugin.json": "1aa6ebda372976b732c61558d064bf74529673c2eb225ffcc8a6cc92efebbe71",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/AGENTS.md": "e724aacf799177315df191d09b0d56745dfed18097ce5ec1576b6651c96f4efe",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/README.md": "e7a1ecc7e66cd93ed4ffa39b336865e404db607069713fb7a50ee46beddec125",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-app-planner.md": "d377fe887848e51deb8e20e618dc0879a9d2a3937569c1c3b2073ced4aa97913",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-create-builder.md": "38948cb1b5dbb5c5f935bc2ffb6c18a92e18afc1b5e6dac6e2a5985baa2d9459",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-create-discovery.md": "e34617a3f427215d9c98fa62459989b5f58f02053e5f6db51bfb146abff5c2fd",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-create-functionality.md": "1ed06b161dc9882f2dd3b010e8d06c5cb668e33888032092210bfb3b7adae0db",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-create-layout.md": "32851b5d8760736c68bd3185c590892db7092da3745daa7b68c85d9e033853a2",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-create-screens.md": "42f5bfd130a6599d7cd1f5a89b97a1cf5defd9c0a595d3a4d360d45ca397e719",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/agents/canvas-screen-builder.md": "81ffa67af5690b88d69caa91aa4633067b01b3d92248a3620253ed832914a1bb",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/hooks/hooks.json": "4258ec7f448b9108cb07a5fa3ff44f64aa74b08662f7ca67b2a5ab3d57b5731b",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/hooks/inject-sync-reminder.cs": "f6df8681dc3e71080cc2de82e181ee16629cb5a983a2741d772d500f2a5a334d",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/hooks.json": "f601c4b74f9881ffea71a801ed3196e78097499704fba1d12c30fde4776e2c3a",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/BehaviorCore.md": "76157600107788d574ced43c54a24a9f8f1aadcba046df0bfc09991fd6bc142d",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/ControlGuide.md": "faa1f292d16aef046b6f6108cf4acc74a654737877e7b0d0bb3e785bf0298ef4",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateBuilderCore.md": "41497ccd1e43544d43a4995a78eb2bb66bb5295bee2bddfec5cf53a7108cb698",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateConformance.md": "d7ef51aec52657186523e7c14cfa831ee572079b73ccf9442539db176e3fad0f",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateGalleryLayout.md": "cc5a9af54a6d559fd84adfe210bad2c37eb038c728a5e6db297a97f3a6818fec",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateImplementation.md": "762d82adb9c1c74fab597b48510352be14d9058d42bdd0d0838fb909494ea4d6",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateMutations.md": "61b6828735b5f99a30b14e6d596b0c575636826bfebadcbbf1669fc259388d07",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateNavigationState.md": "7ffb73156afbfecb219d6f04e69eb22d694b75e193c208d50d9413025ac7b6e8",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateSelectionControls.md": "dac2d7bc0f2c357120d0bc40ccd96c216e9d23bab1b43126a237e16eb18730d4",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateValidation.md": "08469c3d9f4426190a68277555f397c37fdcd0e46aee95b8c9b638701574ec14",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/CreateWorkflow.md": "1477d703ddf2e683a872322d82345b2aa41ec94e85bf3264cde15b4a0a6e6770",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/DataBehavior.md": "005331f6203aea694393df7ac4a84920ce3ef4e28aac836f160682190fab8a8d",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/DesignGuide.md": "b85fd6aba9314c411472e0892c73df0bcd9fa36d34339dde78e01bb9f3528149",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/EditConformance.md": "562654308ae252f5e7801afd94b2e07325982ab90761a3cf94f7b5d945dd9170",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/EditWorkflow.md": "6b94265a80c5a6275c2a21b906a32229cac3aee6e38781d13feed68ddca2ef55",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/GridLayoutGuide.md": "4b322034c22d5eac5c4d2810708d6d2223eef35f5336fc38802459c27882053b",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/LayoutGuide.md": "a7bc6b1da781dee8b4d44dbc91251818352ba97a81220748d70961257dddb521",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/LayoutPolicies.md": "707df664e007594934567678178a137dd79fec1aeaffdc5a9bdebbdc13548dd9",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/MutationBehavior.md": "c1d9d5c1cd8f540ac004d629079dc1d0b068622d829c9d39538f4d769bf87d65",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/PlanIndexEdit.md": "415a69e7606b2cdb761d6493b6b9bb44af67ccbffe574330fdeda767acedbf37",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/PlanModel.md": "72f6ecc7186ad72ed01d8a19360fa45c178a81e32ffefb2379c0d7edb399c240",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/PlannedEditHandoff.md": "7255bb100feb241b99fc0416bac9f56bc16b7a4b08613729861cf257c418f1c7",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/PowerFxGuide.md": "77eedb9e36f5a8f822f093e53f5c613e6c4c2ae0a4e327cda69ad217247f97fc",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/QAChecks.md": "81975c445144e5f3542432cf26ae60eaebb6ed1d4d3a025dbdb247af3e113db4",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/ScreenCreateArtifact.md": "25580bb94ec886fa0484eac54872119f148ce3dffae4aafc46c10dcd0f27172d",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/ScreenModifyArtifact.md": "d8961d68d5311b0eb11c562c8e959eef948ae4c15ad608a3744951b71f39a888",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/SharedPlanArtifact.md": "ee34a4bc7210d878a17a87ace0a219944dd40a8c2f12b13813b7a0cd6c07da58",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/ValidationWorkflow.md": "51b7d37a55e5344f8d3714f6edaae150ae70acc92a30297e24669050ccf6245a",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/references/YamlSyntax.md": "c8bfe4bfad71f8669b7d01ed50dafca2a9d41df947e747c86eed826e77691ce0",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/add-data-source/SKILL.md": "d2991a6e916d10f3d47fe31779a50fab332cc7e3c5523418e6aab49b2b55e116",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/canvas-app/SKILL.md": "286cf67a663aa4a439065c4bc0cb7e0ca739ad373f5dbbe85feda55b941a8f00",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/configure-canvas-mcp/SKILL.md": "30298676d3b805ae3ebf6dc773d41bf10c8e70954fd29d5cfa00eb45b31850ca",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/report-issue/SKILL.md": "c2b880d29de0a4da656c1f48f640186d79a8699120460e88f849465d83284159",
+        "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/report-issue/report-issue-workflow.md": "72c3ea060cf4865c002764d65a50d981bb0b81f4590d320dec8c2d789631b5cf",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/.claude-plugin/plugin.json": "db8b3168d9740925711e45945da2d6593a11e8d5fc251042ab3325f079e189af",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/.mcp.json": "10187a5c681a251e2e6ce6407f82e57ed50bf80723760ff90d63c8ec5317fd03",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/.plugin/plugin.json": "db8b3168d9740925711e45945da2d6593a11e8d5fc251042ab3325f079e189af",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/AGENTS.md": "1bcd02f7966dcac23e1dfffb890f589b5beadfbea4d85eca023383e4eb9eb492",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/README.md": "4ec7f28eda65f6b57355be981978882b845b4c43a031a3b039c7c2864220e0ab",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/hooks/hooks.json": "4b11662daf2da1a19b85c52d0fe5739ab2b36352a0a4598df18d2b76ebad3d63",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/hooks/run-skill-pretool-telemetry.js": "50cd861703dc54446ecb472e68321360eee5fd3d26bd0f819f81cd0ac418f60f",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/hooks/run-user-prompt-telemetry.js": "758414ddb9dea35f668ec9112783bf826772610615c64720672e16b186ca0a87",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/package.json": "7c8156040fa14a4a1aaf58ae9ebe12c8fbedec48b7439966980bd7f4b0c3274f",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/references/cli-reference.md": "d90e38c01e05b72ad9e8d0be9deed963842c14c7eee31fe74a262053e0853761",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/references/connection-patterns.md": "f075ff2fd5543997abf259413648c23bebf8376d6ef9b9794e64711d5abcd0ce",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/references/definition-reference.md": "79d11eb507624a3a6010729671414535e079712cc365e7163fa70c28a6b3f8a4",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/references/error-troubleshooting.md": "f03ebe9006ffc149a19f576e978d2a4556843fc64238016afc74eee38a023089",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/references/telemetry.md": "70480a8fb09b4808bef5680dae1ef4a4ee4b2acc35ca278bd38722c38a56642c",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/pa-hook-utils.js": "fbf56b36130e3fcb171701150655e0f02ca755002d9a629470153b29d415f7cc",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/async-ext.js": "c47775746909e62282581ba5df47005f586f513cd86931ef71b8de9f0bf7054b",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/async-ext.test.cjs": "2407d15931c5ae376c0fbd0e94cc07f417a7ea3a47157c2475b6df4ef80ae9ee",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/ikey.json": "f057a32130fa8bb2f89ade3fd468fe0b1000dedfbe79a05baf6a9e828d1d9dec",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/agent-info.js": "4f6e8bd362c05483fe02c14a6bffaa94118d3ade45532eb9daffed655b1b116c",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/emit-dispatcher.js": "da1ebfe0770b8ac7fe13ce1f29b9b698315d2bdd79bf07ebdad0c7dcd74cfaa6",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/emit-from-prompt.js": "270c70b82d7cd4334e9a655233d5d9042d2a864a5322b717c95ef094caded8c2",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/emit-spawn.js": "10fb95fe5bffab1202aec776109a4fe5cb2a9030054c84f5e1b2a377f9b5a1b3",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/events.js": "c7e8b45b1b7747f86d4fe9a94ade7d39773df957d1d01d6b0ba531455c2eb74e",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/local-log.js": "5e738db93e54817c24ad58b94763c8793f4cdf29589b2446f260626689bbcae7",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/native-exec.js": "2a9e3ff2e3dadca4e57e40f2c02a24e6de7ccd97a8240e672e019aa5688c05d3",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/pac-auth.js": "17f46ca4c09fec35705635c975f5bd3e0bd616ddf90405b9d4eb6a21ce7988d6",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/prompt-detector.js": "5548129cec817a931c6c7b139e5e89f04ae655277b63d0b8457ac8853a426139",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/resolver-loader.js": "f16ea89f52277da2ecfa3112661c43f042bf0b924fa720c4332f06e5954fc7df",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/scrubber.js": "e88623e47e08bd01752ab0b98f61a18cc84b558504d8cb29ec4066182919720e",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/session.js": "180db698f8086fcab33d3f6b2505a6bf2b74d08db98caf13841bdd10d600b654",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/telemetry-config.js": "184210e799c7e6119ce0f85c284d46e9cecd2642141d8ffa56b928e5f570ffb4",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/lib/user-config.js": "26bcb25541ead7bec578cdacd724c9f16a9025e34d0ea01316dae2fd7eea3137",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/region/artemis-service.js": "b22098ccf8d1221d48d7d306e54f7bb5c754da73076152f1d960cb586e31085a",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/region/region-cache.js": "6f41680b247c425f422869fa38f8aa4678706f2c364b169d1a627655f85f1835",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/region/region-resolver.js": "fd176b99352223bc66c894530b64d1fa01372968ca41099a855cfb68dea56a12",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/lib/telemetry/resolver.js": "4d53efbf7af49f3685a4f8ed6b3c0ff4312ef0d0040a4189e33c5a61510ba866",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/scripts/release-contract.test.cjs": "24d6d50dd43beed2038815eb026b8c2aa8603cb9f543ff704e1fa59a226870e6",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/server/emit-dispatcher.mjs": "b73076c84e2bbee40a0a243738bb4680a407c570246d8a910caeeb9f9dbb61ee",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/server/mcp.mjs": "c1bd1cf31363a8db2403cb87f6ee52a182528af55d0a3d17c487ae013a1731d3",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/browse-flows/SKILL.md": "9dac2467e4db4a31a6cfa9933c6204f6f8f4435a366c6fbf0c92c6ff9a938859",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/build-flow/SKILL.md": "70ab5f2899acd3a3609058f72d1af3f56978f2ae53478c134b44ecaa41d250e6",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/create-flow/SKILL.md": "dcdb5e676aff64b10b1e99564460c0dcc205aac869b5b44e68a7749b9e0fdc38",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/debug-flow/SKILL.md": "a177f4eaffc43661831de09dde72d2932bbf2de11aa9b3f29979ea63336ddec1",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/diagnose-flow/SKILL.md": "62f324fd36d668939627e80dc6b6cb08b2efce288f578d8501782539e1faceb8",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/manage-desktop-flows/SKILL.md": "8c5933e2190bb1a7ca9e20b8a66b6177a1c00c4a4447e43dd27ea283175b8b49",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/manage-flows/SKILL.md": "d7059191d47ec4a66f435517c55c7be22e57b2800b85f810d61e8f2213e12b36",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/report-issue/SKILL.md": "9c0b3c723567b5369b483213fbc36de20c92bf2fedc80346426c0c7b9de9dc33",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/report-issue/report-issue-workflow.md": "72c3ea060cf4865c002764d65a50d981bb0b81f4590d320dec8c2d789631b5cf",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/route-environments/SKILL.md": "f359451d9451d630b0195a3eaa3f52be8bdd7828ce899fc1d61f65dd2737de33",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/setup/SKILL.md": "d01660046f4c6ea721d5d9440f1d4cb9aa130749e4fb107f7d6f186dd8710123",
+        "vendor/skills/microsoft/power-platform-skills/power-automate/skills/telemetry/SKILL.md": "0aa4602ec5273fd81b8409ff6d9d5db91efdc7330abd938208031277563e1ff0"
+      }
+    },
+    {
+      "repository": "obra/superpowers",
+      "commit": "2ce8aa15d05bd57213e6f746f953aafb7ded7a8b",
+      "url": "https://github.com/obra/superpowers",
+      "files": {
+        "vendor/skills/obra/superpowers/LICENSE": "a37e0e9697144819e1d965176ac4ae5bc3fa02d11e7812036bbcadf6dafe2400",
+        "vendor/skills/obra/superpowers/systematic-debugging/CREATION-LOG.md": "c24733a5b1821bd6bed1fc950261f0b9f4e90097e0bbb96459d8179713730789",
+        "vendor/skills/obra/superpowers/systematic-debugging/SKILL.md": "51c6435d98c83c42c96ba7c35725a0b2c376cd487fb1a4e6bd0ddbe7e33ef202",
+        "vendor/skills/obra/superpowers/systematic-debugging/condition-based-waiting-example.ts": "40ae5ebe497fdf310200e43fe986552546d0a22837c0d39e855db1cfd33eb88e",
+        "vendor/skills/obra/superpowers/systematic-debugging/condition-based-waiting.md": "e89fec8400d6cd50f43407cec9fab50976ba4d55d0ec2eb51c0bd68036b54c26",
+        "vendor/skills/obra/superpowers/systematic-debugging/defense-in-depth.md": "1e175fb86fc357e58c6aebf5441e481e1b7868b4380c0456b63a17eefbd18ba7",
+        "vendor/skills/obra/superpowers/systematic-debugging/find-polluter.sh": "dd7b8f13c4cc2a24b33ff87b18da9248f3e1c80a085c3316224f69ff0fa5c43c",
+        "vendor/skills/obra/superpowers/systematic-debugging/root-cause-tracing.md": "75b933b6a8c40bdb2031b10f21654395b56ec6ab6bc7b018c18d3fe57aeb7fb8",
+        "vendor/skills/obra/superpowers/systematic-debugging/test-academic.md": "fe2ba480d78ac0d686dc025f41c2a32a43d642bf533f91b0c6053a04d35d6486",
+        "vendor/skills/obra/superpowers/systematic-debugging/test-pressure-1.md": "0b6a915db0054577819834c79be9eb614e97bddba10d73768e1fbe91cfed048a",
+        "vendor/skills/obra/superpowers/systematic-debugging/test-pressure-2.md": "b2030aeffba07050e8ad573ddf87486457c4a016a786bb326235bebd856f2016",
+        "vendor/skills/obra/superpowers/systematic-debugging/test-pressure-3.md": "96b50a52e2c7989c9cf20fb752c47c1e9a3a70dc362f8f7989f8f5b64dac7708",
+        "vendor/skills/obra/superpowers/verification-before-completion/SKILL.md": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+      }
+    },
+    {
+      "repository": "k-dense/scientific-agent-skills",
+      "commit": "5f2bc0341354fd5590aef76a533ada1e1e5b4e62",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "files": {
+        "vendor/skills/k-dense/scientific-agent-skills/LICENSE.md": "09b02a3c9df3053c55531d503357a9c7cde275970e6c3ceaa1ddf5f0e90b40c1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/SKILL.md": "ead247f623212ca1560486d863a2d0a8c0555d8d20b975d55053eeb4ed043d37",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/addgene.md": "f00236e01cc49c837104a0becab4c9583bf826c0d352c1f026363448954a4c25",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/alphafold.md": "887217bb9a0174a64b0d2b84475fa961e9d9c2c48dfac1e0bc7b6c0bb958b5bc",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/alphavantage.md": "d7f38702848cff7239fa1c00271dc4fff445f4eda88774ad65724468d1497f97",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/bea.md": "2ceb06d34c26bb679de7d8645b754e1da0e9461de2a595006971877a9b06b757",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/bindingdb.md": "390dabcc89dd9750bedca0b9d8d2edefc984157202b83a5e8b39138d3e26873f",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/biogrid.md": "887c72e6858db7ab113c37dcd93378ba422e7e6a195f27c466f50e45c611bf0d",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/bls.md": "711e31c51e600970a31815fd3b224d61501bb12705496c498de3379868612620",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/brenda.md": "4cb904eadbe76a2a392b5826e4eec46d9e59c4c61acddf0322059d94ca07af0c",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/cbioportal.md": "d57ec6a08a5538e38bb1b73bc1eea855b14b87bf0babdf62730a312298f6c85b",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/census.md": "ceaeae4a0c35cf87ba20de4b7405b867bb105dc7f6f82ab80685d0b1af437ff1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/chebi.md": "657014c7416c6418c911fd710c10c02221edf17fba08f22e54dd9619ab614a43",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/chembl.md": "8b48ee10535d4df944c0a1c5bede8efe8c6a96ee39744191e7d4827ab8fcd25c",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/clinicaltrials.md": "aaa72ade4740edee237cb10371fc07e0b662145f45b03f95410f16a9e93c02e9",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/clinpgx.md": "563c95c97fbad8f5cbc4b9ff1783e32439a916beb0d579cb73215accdb8ef0a3",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/clinvar.md": "5c051b539f8df9f292cdb63f627e19d754388e627c0d891d4b0293be30d30a3c",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/cod.md": "45569fbad65309ddff67bba27f2b7f231bc6e10d715e6ccd60ae8263fb509ed1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/cosmic.md": "06639396334327201880e26a52647c41675411c56bd6a89c22bd2bdd527a6100",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/dailymed.md": "2a4ed938cc7b2611e272a655699a0a98105b926eeb00cb68d41c9aafd306088e",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/database_selection_guide.md": "02fb77429b15d8e599f05ab5ee7de4988b8d04d815285112f2dc182e86e18d6b",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/datacommons.md": "4e080cd83e5a9fedbf8c0b1c2be71c2d4cd0cbc333810834a8c24d574138e258",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/dbsnp.md": "bdee23c89aca51a6a0e33593da3059ffca314f29e399891713cf57583d86da8d",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/disgenet.md": "0c3fda50de43234d4e213cc7c572c6edbb58b47fc5abe2458fe1a4eca7ddad4f",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/drugbank.md": "5f874bda7098c244e65b69a08894f25ced01c548ae116a49f6388ff7d465b841",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ecb.md": "8452e47f271c9f0b6ec7f346af2c72ab296dfaa1e13a83310e1170e3f48bd372",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/emdb.md": "3d07236a2b91bed128afbab61cfb60e397e79ec17fb659359ea86029e61cb185",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ena.md": "7ab747fbcf9be9e4f22caf88c7a6912d3e676382baf80c3bb5d699e572d18729",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/encode.md": "e11c15b74cb30f3b6222ed7bb398967027ebcaa3ca5e789e3a4022cfdc658735",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ensembl.md": "80d118b56d9e250f69570e651d60961ddddc8ada3a117bad94c38b66d8a9a935",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/epa.md": "d5bbac5283f1caae1d6ab7013787f8abeabf85c354e1a2caf58d286e7bb882fa",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/eurostat.md": "46b125c99fb756ce62655e6a6d5d5562d0694b329844c7089ce6612daf8c9dfb",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/fda.md": "b42a94499aadea58802a6116731244d84941ba9ffca698eac31bead5ceb38331",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/federal-reserve.md": "a8b47c7925eba9cc268106a1a8bb54f2fdf849ffbda6fa2dd00f0f561473d11e",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/fred.md": "cabb0f8c96da6dd5cc53c11861ea179477800896260c9753f490079962542f96",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/gene-ontology.md": "59cdfdf414893ee82d1a51f390fe96ca3713da780e96dd2c6a3cdb354afe63a8",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/geo.md": "43fcec5baddb616903e2811bbc49fe5c5f24fda6e491498e98d775c6671015b1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/gnomad.md": "bf319407d088b321295211aaff377db8f21d60dae0f75bd9311f2e2e65e3ed20",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/gtex.md": "ff4b57debc74a39f2e879e81a43d18193714bb75dc855d1dd9a5bb12dd09593b",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/gwas-catalog.md": "93d34d7047bfbcde62de6458814d83608a7dc99a4e0599fc32322f923cebc333",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/hca.md": "4a8afd752e835065feab3b21989f27dde56172af7fa0b79acdac7eb7536750e1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/hpo.md": "74f281daf81f4e544b62a0a9177242816ede3de45b8b6c58ba509a2cd8642a75",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/human-protein-atlas.md": "e93b1038d79249e58aa22ea60e1c954edd32db8b8ace7aa76a14a9b88a9a11f3",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/interpro.md": "18304f87ac9c9f11d399040be52290bc2287c583bff43348bf875a50cd6ba0f4",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/jaspar.md": "53d0f4111fb7ca547062bbde4fe2f4ebc418e0088da0e401733287018a4cd837",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/kegg.md": "10af18380cd77b3651854519a60f2a28e4dec53172e8db658b7681d4cbabd99f",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/lincs-l1000.md": "ddbc6b02bd394782b824c9f084b9079bf79168dc99bd1085163778c5e91de8cb",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/materials-project.md": "0c54129b9294a9464623faa362b91bf32a73bfcdbe5b514802f3e0acd12c2d12",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/metabolomics-workbench.md": "c5d33c855da6f96c23a923703bfea13818650ce6c7755ee7e4ed6eac788c943e",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/monarch.md": "dedd349124dba2f685ab9e041e624e61ea93e3672181c2a7c7c9b3e986e75660",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/mousemine.md": "4d63c40019bc259ab6eb72cbf5ab23c14b6cb9a992ee3a18c6a7f07554ef6e21",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/myvariant.md": "4bcb1c829fdb89ad5af864135c84aa40667cbeb8271d80999c1518c223600cb0",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/nasa-exoplanet-archive.md": "9be3b02563289e9cf4351d5f4f185d022fe6e5de76450a8e1b477545c5721ffe",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/nasa.md": "bd7719904299fd8bd93a87804e1eb281388b57e7d64c984d3f7728c7c2c7c2a2",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ncbi-gene.md": "c1d32a4eddb24e20129467adafc177366327c9e48ee5a67b78515b07c36370c1",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ncbi-protein.md": "7b5489a99bddb357567a6287cb7630413db9e298378397e4d16f3ae0bdb8733a",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ncbi-taxonomy.md": "f9508cebfb72825c9752fe96ef72e52d057a7ea46dd64fe8fb3aab435f85f266",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/nist.md": "8587c7dbb384718b4bc0e769b2279e355ad6acc0273bb2dedf7619feb9e67738",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/noaa.md": "54c296b7bacd0b3b0321a8889428534e6b56c9ceac126914c09016d8f09b2dcc",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/omim.md": "ea5d3063474fec788ed4fa6d0f2e1d972d843ae34ee6538456386a57c36e161a",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/opentargets.md": "e72ab37f5cd87a748c91bc9ccecde2627329523c85f6d024a9093611b3eafc52",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/openweathermap.md": "89caa890cd45dcc1b500cdc6bd927a2aac846c4bb6af3109bca51e5a0191a531",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/pdb.md": "38eaeeff4ca768c9545450233ac3942b5cf389b9347f9541cdd0267036cd30fc",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/pride.md": "cff5062cd99d22d928732383c6142408be83c95d2d166e9d265866352b94ce4d",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/pubchem.md": "93225212346b327623446874090cb458c954f5820cba66a4163e5e8eb6d75524",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/quickgo.md": "b567b7e4b17f5d91c6b09476fcbd06d2c772538805c45655f00309bae84d4de6",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/reactome.md": "c91bc6c1464005d405c5d5320d9e7527ac7c9fcd0ef8497a9e8e988e24c70424",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/regulomedb.md": "933970cc4586ec2d6d342ccda90c7378d085129b94f8654605b6bca43a9c5883",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/retrieval-contract.md": "a268604e226309c291aa7c981a99219edde25346d69645ad9d8acc3cbabbaaf2",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/rummageo.md": "1dce8be4c7ac7b3f79e59988da7cef6358176a2619bd09d56ad00ffd89ddb443",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/sdss.md": "b6c1dc13446aaad2ebd5cd6a894a69b979da4a93b047d8a48bd507a33ee2a75f",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/sec-edgar.md": "282e045e9675e309a6c720045fd10475da3b9759459d876b3a8ba10beab457e6",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/simbad.md": "d14a765a17f1de3299cdb68e5ed64a38b5790fe7529cde19b1534f78fd34ed25",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/sra.md": "f70d0b4ce1d0a2b2ce01fdbd358929ffbc99eb77256d18ae3d215d190a5fc452",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/string.md": "8d39fe9d9fb46bf7ce6830703603f07777ea21770e83f883bc98cba5ab20f699",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/tcga-gdc.md": "91f8be4bf809b9f3ac87641980fd33b6ec5f76ddf17b32e9c2f5c5b9f090d70b",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/treasury.md": "a1b4c3a4d18d1f5a55135585384c4e51705722a7b04c1e1ba151b954f01dd7f6",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/ucsc-genome.md": "8be92a6a4978a12e56c412b94195f44128837ae66528779859dd994aa57f4781",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/uniprot.md": "8e625f9f6e3becd9dde739d8937b306feafd29482af2c359b579915ea560f2de",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/usgs.md": "343bb71e510f43b54a444f486b97f1e47e957aed4f35b81fa588c3e3247bbd30",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/uspto.md": "858002e1a231ae0eae30c48b7dec00d97b80fe7e08c9305dfbec0805434c19b0",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/who.md": "9260f58512a9de4f3647207c759451931ffbd4e15415afa39b0bfdedbdb12d4b",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/worldbank.md": "673144b300cdbef6fc0a6bb995df3182f13230dd5dd83264db593c13b3e4f0c4",
+        "vendor/skills/k-dense/scientific-agent-skills/database-lookup/references/zinc.md": "7aa76cb2cd7f2cdae05c73faf95be0445f86c404259e4efabb352ed179e97274",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/SKILL.md": "16a9e85bcdcb9bb859e1646bf836e51b22900445ba2e367d8d75be05b5a5cba8",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/assets/review_template.md": "08671516976d01a7004f8ae7c944a50c253877504720c15d5fa24eed90889819",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/references/citation_styles.md": "2a50e43b18c2fff781e04406deb66186ba8f91ed28af32004aba63c63dcc1789",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/references/core_workflow.md": "4d63f1087c98efeec7c7bf622bed6e0456a9c7c3defe584995917f2de6f2c601",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/references/database_strategies.md": "24b56cd88128a9016520ed6b5e2abb79e19dc9b86cbf064927e9056aa1504f48",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/references/example_workflow.md": "86336c42f78ff282430a6cdd2282a99562cc9d5e46b62e70a33bd839f9ab726a",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/references/search_and_citation.md": "f33d671351989ee86066b9a21bdbf630a1f60001ada92fda4c942006d37b74fe",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/scripts/generate_pdf.py": "0ba1b16b196b64d4966e5f055a289f0c17e3579a84254abe47ff63be95b4f136",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/scripts/generate_schematic.py": "0c81ce099d5ab9aa3d3c486aa9bd3e81ee1117e18a54db14bb0a68de61eaa4bc",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/scripts/generate_schematic_ai.py": "7316f2df92f442b8c60a5dd2bd8b504e17449d4be89352e5af24be2239700046",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/scripts/search_databases.py": "76f47fd18ca28df4985ffc6d30d5ad659e67c8058bb3de8f385c2443752f4eaf",
+        "vendor/skills/k-dense/scientific-agent-skills/literature-review/scripts/verify_citations.py": "4c8e8377718ddd47e9cd7cef706935b04910af5d13bfd920970dcf41d4ef3706",
+        "vendor/skills/k-dense/scientific-agent-skills/pyproject.toml": "f1389a7dcea847fab4bbd59d4d4b15a717e9eb7fbd28af46115cb1ad8d9fb876"
+      }
+    },
+    {
+      "repository": "anthropics/skills",
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "url": "https://github.com/anthropics/skills",
+      "files": {
+        "vendor/skills/anthropics/webapp-testing/LICENSE.txt": "bc6b3af2f331cbc7fb0da1344efb2cbe5877a31498b4d70dbc7000f3405a1362",
+        "vendor/skills/anthropics/webapp-testing/SKILL.md": "51b7349e77ec63b7744a6f63647e7566a0b4d2e301121cc10e8c2113af6556a2",
+        "vendor/skills/anthropics/webapp-testing/examples/console_logging.py": "ea46877289acb82da7e7ce59d0bc37c8977cd57e2a006d0c88d7a1c625bf95da",
+        "vendor/skills/anthropics/webapp-testing/examples/element_discovery.py": "d63c89604a22f8845d724e95dda45db49b1bf57c25ce0a83afbb7b8da3d402f0",
+        "vendor/skills/anthropics/webapp-testing/examples/static_html_automation.py": "9d533aafb875ee3ab8b8ebf8f5b9003ac8d999da3d09b285cce252e623140064",
+        "vendor/skills/anthropics/webapp-testing/scripts/with_server.py": "b0dcf4918935b795f4eda9821579b9902119235ff4447f687a30286e7d0925fd"
+      }
+    },
+    {
+      "repository": "tonylofgren/aurora-smart-home",
+      "commit": "8ffe3f7b0c15bf239447f7de27270174fd6c3f3a",
+      "url": "https://github.com/tonylofgren/aurora-smart-home",
+      "files": {
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/SKILL.md": "ac10f126335cfddc8694d5e0592e5888e3ef6c7d3a0e8b1380ce89230fd8469b",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/assets/custom-editorial/README.md": "b4a3b93f556d9ee8233f8dd37ed3fab2dc41f6e5850eb16e0f8f422764f72362",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/assets/custom-editorial/dashboard.yaml": "aca6a2ca5fceabf9538021f02c78a08ebe0857b875a0bc17106d24961f38ce6d",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/assets/custom-editorial/theme.yaml": "aca6194c52797a8abc17bdaafdc8e0cc0aa9b19a8f54a01a63a096357be12512",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/custom-dashboards.md": "7925b825a732519b6eebd14f6044b8db4447d4f04e100d8bd12d9dfc07a218a9",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/dark-minimal.md": "5f850c8aa4e92df16d9d5f324b3b5dad1298e080c33edf7038a1a515ce98d958",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/glassmorphism.md": "a23e815a1da947bc5bd40d5516e1b198e132ae07a7d2f590ce484fbff7e4fd63",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/image-prompts.md": "9fe8274db5ae80c0de4be0530b7d874f2f95d142aa0f64b0ed10b7d14ea081e3",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/luxury-gold.md": "a7b1fc6a88f436844efd74b4210db8cf4e0eaca46b35cf25d599ab0391ecdb5e",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/material-you.md": "186f63641786cd3403a46b5c8b11af83fac918654852c0365134f17d8542710c",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/neon-cyberpunk.md": "b16753a6b28368397fbd04aa822f0644d73dcd83491487215fc48c2e901cdd4f",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/nordic.md": "77ba941369af3da0a50617887f5f603b93d380558fc6a2b25258832735e46b38",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/retro-terminal.md": "9367803c80cc925df1b6a934721ab945803897211f9a27d70b5de9ea06551988",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/soft-pastel.md": "55ca98b96be5f9616534622b74c683cc231912ea919fb3b3422a9b084ded071a",
+        "vendor/skills/aurora-smart-home/ha-dashboard-design/references/warm-home.md": "20454be82f4f72fb40f25f9a39148c4db17393e878ce1e6ff860314c6511883c"
+      }
+    },
+    {
+      "repository": "extsps/Victron-Modbus-Skill",
+      "commit": "c17478315bbbfe09c9235645004a473d413215ef",
+      "url": "https://github.com/extsps/Victron-Modbus-Skill",
+      "files": {
+        "vendor/skills/extsps/victron-modbus-skill/LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+        "vendor/skills/extsps/victron-modbus-skill/README.md": "7ae5a392a48e0ebecfd5d281cc746cee6f16b79526abd496f1bcf32f750fac65",
+        "vendor/skills/extsps/victron-modbus-skill/SKILL.md": "385ac73540509e1771516b1c1c283c1411196239f138e3435b12a2d5154bc677",
+        "vendor/skills/extsps/victron-modbus-skill/agents/openai.yaml": "752301c49cfa1874e95d0369a55af25f3745631049973ff1e9def4a7dda0d02d",
+        "vendor/skills/extsps/victron-modbus-skill/references/modbus-workflow.md": "aa0315a951f4a42c7dbbabf63c098bee2b5e30ca34ddfa4aabbd2aa88a136889",
+        "vendor/skills/extsps/victron-modbus-skill/references/register-plan-template.md": "cc478cf9bc2fe1e029461d3b06fa4abf9a526a93ac1ece3d1dcc611aea618464",
+        "vendor/skills/extsps/victron-modbus-skill/references/service-overview.md": "5f30318dbc66512189570b7339978e2854a3271cd4c1c5cc97dd0f9b6950cf53",
+        "vendor/skills/extsps/victron-modbus-skill/references/workbook-guide.md": "7954b9955b69f0459eb70ed0304e9cc534c8d375272cac99b183ebd23c2e522f"
+      }
+    },
+    {
+      "repository": "mart337i/odoo-skills",
+      "commit": "634b2db69c0ffb9766a5d16cff09a81ff1df54f4",
+      "url": "https://github.com/mart337i/odoo-skills",
+      "files": {
+        "vendor/skills/mart337i/odoo-skills/README.md": "89a3492972bb7081dc97e83dd6890526655c80e4f2e00fb76a41f68acbc5a05f",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/SKILL.md": "a5b02292d2d986f22de99677c156b07f39e9655ea8eb4d102826b05ecdaa35c9",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-actions-guide.md": "0db6cfed41da08d2c7342a7f0d361ed0bf79f6836a3a29d0004989225107ebd3",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-controller-guide.md": "1a131bda6097753b1bed4f70284cbd6f7c9aab7d28025eb6fadf068cba765926",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-data-guide.md": "11177c24c2075dd34c144ee3381b18f7151485a02cea76629c1e785f324eaf3e",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-decorator-guide.md": "24d6dbdb1e16467be7b49364e0bc6673a22761d9afdc22639a44b5d141753400",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-development-guide.md": "1325144314254928e2181b16f63140e6f84ad7373822f28cdf264c08b6d8aa99",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-field-guide.md": "55ec763d6513df0ececcb96bfcc648efbee67e77b284161ac73afc8c41e2ed5b",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-manifest-guide.md": "d2eaa1e583a33f13facb14974b084d53165f8e1d0a7b90dcb1a88d0d4c226bfc",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-migration-guide.md": "992697873f2ba2ab89bcf0610c84b458840fcbdc6022a5256f9c5a0c661a6e78",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-mixins-guide.md": "91110a91b1ddcb74c011236c0522e49d91078d5ea9c10828a0e6bf1c74870372",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-model-guide.md": "cf22140869c6811cc06c3938555cad84f208e06986d61848e1784b7c64eb3eaa",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-owl-guide.md": "bdc1ab1e2d472f7c37ea22e3de12c7940ebf71c4d7c86b3faf14eb8dc9c9887e",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-performance-guide.md": "8377516871909a20e0e1d93c4ecee0259424641cf5afa329c0bc0b9ceab0ca5c",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-reports-guide.md": "20986ed4369796e3c123cd1bb7f9b5dacb4cf0d34b0d40733d384c82ae4b0e5d",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-security-guide.md": "fd721abfc6a8d6df36f036708b08646ecd248d658c9ff162ddcd58c87a699ec7",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-testing-guide.md": "69a05550e9af55434c4a7031b02128e737f72d8bad2b29d49168f23da00bb94f",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-transaction-guide.md": "7efa4263570f6ef7fd1b77bae513a325656457b9f4688d75a67f353aad4265e0",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-translation-guide.md": "c6d42d95a96e440830f9d079a7e67d77edbfa13c8c31647ef2d7e996f0e4ca85",
+        "vendor/skills/mart337i/odoo-skills/odoo-19.0/references/odoo-19-view-guide.md": "e50d962141a77007d0c7eaad70fdb788d42e3f758cbbaffa7e65e438d4fdcf0b",
+        "vendor/skills/mart337i/odoo-skills/package.json": "b8e7f0ffe396c8a3f1a24299b23bd6b8db3912e52554fbb3c6f77f482049e304"
+      }
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "commit": "b1a00457c0b8794243883f387e7de71e88800e3e",
+      "url": "https://github.com/github/awesome-copilot",
+      "files": {
+        "vendor/skills/awesome-copilot/powerbi-modeling/SKILL.md": "0730f587a313065335e1ff58f5b5dcb60a150c1632451a365f9d232ada0e54ff",
+        "vendor/skills/awesome-copilot/powerbi-modeling/references/MEASURES-DAX.md": "d661d2855cbd90e86de6392cbf4e0458c8f2f249e469558491829a19f0e435ed",
+        "vendor/skills/awesome-copilot/powerbi-modeling/references/PERFORMANCE.md": "c270f42a6f3910550842478cc1bc64236def5ecd6e469778c4ffc242d1c3beaf",
+        "vendor/skills/awesome-copilot/powerbi-modeling/references/RELATIONSHIPS.md": "1a73fcdc91b64eed2fe6592fbfbff11ae9dde8d3ea64e24395901c81f119c740",
+        "vendor/skills/awesome-copilot/powerbi-modeling/references/RLS.md": "8abc844089dc8fcc457167d9007609f81a96b166c2787d69182d57649faa2093",
+        "vendor/skills/awesome-copilot/powerbi-modeling/references/STAR-SCHEMA.md": "af288e11a243a090f9a2d540103d49d3b6d0d20e39a85e9b45c51175eb0028b2"
+      }
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "commit": "b1a00457c0b8794243883f387e7de71e88800e3e",
+      "url": "https://github.com/github/awesome-copilot",
+      "files": {
+        "vendor/skills/awesome-copilot/power-bi-dax-optimization/SKILL.md": "5c94805ea59a827571464d169571db6f9100859c9072ef7af4aba24aba4ea5be"
+      }
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "commit": "b1a00457c0b8794243883f387e7de71e88800e3e",
+      "url": "https://github.com/github/awesome-copilot",
+      "files": {
+        "vendor/skills/awesome-copilot/power-bi-report-design-consultation/SKILL.md": "0151c2ebaed4d6fde6c747cfd14c324b54013ec59ef4f43872e043976d880b2b"
+      }
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "commit": "b1a00457c0b8794243883f387e7de71e88800e3e",
+      "url": "https://github.com/github/awesome-copilot",
+      "files": {
+        "vendor/skills/awesome-copilot/power-bi-performance-troubleshooting/SKILL.md": "3901de5f09fff6a226b9a458f147875084d2aac30329c3f4c3b1bb3318316921"
+      }
+    },
+    {
+      "repository": "github/awesome-copilot",
+      "commit": "b1a00457c0b8794243883f387e7de71e88800e3e",
+      "url": "https://github.com/github/awesome-copilot",
+      "files": {
+        "vendor/skills/awesome-copilot/power-bi-model-design-review/SKILL.md": "bf6268e3d75446533b54887db6263302fde01f516634d4bd60a1cc21928add4c"
+      }
+    }
+  ],
+  "installed_skills": [
+    {
+      "name": "canvas-app",
+      "entrypoint": ".agents/skills/canvas-app/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/canvas-app/SKILL.md",
+      "claude_entrypoint": ".claude/skills/canvas-app/SKILL.md"
+    },
+    {
+      "name": "configure-canvas-mcp",
+      "entrypoint": ".agents/skills/configure-canvas-mcp/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/configure-canvas-mcp/SKILL.md",
+      "claude_entrypoint": ".claude/skills/configure-canvas-mcp/SKILL.md"
+    },
+    {
+      "name": "power-automate",
+      "entrypoint": ".agents/skills/power-automate/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/setup/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-automate/SKILL.md"
+    },
+    {
+      "name": "browse-flows",
+      "entrypoint": ".agents/skills/browse-flows/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/browse-flows/SKILL.md",
+      "claude_entrypoint": ".claude/skills/browse-flows/SKILL.md"
+    },
+    {
+      "name": "build-flow",
+      "entrypoint": ".agents/skills/build-flow/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/build-flow/SKILL.md",
+      "claude_entrypoint": ".claude/skills/build-flow/SKILL.md"
+    },
+    {
+      "name": "create-flow",
+      "entrypoint": ".agents/skills/create-flow/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/create-flow/SKILL.md",
+      "claude_entrypoint": ".claude/skills/create-flow/SKILL.md"
+    },
+    {
+      "name": "debug-flow",
+      "entrypoint": ".agents/skills/debug-flow/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/debug-flow/SKILL.md",
+      "claude_entrypoint": ".claude/skills/debug-flow/SKILL.md"
+    },
+    {
+      "name": "diagnose-flow",
+      "entrypoint": ".agents/skills/diagnose-flow/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/diagnose-flow/SKILL.md",
+      "claude_entrypoint": ".claude/skills/diagnose-flow/SKILL.md"
+    },
+    {
+      "name": "manage-flows",
+      "entrypoint": ".agents/skills/manage-flows/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/manage-flows/SKILL.md",
+      "claude_entrypoint": ".claude/skills/manage-flows/SKILL.md"
+    },
+    {
+      "name": "route-environments",
+      "entrypoint": ".agents/skills/route-environments/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/route-environments/SKILL.md",
+      "claude_entrypoint": ".claude/skills/route-environments/SKILL.md"
+    },
+    {
+      "name": "systematic-debugging",
+      "entrypoint": ".agents/skills/systematic-debugging/SKILL.md",
+      "source": "vendor/skills/obra/superpowers/systematic-debugging/SKILL.md",
+      "claude_entrypoint": ".claude/skills/systematic-debugging/SKILL.md"
+    },
+    {
+      "name": "verification-before-completion",
+      "entrypoint": ".agents/skills/verification-before-completion/SKILL.md",
+      "source": "vendor/skills/obra/superpowers/verification-before-completion/SKILL.md",
+      "claude_entrypoint": ".claude/skills/verification-before-completion/SKILL.md"
+    },
+    {
+      "name": "webapp-testing",
+      "entrypoint": ".agents/skills/webapp-testing/SKILL.md",
+      "source": "vendor/skills/anthropics/webapp-testing/SKILL.md",
+      "claude_entrypoint": ".claude/skills/webapp-testing/SKILL.md"
+    },
+    {
+      "name": "ha-dashboard-design",
+      "entrypoint": ".agents/skills/ha-dashboard-design/SKILL.md",
+      "source": "vendor/skills/aurora-smart-home/ha-dashboard-design/SKILL.md",
+      "claude_entrypoint": ".claude/skills/ha-dashboard-design/SKILL.md"
+    },
+    {
+      "name": "victron-modbus",
+      "entrypoint": ".agents/skills/victron-modbus/SKILL.md",
+      "source": "vendor/skills/extsps/victron-modbus-skill/SKILL.md",
+      "claude_entrypoint": ".claude/skills/victron-modbus/SKILL.md"
+    },
+    {
+      "name": "odoo-19",
+      "entrypoint": ".agents/skills/odoo-19/SKILL.md",
+      "source": "vendor/skills/mart337i/odoo-skills/odoo-19.0/SKILL.md",
+      "claude_entrypoint": ".claude/skills/odoo-19/SKILL.md"
+    },
+    {
+      "name": "database-lookup",
+      "entrypoint": ".agents/skills/database-lookup/SKILL.md",
+      "source": "vendor/skills/k-dense/scientific-agent-skills/database-lookup/SKILL.md",
+      "claude_entrypoint": ".claude/skills/database-lookup/SKILL.md"
+    },
+    {
+      "name": "literature-review",
+      "entrypoint": ".agents/skills/literature-review/SKILL.md",
+      "source": "vendor/skills/k-dense/scientific-agent-skills/literature-review/SKILL.md",
+      "claude_entrypoint": ".claude/skills/literature-review/SKILL.md"
+    },
+    {
+      "name": "powerbi-modeling",
+      "entrypoint": ".agents/skills/powerbi-modeling/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/powerbi-modeling/SKILL.md",
+      "claude_entrypoint": ".claude/skills/powerbi-modeling/SKILL.md"
+    },
+    {
+      "name": "power-bi-dax-optimization",
+      "entrypoint": ".agents/skills/power-bi-dax-optimization/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-dax-optimization/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-dax-optimization/SKILL.md"
+    },
+    {
+      "name": "power-bi-report-design-consultation",
+      "entrypoint": ".agents/skills/power-bi-report-design-consultation/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-report-design-consultation/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-report-design-consultation/SKILL.md"
+    },
+    {
+      "name": "power-bi-performance-troubleshooting",
+      "entrypoint": ".agents/skills/power-bi-performance-troubleshooting/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-performance-troubleshooting/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-performance-troubleshooting/SKILL.md"
+    },
+    {
+      "name": "power-bi-model-design-review",
+      "entrypoint": ".agents/skills/power-bi-model-design-review/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-model-design-review/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-model-design-review/SKILL.md"
+    }
+  ]
+}
+

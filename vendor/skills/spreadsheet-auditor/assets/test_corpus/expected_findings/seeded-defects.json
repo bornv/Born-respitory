@@ -1,0 +1,57 @@
+{
+  "workbook": "seeded-defects.xlsx",
+  "static_expected": {
+    "LIVE_ERROR": [
+      "Model!B44",
+      "Model!B28"
+    ],
+    "BROKEN_REFERENCE": [
+      "Model!B28"
+    ],
+    "FORMULA_DRIFT": [
+      "Model!D4",
+      "Model!B70"
+    ],
+    "RANGE_EXCLUSION": [
+      "Model!B11",
+      "Model!B17",
+      "Model!B70"
+    ],
+    "RANGE_INCLUDES_SUBTOTAL": [
+      "Model!B18"
+    ],
+    "RANGE_LENGTH_MISMATCH": [
+      "Model!F63"
+    ],
+    "HARDCODE_IN_FORMULA_BLOCK": [
+      "Model!C22"
+    ],
+    "LITERAL_CONSTANT": [
+      "Model!B25"
+    ],
+    "IFERROR_MASK": [
+      "Model!B27"
+    ],
+    "HIDDEN_STRUCTURE_IN_TOTAL": [
+      "Model!B32"
+    ],
+    "NUMBERS_STORED_AS_TEXT": [
+      "Model!B35"
+    ],
+    "WHITESPACE_KEY": [
+      "Model!A36",
+      "Model!A38"
+    ],
+    "DUPLICATE_KEY": [
+      "Model!A37, Model!A38"
+    ],
+    "MERGED_CELL_IN_DATA_RANGE": [
+      "Model!A42:B42"
+    ]
+  },
+  "value_dependent_expected": {
+    "CROSS_FOOT_FAILURE": [
+      "Model!E70"
+    ]
+  }
+}

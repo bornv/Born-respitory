@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+skills_repo_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+skills_env_path=${BORN_SKILLS_VENV:-"$skills_repo_root/../.venvs/born-skills"}
+if [[ ! -x "$skills_env_path/bin/python" ]]; then
+    echo 'Installeer eerst de hulpmiddelen: bash tools/setup-skills.sh' >&2
+    exit 127
+fi
+exec "$skills_env_path/bin/python" "$@"
