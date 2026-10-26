@@ -11,6 +11,12 @@ Modelinstellingen: `maxParallelismPerRefresh: 1` (Penta-belasting), compatibilit
 3. Nieuwe meting/kolom: eigen `lineageTag` (GUID), `formatString`, `displayFolder`, `///`-beschrijving.
 4. Nieuwe query: ook in `annotation PBI_QueryOrder` en `ref table` in `model.tmdl`.
 5. M-partitie → berekende tabel: `partition X = calculated`, kolommen `sourceColumn: [Naam]`; gebruiker moet in een lege map uitpakken.
+6. **Query's schoon opbouwen vanaf de bron, nooit achteraf repareren.** Geen stappen als `Opgeschoond = Table.RemoveColumns(...)`, geen `MissingField.Ignore`/`Table.HasColumns`-vangnetten en geen kolommen aanmaken die later weer weg moeten. Concreet:
+   - SQL selecteert alleen de velden die gebruikt worden (filtervelden alleen in `WHERE`);
+   - naam en type direct bij het inlezen (`Table.TransformRows` naar records met een `type table [...]`, of `Table.SelectColumns` + `TransformColumns` als eerste stap bij Excel);
+   - tussenresultaten alleen als een latere stap ze nodig heeft;
+   - de query eindigt met één `Table.SelectColumns` met exact de kolommen uit de TMDL.
+   Moet een query anders, herschrijf hem dan als geheel in plaats van er een stap achteraan te plakken.
 
 ## Valideren (lokaal, vóór opleveren)
 | Controle | Hoe |
@@ -47,3 +53,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 20 | LCV-werkwijze: F/D-tabelnamen, Calculations, Last refresh date + kaart, timeout 3 uur, datumfilter PAJL als getal |
 | 22 | Broncontroles verwijderd (PentaViews/PKLPBron/TransportGegevensbron, controletabellen en -pagina's); kolommen PKLK/PKLP vast in SQL; alleen 8 dataquery's, geen metadataquery's |
 | 21 | Eén query per Penta-bron (8 dataquery's), afgeleide tabellen in DAX, dataflow-schakelaar en query LCV vervallen; opgeschoond (22 metingen, 46 kolommen) |
+| 23 | Alle query's schoon herschreven: geen Opgeschoond/RemoveColumns/MissingField-stappen, SQL alleen benodigde velden, Excel-tabellen met vaste kolomlijst; BundelbronBeschikbaar en "Bonnen zonder bundelbron" vervallen |
