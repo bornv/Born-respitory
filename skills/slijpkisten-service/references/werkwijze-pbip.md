@@ -17,6 +17,7 @@ Modelinstellingen: `maxParallelismPerRefresh: 1` (Penta-belasting), compatibilit
    - tussenresultaten alleen als een latere stap ze nodig heeft;
    - de query eindigt met één `Table.SelectColumns` met exact de kolommen uit de TMDL.
    Moet een query anders, herschrijf hem dan als geheel in plaats van er een stap achteraan te plakken.
+   Let op bij hernoemen tijdens het inlezen: links staat de nieuwe naam (`Datum = ...`), maar `r[...]` blijft de Oracle-naam (`r[DATUM]`). Controleer na elke herschrijving dat elk `r[VELD]` in de SELECT staat (fout in v23: "The field 'Datum' of the record wasn't found").
 
 ## Valideren (lokaal, vóór opleveren)
 | Controle | Hoe |
@@ -54,3 +55,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 22 | Broncontroles verwijderd (PentaViews/PKLPBron/TransportGegevensbron, controletabellen en -pagina's); kolommen PKLK/PKLP vast in SQL; alleen 8 dataquery's, geen metadataquery's |
 | 21 | Eén query per Penta-bron (8 dataquery's), afgeleide tabellen in DAX, dataflow-schakelaar en query LCV vervallen; opgeschoond (22 metingen, 46 kolommen) |
 | 23 | Alle query's schoon herschreven: geen Opgeschoond/RemoveColumns/MissingField-stappen, SQL alleen benodigde velden, Excel-tabellen met vaste kolomlijst; BundelbronBeschikbaar en "Bonnen zonder bundelbron" vervallen |
+| 24 | F Afkeur: r[DATUM]/r[MENGE]/r[ARTIKEL_NR] hersteld; tblContracten in de afsprakenlijst t/m kolom H |
