@@ -60,3 +60,9 @@ Ongebruikte metingen en kolommen zijn verwijderd (22 metingen, 46 kolommen). Cri
 
 ## Rapport (pagina's)
 Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en marge, Nieuw contract, Meerkosten, Per kist (incl. serienummercontrole, zendingen), Afkeur, Slijpservice (contracten, Waarde slijpservice, overige contractkosten, revisie, Bron-kleur), Facturen, Omzet per order, PO's, en transport: Kisten per zending, Transport en afleverbonnen. Slicers o.a. Maandstatus (lopende maand selecteerbaar), robot, klant, gewenste marge.
+
+## Betrouwbaarheid kistaantal (sinds v26)
+`Kisten in omloop` = verschillende serienummers op kistregels met kosten sinds StartPeriode. Twee gaten worden zichtbaar gemaakt op de pagina **Controle kisten**:
+- `Kistregels zonder serienummer`: kistregel (.990/.000) zonder CHARGEN_SERIEN_NR in het journaal → telt niet als kist.
+- `D Kisthistorie`: alle kistserienummers uit LCV_PAJL (alle jaren, GOB/GVR, kisttypen uit KistRegelsSQL), per serienummer in Oracle samengevat (laatste datum, laatste order via `KEEP (DENSE_RANK LAST ORDER BY DATUM)`, klant uit LCV_KPTM). Kolom `Status`: In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode.
+StartPeriode vast houden (niet meeschuiven): een meeschuivende periode laat kisten en contractkosten ongemerkt wegvallen.

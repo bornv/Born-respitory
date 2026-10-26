@@ -58,3 +58,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 23 | Alle query's schoon herschreven: geen Opgeschoond/RemoveColumns/MissingField-stappen, SQL alleen benodigde velden, Excel-tabellen met vaste kolomlijst; BundelbronBeschikbaar en "Bonnen zonder bundelbron" vervallen |
 | 24 | F Afkeur: r[DATUM]/r[MENGE]/r[ARTIKEL_NR] hersteld; tblContracten in de afsprakenlijst t/m kolom H |
 | 25 | Alle 5 functies (fx) verwijderd en in de query's zelf opgenomen; StartPeriode 202410 (2 jaar, vast); KistKosten-lidmaatschap via joins; Betaaltermijnen herschreven |
+| 26 | Pagina Controle kisten: kistregels zonder serienummer + D Kisthistorie (alle kistserienummers, alle jaren, in Oracle per serienummer samengevat; status In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode); 9 Oracle-query's |
