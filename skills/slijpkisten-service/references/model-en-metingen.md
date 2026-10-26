@@ -1,17 +1,16 @@
 # Model, tabellen en metingen
 
 ## Gedeelde M-expressies (niet geladen)
-Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist, KPTM_Contract, Journaal_Kist, SqlIn, Bronmodus/Dataflow. Nieuw: KistOrdersSQL/KistKlantenSQL/KistRegelsSQL/VanafJournaal (SQL-tekst), NaarDatum, MesRobotLijst. Zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md#bronlaag-één-query-per-penta-bron-vanaf-versie-21).
+Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist, KPTM_Contract, Journaal_Kist, SqlIn, Bronmodus/Dataflow. Nieuw: KistOrdersSQL/KistKlantenSQL/KistRegelsSQL/VanafJournaal (SQL-tekst), NaarDatum, MesRobotLijst. Zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md#bronlaag-één-query-per-penta-bron-vanaf-versie-21). Sinds versie 25 ook vervallen: de functies NaarDatum, KPTM_Lees, LeesHoofdafleverbon, Opzoek en Bevat.
 
 | Expressie | Doel |
 |---|---|
-| `OracleServer`, `StartPeriode` (jjjjmm, bv. `202510`), `AfsprakenSite`, `AfsprakenBestand` | Parameters |
+| `OracleServer`, `StartPeriode` (jjjjmm, vast; sinds v25 `202410` = 2 jaar terug), `AfsprakenSite`, `AfsprakenBestand` | Parameters |
 | `KistBasis` | Unieke kistregels (eigen lichte SQL) — basis voor bijna alles |
 | `KistOrderLijst`, `KistKlantLijst` | Lijsten uit KistBasis voor `SqlIn` |
-| `KPTM_Lees(sql)`, `KPTM_Kist`, `KPTM_Contract` | KPTM-boekingen op kistorders resp. contractorders |
 | `Journaal_Kist` | PAJL-regels van de kistorders (datumfilter in M) |
 | `AfsprakenWerkboek`, `NietInSlijpmarge` | Excel op SharePoint |
-| `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `NaarDatum`, `KPTM_Lees`, `MesRobotLijst` | Hulpfuncties |
+| `MesRobotLijst`, `NietInSlijpmarge`, `AfsprakenWerkboek` | Hulplijsten/-tabellen (geen functies; sinds v25 staan datumomzetting, KPTM-inlezen en bundellezen in de query's zelf) |
 
 ## Geladen tabellen
 Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).

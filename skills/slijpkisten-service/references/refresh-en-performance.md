@@ -31,7 +31,7 @@ Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt 
 - Eén lichte root-query (KistBasis); alle andere SQL met **vaste lijsten**: `SqlIn("KOLOM", lijst)` → `(KOLOM IN ('a','b',…) OR …)` per 900 waarden; lege lijst → `1 = 0`. Geen subquery's, geen functies op kolommen in de WHERE. Klantorders zowel met als zonder voorloopnullen meegeven waar het type onbekend is (PKLK).
 - Alleen benodigde kolommen selecteren (geen `SELECT *`); optionele kolommen alleen opnemen als ze bestaan (`Table.ColumnNames(LCV{[Name=…]}[Data])`).
 - `Oracle.Database(OracleServer, [CommandTimeout = #duration(0, 3, 0, 0), Query = Sql])` (LCV-standaard 3 uur).
-- Opzoeken in lange lijsten: `Opzoek(lijst)` (record) + `Bevat(record, waarde)` i.p.v. `List.Contains`.
+- Opzoeken of een regel in een andere set staat: `Table.NestedJoin` op een gegroepeerde/distincte tabel (sinds v25 geen functies Opzoek/Bevat meer).
 - Opzoektabellen vóór een `Table.Group` één keer bufferen of vooraf groeperen (record per sleutel).
 - Tabellen die alleen uit andere geladen tabellen volgen → **DAX** (berekende tabel/kolom), bv. Facturen en Kistorders[Afspraak].
 - Hoofdafleverbonnen: stap 1 eigen bonnen, stap 2/3 alleen ontbrekende bonnummers (max. twee niveaus; dieper = "ontbreekt").
