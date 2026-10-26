@@ -20,11 +20,35 @@ werkwijze, met de bewuste afwijkingen hieronder.
 | SharePoint op `jbtmarel.sharepoint.com` met `SharePoint.Files(..., [ApiVersion = 15])` | Ja (geen oude tenant mymarel) |
 | Penta-datum = getal JJJJMMDD (0 = leeg) | Ja; filter in Oracle als getal, omzetting naar datum in Power Query |
 
+## Bronlaag: één query per Penta-bron (vanaf versie 21)
+
+Regel: **een query die Oracle leest, verwijst nooit naar een andere query die Oracle leest.** Combineren van bronnen gebeurt
+in DAX (berekende tabellen/kolommen) of op de server (subquery/JOIN in dezelfde SQL). Zo wordt elke bron per refresh één
+keer gelezen. Gedeelde SQL-stukken zijn alleen tekst (`KistOrdersSQL`, `KistKlantenSQL`, `KistRegelsSQL`, `VanafJournaal`).
+
+| Tabel | Penta-bron | Selectie |
+|---|---|---|
+| F KistKosten | LCV_KPTM | ISW, PERIODE >= StartPeriode, KD in kistorders (subquery); kolom IsKistregel |
+| F Slijpservice | LCV_KPTM | PLW/ISW, KD LIKE '00____0000', KUNDEN_NR in slijpklanten |
+| F OmzetKlant | LCV_KPTM | 951000, slijpklanten; ORDERTYPE via CASE op de server |
+| F Journaal (verborgen) | LCV_PAJL | DATUM >= JJJJMMDD, KD in kistorders; IS_KISTARTIKEL op de server; per kistregel serienummer/GOB/GVR |
+| F Afkeur | LCV_PAJL + STATPRIJS + PART (één SQL met JOIN) | WAM op .990-kistregels |
+| F PO_BM | LCV_PEKP | Maschinenmesser, KD in kistorders |
+| D Shipping_PKLK | LCV_PKLK | WITH-query: bonnen van kistorders + 2 niveaus hoofdbonnen; bundeling/zending per bon in M |
+| F AfleverbonKistregels | LCV_PKLP | bonnen van kistorders (subquery op PKLK) |
+
+DAX-laag (uit geladen tabellen): D Kistorders, D Klanten, D KistRegels, D Kisttypen, D Servicecontracten,
+D ContractKistorder, F Omzetplanning, F TransportAfleverbonnen, F TransportZendingen, F SerienummerControle, F Facturen.
+Excel/lijsten (verborgen M): Contractenlijst, Contractkistorderlijst, Kisttypenlijst, Instellingen (StartPeriode voor DAX).
+
+DAX-regels om circulaire afhankelijkheden te voorkomen: berekende tabellen lezen feitentabellen met `FILTER('F ...')`/`GROUPBY`;
+dimensies met een relatie terug via `ALLNOBLANKROW(...)` of `LOOKUPVALUE`; geen `CALCULATE`/`VALUES` in berekende tabellen.
+
 ## Bewuste afwijkingen
 
 | LCV-regel | Afwijking | Reden |
 |---|---|---|
-| Navigatie + query folding, geen native SQL | Native SQL (`Oracle.Database(..., [Query = ...])`) met `SqlIn`-lijsten | Views lopen via databaselink PENTA8; folding met `List.Contains` is niet gegarandeerd en Oracle staat max. 1000 waarden per `IN` toe (SqlIn splitst per 900). Een niet-gefolde stap haalt hele tabellen over de link. |
+| Navigatie + query folding, geen native SQL | Native SQL per bron met subquery's/JOIN op de server | Views lopen via databaselink PENTA8; de kistorderselectie moet zeker op de server gebeuren en mag geen M-lijst uit een andere query zijn (dan wordt die query opnieuw uitgevoerd). |
 | Engelse kolomnamen en labels | Nog Nederlands | Keuze van Born (open) |
 | Paginanummering per rapport ("x.y Pagina") | Nog niet | Rapportnummer nog niet bepaald |
 | JBT Marel-thema + logo | Eigen kleuren (#1B2A41) | Themabestand niet beschikbaar |
@@ -49,8 +73,7 @@ werkwijze, met de bewuste afwijkingen hieronder.
 | SerienummerControle | F SerienummerControle | | | |
 
 M-verwijzingen gebruiken `#"F KistKosten"`, DAX `'F KistKosten'`. M-expressies (KistBasis, KPTM_Kist, KPTM_Contract,
-Journaal_Kist, SqlIn, Opzoek, Bevat, PentaViews, …) zijn geen tabellen en hebben geen prefix. Dataflow-entiteiten houden
-hun naam (bv. `DataflowTabel("Shipping_PKLK")`).
+Opzoek, Bevat, PentaViews, …) zijn geen tabellen en hebben geen prefix.
 
 ## Hernoemen: hoe (voor volgende keren)
 - Vervang tabelnamen alleen buiten tekstliterals en buiten `[...]` (kolomnamen); in M als `#"..."`, in DAX als `'...'`.

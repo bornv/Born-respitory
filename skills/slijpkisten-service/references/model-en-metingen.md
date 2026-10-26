@@ -1,16 +1,18 @@
 # Model, tabellen en metingen
 
 ## Gedeelde M-expressies (niet geladen)
+Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist, KPTM_Contract, Journaal_Kist, SqlIn, Bronmodus/Dataflow. Nieuw: KistOrdersSQL/KistKlantenSQL/KistRegelsSQL/VanafJournaal (SQL-tekst), NaarDatum, MesRobotLijst. Zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md#bronlaag-één-query-per-penta-bron-vanaf-versie-21).
+
 | Expressie | Doel |
 |---|---|
-| `OracleServer`, `StartPeriode` (jjjjmm, bv. `202510`), `TransportGegevensbron` (`Oracle` of iets anders = transport uit), `PKLPView`, `PKLPArtikelveld`, `AfsprakenSite`, `AfsprakenBestand`, `Bronmodus` (`Oracle`/`Dataflow`), `DataflowWerkruimteId`, `DataflowId` | Parameters |
+| `OracleServer`, `StartPeriode` (jjjjmm, bv. `202510`), `TransportGegevensbron` (`Oracle` of iets anders = transport uit), `PKLPView`, `PKLPArtikelveld`, `AfsprakenSite`, `AfsprakenBestand` | Parameters |
 | `KistBasis` | Unieke kistregels (eigen lichte SQL) — basis voor bijna alles |
 | `KistOrderLijst`, `KistKlantLijst` | Lijsten uit KistBasis voor `SqlIn` |
 | `KPTM_Lees(sql)`, `KPTM_Kist`, `KPTM_Contract` | KPTM-boekingen op kistorders resp. contractorders |
 | `Journaal_Kist` | PAJL-regels van de kistorders (datumfilter in M) |
 | `PKLPBron` | Record: PKLP-regels + beschikbaarheid view/kolommen |
 | `AfsprakenWerkboek`, `NietInSlijpmarge` | Excel op SharePoint |
-| `SqlIn`, `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `DataflowTabel` | Hulpfuncties |
+| `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `NaarDatum`, `PentaKolommen`, `PentaViewBestaat` | Hulpfuncties |
 
 ## Geladen tabellen
 Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).

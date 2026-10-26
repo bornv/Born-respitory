@@ -16,7 +16,7 @@
 | `405 Method Not Allowed` / "dynamic data source" | Zie afsprakenlijst | Vaste site-parameter |
 | DAX-fout "comparing values of type Text with True/False" | Kolom uit een record-stap zonder type laadt als tekst | `Table.TransformColumnTypes` aan het eind van de query |
 | `403` bij parameters wijzigen in de service | Gebruiker is Viewer/geen eigenaar | Rol Lid/Inzender/Beheerder, model overnemen, of wijzigen in Desktop en publiceren |
-| Formula.Firewall | Query gebruikt data van een andere query in een bronaanroep (SqlIn-lijsten) | Privacyniveaus negeren (`fastCombine`) aan in model én dataflow |
+| Formula.Firewall | Query gebruikt data van een andere query in een bronaanroep | Vermijden (versie 21: selectie via subquery, niet via lijsten uit andere query's); anders privacyniveaus negeren (`fastCombine`) |
 
 Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt = geen nieuwe uitkomst.
 
@@ -27,6 +27,7 @@ Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt 
 4. **Ingebakken momentopname** van 6 MB in Shipping_PKLK.
 
 ## Regels voor SQL en M in dit model
+- **Eén query per Penta-bron** (versie 21): geen M-verwijzing van een Oracle-query naar een andere Oracle-query; selectie via subquery in dezelfde SQL, combineren in DAX. Resultaat: 8 dataquery's per refresh (was 33 bronuitvoeringen in versie 20).
 - Eén lichte root-query (KistBasis); alle andere SQL met **vaste lijsten**: `SqlIn("KOLOM", lijst)` → `(KOLOM IN ('a','b',…) OR …)` per 900 waarden; lege lijst → `1 = 0`. Geen subquery's, geen functies op kolommen in de WHERE. Klantorders zowel met als zonder voorloopnullen meegeven waar het type onbekend is (PKLK).
 - Alleen benodigde kolommen selecteren (geen `SELECT *`); optionele kolommen alleen opnemen als ze bestaan (`Table.ColumnNames(LCV{[Name=…]}[Data])`).
 - `Oracle.Database(OracleServer, [CommandTimeout = #duration(0, 3, 0, 0), Query = Sql])` (LCV-standaard 3 uur).
@@ -34,7 +35,7 @@ Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt 
 - Opzoektabellen vóór een `Table.Group` één keer bufferen of vooraf groeperen (record per sleutel).
 - Tabellen die alleen uit andere geladen tabellen volgen → **DAX** (berekende tabel/kolom), bv. Facturen en Kistorders[Afspraak].
 - Hoofdafleverbonnen: stap 1 eigen bonnen, stap 2/3 alleen ontbrekende bonnummers (max. twee niveaus; dieper = "ontbreekt").
-- `maxParallelismPerRefresh` 1 zolang er geen staginglaag is (één query tegelijk naar Penta); met dataflow/staging 2–4 proberen. Bij ORA-12570 omlaag.
+- `maxParallelismPerRefresh` 1 (één query tegelijk naar Penta); met één query per bron kan 2 worden geprobeerd. Bij ORA-12570 omlaag.
 - Realistische telling: een gedeelde query draait één keer **per afhankelijke tabel** (KistBasis ≈ 18×, Journaal_Kist ≈ 6×, KPTM_Contract ≈ 4×). Tel paden niet dubbel.
 - Query **LCV** wordt nergens gebruikt; transport gebruikt PentaViews/PentaKolommen/PentaViewBestaat, zodat een navigatieklik in LCV niets breekt.
 - Datumfilters pas naar Oracle als datatype en formaat vaststaan.

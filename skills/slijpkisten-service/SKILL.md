@@ -23,6 +23,7 @@ Claude levert M, DAX, TMDL, SQL en stappen. **Born** voert ze uit in Power BI De
 
 ## Vaste afspraken (niet opnieuw ter discussie stellen)
 
+0. **Eén query per Penta-bron; combineren in DAX of op de server.** Een Oracle-query verwijst nooit naar een andere Oracle-query.
 0. **Bouw volgens de LCV-werkwijze** (skill penta-powerbi-lcv): `F `/`D `-tabelnamen, metingen in `Calculations`, `Last refresh date` + kaart op elke pagina, CommandTimeout 3 uur, sterschema. Afwijkingen alleen zoals vastgelegd in [lcv-werkwijze-afstemming.md](references/lcv-werkwijze-afstemming.md).
 
 1. **1 GOB + 1 GVR = 1 zending = 1 kist.** Alleen journaalposten Goederenontvangst (GOB) en Goederenverzending (GVR) tellen; serienummer = `CHARGEN_SERIEN_NR` uit LCV_PAJL, rechtstreeks geladen (geen parameter, geen momentopname).
