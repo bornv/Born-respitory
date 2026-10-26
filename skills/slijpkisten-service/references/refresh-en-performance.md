@@ -37,11 +37,11 @@ Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt 
 - Hoofdafleverbonnen: stap 1 eigen bonnen, stap 2/3 alleen ontbrekende bonnummers (max. twee niveaus; dieper = "ontbreekt").
 - `maxParallelismPerRefresh` 1 (één query tegelijk naar Penta); met één query per bron kan 2 worden geprobeerd. Bij ORA-12570 omlaag.
 - Realistische telling: een gedeelde query draait één keer **per afhankelijke tabel** (KistBasis ≈ 18×, Journaal_Kist ≈ 6×, KPTM_Contract ≈ 4×). Tel paden niet dubbel.
-- De oude query **LCV** is verwijderd (versie 21). Metadata van views loopt via PentaViews/PentaKolommen/PentaViewBestaat. Wil je een view bekijken: maak een losse testquery en verwijder die weer.
+- Geen navigatie- of metadataquery's meer (LCV, PentaViews, kolomcontroles verwijderd in versie 21/22): kolommen staan vast in de SQL. Een view bekijken: losse testquery in een apart bestand.
 - Datumfilters pas naar Oracle als datatype en formaat vaststaan.
 
 ## Diagnose zonder logs
-- **Test A (transport uit)**: parameter `TransportGegevensbron` ≠ `Oracle` (service: model → Instellingen → Parameters; vereist schrijfrechten, anders in Desktop). Slaagt de refresh → transportketen is de oorzaak.
+- **Test A (transport uit)**: in versie 11–21 via parameter `TransportGegevensbron`; die schakelaar is in versie 22 verwijderd. Nu: in Desktop D Shipping_PKLK en F AfleverbonKistregels uitsluiten van vernieuwen.
 - **Test B (Desktop)**: Modelweergave → rechtsklik tabel → Gegevens vernieuwen: Klanten (= KistBasis), KistKosten (KPTM_Kist), KistRegels (Journaal_Kist); duur noteren.
 - **Losse SQL-test** in een leeg bestand (Oracle-database → Geavanceerd → SQL-instructie): KistBasis-SQL, `COUNT(*)` zonder `LIKE '%…'`, `SELECT DATUM FROM LCV_DATA.LCV_PAJL WHERE ROWNUM <= 5`.
 - Geplande vernieuwing uitzetten tijdens het testen (anders 4 × 5 uur pogingen).

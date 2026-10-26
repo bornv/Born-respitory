@@ -37,8 +37,10 @@ keer gelezen. Gedeelde SQL-stukken zijn alleen tekst (`KistOrdersSQL`, `KistKlan
 | D Shipping_PKLK | LCV_PKLK | WITH-query: bonnen van kistorders + 2 niveaus hoofdbonnen; bundeling/zending per bon in M |
 | F AfleverbonKistregels | LCV_PKLP | bonnen van kistorders (subquery op PKLK) |
 
+Sinds versie 22 geen controles meer op het bestaan van views/kolommen: alle gebruikte kolommen staan vast in de SQL (bevestigd in Penta).
+
 DAX-laag (uit geladen tabellen): D Kistorders, D Klanten, D KistRegels, D Kisttypen, D Servicecontracten,
-D ContractKistorder, F Omzetplanning, F TransportAfleverbonnen, F TransportZendingen, F SerienummerControle, F Facturen.
+D ContractKistorder, F Omzetplanning, F TransportAfleverbonnen, F TransportZendingen, F Facturen.
 Excel/lijsten (verborgen M): Contractenlijst, Contractkistorderlijst, Kisttypenlijst, Instellingen (StartPeriode voor DAX).
 
 DAX-regels om circulaire afhankelijkheden te voorkomen: berekende tabellen lezen feitentabellen met `FILTER('F ...')`/`GROUPBY`;
@@ -70,10 +72,9 @@ dimensies met een relatie terug via `ALLNOBLANKROW(...)` of `LOOKUPVALUE`; geen 
 | TransportAfleverbonnen | F TransportAfleverbonnen | | KlantLand, TransporttariefLand, VerwachteKisten, Productie, NC Robots | D … |
 | AfleverbonKistregels | F AfleverbonKistregels | | Shipping_PKLK | D Shipping_PKLK |
 | TransportZendingen | F TransportZendingen | | Periodes, Calculations, Last refresh date, what-if-tabellen, TransportBroncontrole, PKLPControle | zonder prefix |
-| SerienummerControle | F SerienummerControle | | | |
 
 M-verwijzingen gebruiken `#"F KistKosten"`, DAX `'F KistKosten'`. M-expressies (KistBasis, KPTM_Kist, KPTM_Contract,
-Opzoek, Bevat, PentaViews, …) zijn geen tabellen en hebben geen prefix.
+Opzoek, Bevat, NaarDatum, …) zijn geen tabellen en hebben geen prefix.
 
 ## Hernoemen: hoe (voor volgende keren)
 - Vervang tabelnamen alleen buiten tekstliterals en buiten `[...]` (kolomnamen); in M als `#"..."`, in DAX als `'...'`.

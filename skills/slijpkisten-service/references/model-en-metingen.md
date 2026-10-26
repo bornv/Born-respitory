@@ -5,14 +5,13 @@ Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist,
 
 | Expressie | Doel |
 |---|---|
-| `OracleServer`, `StartPeriode` (jjjjmm, bv. `202510`), `TransportGegevensbron` (`Oracle` of iets anders = transport uit), `PKLPView`, `PKLPArtikelveld`, `AfsprakenSite`, `AfsprakenBestand` | Parameters |
+| `OracleServer`, `StartPeriode` (jjjjmm, bv. `202510`), `AfsprakenSite`, `AfsprakenBestand` | Parameters |
 | `KistBasis` | Unieke kistregels (eigen lichte SQL) — basis voor bijna alles |
 | `KistOrderLijst`, `KistKlantLijst` | Lijsten uit KistBasis voor `SqlIn` |
 | `KPTM_Lees(sql)`, `KPTM_Kist`, `KPTM_Contract` | KPTM-boekingen op kistorders resp. contractorders |
 | `Journaal_Kist` | PAJL-regels van de kistorders (datumfilter in M) |
-| `PKLPBron` | Record: PKLP-regels + beschikbaarheid view/kolommen |
 | `AfsprakenWerkboek`, `NietInSlijpmarge` | Excel op SharePoint |
-| `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `NaarDatum`, `PentaKolommen`, `PentaViewBestaat` | Hulpfuncties |
+| `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `NaarDatum`, `KPTM_Lees`, `MesRobotLijst` | Hulpfuncties |
 
 ## Geladen tabellen
 Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).
@@ -33,8 +32,7 @@ Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D 
 | Robots, Kisttypen, VerwachteKisten, Productie, NC Robots, KlantLand, TransporttariefLand | Tarieven, koppelingen, invoer voor calculatie en nieuw contract |
 | Periodes | **Berekende tabel**: maanden van eerste t/m laatste maand in de data (of t/m vandaag), Maandstatus |
 | OmzetKlant | Alle 951000 van slijpklanten op elke order (Ordertype) |
-| SerienummerControle | Controle GOB/GVR/serienummers |
-| Shipping_PKLK, TransportAfleverbonnen, AfleverbonKistregels, TransportZendingen, PKLPControle, TransportBroncontrole | Transport en afleverbonnen |
+| Shipping_PKLK, TransportAfleverbonnen, AfleverbonKistregels, TransportZendingen | Transport en afleverbonnen (controletabellen verwijderd in versie 22) |
 
 Relaties o.a.: KistKosten/KistRegels/Facturen → Kistorders → Klanten; tabellen → Periodes (Periode jjjjmm); Slijpservice → Klanten; OmzetKlant → Klanten en Periodes; transporttabellen → Kistorders/Klanten/Periodes.
 
@@ -62,4 +60,4 @@ Patronen:
 Ongebruikte metingen en kolommen zijn verwijderd (22 metingen, 46 kolommen). Criterium: niet in een visual, relatie, sortering, DAX-formule of andere query. Kolommen die Power Query nog nodig heeft voor een berekening blijven in de query en verdwijnen in de laatste stap `Opgeschoond`. Een verwijderde meting terug nodig? Zie de vorige versie (21 of 20) in de LEESMIJ/zip.
 
 ## Rapport (pagina's)
-Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en marge, Nieuw contract, Meerkosten, Per kist (incl. serienummercontrole, zendingen), Afkeur, Slijpservice (contracten, Waarde slijpservice, overige contractkosten, revisie, Bron-kleur), Facturen, Omzet per order, PO's, en transport: Kisten per zending, Controle kistkoppeling, Transport en afleverbonnen, Transport broncontrole. Slicers o.a. Maandstatus (lopende maand selecteerbaar), robot, klant, gewenste marge.
+Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en marge, Nieuw contract, Meerkosten, Per kist (incl. serienummercontrole, zendingen), Afkeur, Slijpservice (contracten, Waarde slijpservice, overige contractkosten, revisie, Bron-kleur), Facturen, Omzet per order, PO's, en transport: Kisten per zending, Transport en afleverbonnen. Slicers o.a. Maandstatus (lopende maand selecteerbaar), robot, klant, gewenste marge.

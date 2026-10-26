@@ -45,4 +45,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 18 | Transportquery's los van query LCV (PentaViews/PentaKolommen/PentaViewBestaat) |
 | 19 | maxParallelismPerRefresh 1 (serverbelasting) |
 | 20 | LCV-werkwijze: F/D-tabelnamen, Calculations, Last refresh date + kaart, timeout 3 uur, datumfilter PAJL als getal |
+| 22 | Broncontroles verwijderd (PentaViews/PKLPBron/TransportGegevensbron, controletabellen en -pagina's); kolommen PKLK/PKLP vast in SQL; alleen 8 dataquery's, geen metadataquery's |
 | 21 | Eén query per Penta-bron (8 dataquery's), afgeleide tabellen in DAX, dataflow-schakelaar en query LCV vervallen; opgeschoond (22 metingen, 46 kolommen) |
