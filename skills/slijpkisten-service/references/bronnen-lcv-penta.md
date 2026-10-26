@@ -30,7 +30,7 @@ Kistregels: `ARTIKEL_OMSCHRIJVING = 'KIST'` en artikel eindigt op `.990` (slijpr
 Contractorders: `KD_VORGANGS_NR LIKE '00____0000'`; ContractId = teken 3–6 (bv. `00XX990000` → `XX99`). Posities 1000–8999, PLW en ISW. Kostengroep: kostensoort `23…` = Materiaal (over de looptijd verdelen), `1009…` = Eigen uren, rest Overig, revisie-artikel = "Revisie (niet in slijpmarge)".
 
 ### LCV_PAJL — artikeljournaal
-`ARTIKEL_NR`, `DATUM` (**geen Oracle DATE**: `DATUM >= DATE '…'` gaf ORA-01861; omzetten in M, formaat nog vaststellen), `KD_VORGANGS_NR`, `POSITIONS_NR`, `MENGE`, `FUNKTIONS_KZ`, `BESTELL_NR`, `CHARGEN_SERIEN_NR` (serienummer; "S/N" eraf halen).
+`ARTIKEL_NR`, `DATUM` (**getal JJJJMMDD**, 0 = leeg, zoals alle Penta-datums; vergelijk als getal `DATUM >= 20250401`, nooit met `DATE '…'` → ORA-01861), `KD_VORGANGS_NR`, `POSITIONS_NR`, `MENGE`, `FUNKTIONS_KZ`, `BESTELL_NR`, `CHARGEN_SERIEN_NR` (serienummer; "S/N" eraf halen).
 
 | FUNKTIONS_KZ | Betekenis |
 |---|---|
@@ -45,7 +45,7 @@ Contractorders: `KD_VORGANGS_NR LIKE '00____0000'`; ContractId = teken 3–6 (bv
 `ARTIKEL`, `ACTUEEL` (actuele kostprijs) / `ARTIKEL_NR`, `BEZEICHNUNG_1`, `BEZEICHNUNG_2`.
 
 ### LCV_PKLK — afleverbonkop (Shipping)
-`LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR` (klantorder, soms zonder voorloopnullen), `VERSAND_TERMIN` (kan tekst `jjjjmmdd` of `00000000` zijn), `FRACHT_BETRAG`, `FRACHT_SOLL`, `SPEDITION`, `GESAMTGEWICHT_BRUTTO/NETTO`, `ANLIEFER_ADRESS_NR`, `LAENDER_GRUPPE`, `STAAT`, …, `FELD_3_X35` ("Send with pklk", bv. `Verz. met Afl.bon 267158`), `FELD_5_N8` (Main Slip id, heeft voorrang als > 0).
+`LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR` (klantorder, soms zonder voorloopnullen), `VERSAND_TERMIN` (Penta-datum JJJJMMDD; `00000000`/0 = leeg), `FRACHT_BETRAG`, `FRACHT_SOLL`, `SPEDITION`, `GESAMTGEWICHT_BRUTTO/NETTO`, `ANLIEFER_ADRESS_NR`, `LAENDER_GRUPPE`, `STAAT`, …, `FELD_3_X35` ("Send with pklk", bv. `Verz. met Afl.bon 267158`), `FELD_5_N8` (Main Slip id, heeft voorrang als > 0).
 
 ### LCV_PKLP — afleverbonregels (parameter `PKLPView`)
 `LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR`, `BEZ_POSITIONS_NR` (bevestigd in Penta-schermen), artikelveld via parameter `PKLPArtikelveld` (standaard `ARTIKEL_NR`, nog bevestigen). Voorbeeld ter controle: bon 251609 heeft regels 960, 965, 970, 975, 980 = vijf kisten.
@@ -61,7 +61,7 @@ Contractorders: `KD_VORGANGS_NR LIKE '00____0000'`; ContractId = teken 3–6 (bv
 | Eigen uren, verzendkosten, commissie, overige kosten | **Ja** | geen |
 | Plan (PLW) contractorders | **Ja** | geen |
 
-Viewnamen van order- en factuurtabellen in LCV_DATA zijn (nog) niet bekend: vraag ze op (Navigator) en verzin ze niet.
+Bekende andere views (zie skill penta-powerbi-lcv): `LCV_PKVP`/`LCV_PKVK` = klantorderregels/-kop (KD_VORGANGS_NR, POSITIONS_NR, UNTER_POSITIONS_NR, ARTIKEL_NR) — kandidaat voor een lichte KistBasis; `LCV_BI_ORDERKOPPEN` (ZUORDNUNG_4); `LCV_CALENDER`; `LCV_PEKK` (inkoopkop). **Let op:** `LCV_PFAK` is de **productieorderkop**, geen factuurkop. De views voor uitgaande facturen zijn nog niet vastgesteld: niet raden.
 
 ## SharePoint
 `SharePoint.Files(AfsprakenSite, [ApiVersion = 15])` met parameter `AfsprakenSite = https://jbtmarel.sharepoint.com/sites/LCV-LCVRetouren` (alleen het site-adres, geen deellink) en `AfsprakenBestand = Slijpkisten_afspraken.xlsx`. Zie [afsprakenlijst-sharepoint.md](afsprakenlijst-sharepoint.md).

@@ -19,8 +19,11 @@ Claude levert M, DAX, TMDL, SQL en stappen. **Born** voert ze uit in Power BI De
 | Excel op SharePoint: kolommen, nieuwe afspraak/contract toevoegen | [afsprakenlijst-sharepoint.md](references/afsprakenlijst-sharepoint.md) |
 | Refresh faalt of duurt uren, Oracle-fout, gateway, rechten, dataflow | [refresh-en-performance.md](references/refresh-en-performance.md) |
 | Nieuwe versie maken, versies samenvoegen, valideren, opleveren | [werkwijze-pbip.md](references/werkwijze-pbip.md) |
+| Opbouw volgens de LCV-standaard (F/D-namen, Calculations, Refresh date, afwijkingen), tabelnamen oud → nieuw | [lcv-werkwijze-afstemming.md](references/lcv-werkwijze-afstemming.md) + skill **penta-powerbi-lcv** |
 
 ## Vaste afspraken (niet opnieuw ter discussie stellen)
+
+0. **Bouw volgens de LCV-werkwijze** (skill penta-powerbi-lcv): `F `/`D `-tabelnamen, metingen in `Calculations`, `Last refresh date` + kaart op elke pagina, CommandTimeout 3 uur, sterschema. Afwijkingen alleen zoals vastgelegd in [lcv-werkwijze-afstemming.md](references/lcv-werkwijze-afstemming.md).
 
 1. **1 GOB + 1 GVR = 1 zending = 1 kist.** Alleen journaalposten Goederenontvangst (GOB) en Goederenverzending (GVR) tellen; serienummer = `CHARGEN_SERIEN_NR` uit LCV_PAJL, rechtstreeks geladen (geen parameter, geen momentopname).
 2. **Elke kist hoort bij een robot.** Geen "(Blank)"-robot; niet te koppelen kisttypen komen onder "Niet gekoppeld", in slicers liever "All". `50225618` = Primal Cut, `50234143` = nieuwe kist Primal Cut.

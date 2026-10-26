@@ -3,7 +3,7 @@
 ## Project
 `Slijpkisten_Service.pbip` + `Slijpkisten_Service.SemanticModel/definition` (TMDL: `model.tmdl`, `expressions.tmdl`, `relationships.tmdl`, `tables/*.tmdl`) + `Slijpkisten_Service.Report/definition` (PBIR: `pages/<pagina>/visuals/<id>/visual.json`, `pages.json`), `LEESMIJ.txt` (wijzigingen per versie), `Slijpkisten_afspraken.xlsx` (sjabloon), `Dataflow_Slijpkisten_staging.txt`.
 
-Modelinstellingen: compatibiliteit 1606, cultuur nl-NL, `maxParallelismPerRefresh`, `dataAccessOptions` met `fastCombine`, `__PBI_TimeIntelligenceEnabled = 0`. Bestanden UTF-8; regeleinden consequent houden (CRLF zoals de geleverde versie).
+Modelinstellingen: `maxParallelismPerRefresh: 1` (Penta-belasting), compatibiliteit 1606, cultuur nl-NL, `maxParallelismPerRefresh`, `dataAccessOptions` met `fastCombine`, `__PBI_TimeIntelligenceEnabled = 0`. Bestanden UTF-8; regeleinden consequent houden (CRLF zoals de geleverde versie).
 
 ## Wijzigen
 1. Ga uit van de **laatste geleverde versie**. Krijg je een versie van elders (bv. met transportwerk), vergelijk dan eerst met de lijst vaste afspraken in SKILL.md: een versie op een oude basis mist correcties (revisie, WaardeSlijpservice, OmzetKlant, Status = Actief). Samenvoegen = nieuwste basis nemen en de ontbrekende onderdelen gericht terugzetten.
@@ -40,3 +40,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 13–14 | Geen db-link-subquery's (SqlIn); buffers transport; parallelisme 4 |
 | 15 | Opzoek/Bevat, geen SELECT *, dataflow-schakelaar + script |
 | 16 | Facturen en Kistorders[Afspraak] in DAX; CommandTimeout 30 min; alleen ontbrekende hoofdbonnen |
+| 17 | Datatypes TransportZendingen (Compleet/Gemengd als tekst gaf DAX-fout); titels transportpagina's |
+| 18 | Transportquery's los van query LCV (PentaViews/PentaKolommen/PentaViewBestaat) |
+| 19 | maxParallelismPerRefresh 1 (serverbelasting) |
+| 20 | LCV-werkwijze: F/D-tabelnamen, Calculations, Last refresh date + kaart, timeout 3 uur, datumfilter PAJL als getal |

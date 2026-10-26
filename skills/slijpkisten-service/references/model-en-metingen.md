@@ -13,6 +13,8 @@
 | `SqlIn`, `Opzoek`, `Bevat`, `LeesHoofdafleverbon`, `DataflowTabel` | Hulpfuncties |
 
 ## Geladen tabellen
+Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).
+
 | Tabel | Inhoud |
 |---|---|
 | KistKosten | Alle ISW-boekingen op kistorders met Categorie, CategorieVolgorde, RegelSoort (Slijpronde / Nieuwe kist / Overige regel), Bedrag (kosten positief), Omschrijving. Bevat de meeste metingen. |
