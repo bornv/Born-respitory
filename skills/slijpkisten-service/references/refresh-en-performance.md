@@ -37,7 +37,7 @@ Altijd eerst Request ID en tijd vergelijken: dezelfde melding twee keer geplakt 
 - Hoofdafleverbonnen: stap 1 eigen bonnen, stap 2/3 alleen ontbrekende bonnummers (max. twee niveaus; dieper = "ontbreekt").
 - `maxParallelismPerRefresh` 1 (één query tegelijk naar Penta); met één query per bron kan 2 worden geprobeerd. Bij ORA-12570 omlaag.
 - Realistische telling: een gedeelde query draait één keer **per afhankelijke tabel** (KistBasis ≈ 18×, Journaal_Kist ≈ 6×, KPTM_Contract ≈ 4×). Tel paden niet dubbel.
-- Query **LCV** wordt nergens gebruikt; transport gebruikt PentaViews/PentaKolommen/PentaViewBestaat, zodat een navigatieklik in LCV niets breekt.
+- De oude query **LCV** is verwijderd (versie 21). Metadata van views loopt via PentaViews/PentaKolommen/PentaViewBestaat. Wil je een view bekijken: maak een losse testquery en verwijder die weer.
 - Datumfilters pas naar Oracle als datatype en formaat vaststaan.
 
 ## Diagnose zonder logs
