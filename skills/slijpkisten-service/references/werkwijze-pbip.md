@@ -21,6 +21,7 @@ Modelinstellingen: `maxParallelismPerRefresh: 1` (Penta-belasting), compatibilit
 | M | Grove controle op haakjes en let/in (één-regel-`let … in` en geneste lets geven schijnmeldingen); geen blobs; geen `KistOrdersSQL`-subquery's |
 | Afhankelijkheden | Tel per tabel hoe vaak Oracle-bronnen in de keten zitten (zonder cache) — doel: zo laag mogelijk |
 | Grootte | Model hoort enkele honderden kB te zijn, niet MB's |
+| Ongebruikt | Metingen/kolommen zonder gebruik in visuals, DAX, relaties, sortering of andere query's opsporen en verwijderen (kolommen via eindstap `Table.RemoveColumns`) |
 
 Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd zo melden.
 
@@ -44,4 +45,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 18 | Transportquery's los van query LCV (PentaViews/PentaKolommen/PentaViewBestaat) |
 | 19 | maxParallelismPerRefresh 1 (serverbelasting) |
 | 20 | LCV-werkwijze: F/D-tabelnamen, Calculations, Last refresh date + kaart, timeout 3 uur, datumfilter PAJL als getal |
-| 21 | Eén query per Penta-bron (8 dataquery's), afgeleide tabellen in DAX, dataflow-schakelaar vervallen |
+| 21 | Eén query per Penta-bron (8 dataquery's), afgeleide tabellen in DAX, dataflow-schakelaar en query LCV vervallen; opgeschoond (22 metingen, 46 kolommen) |

@@ -50,13 +50,16 @@ Omzet = CALCULATE ( SUM ( KistKosten[Bedrag] ), KEEPFILTERS ( KistKosten[Categor
     Slijpservice[Kostengroep] <> "Revisie (niet in slijpmarge)", TREATAS ( VALUES ( Periodes[Periode] ), Slijpservice[Periode] ),
     TREATAS ( CALCULATETABLE ( VALUES ( Omzetplanning[Referentie] ), ALL ( Omzetplanning ), Omzetplanning[Bron] = "Contract" ), Slijpservice[ContractId] ) )
 ```
-Verder o.a.: Slijpen B.M., Afkeur SAP, Nieuwe kisten, Verzendkosten M46U, Commissie IKP, Meerkosten extra messen, Kosten per jaar, Afschrijving nieuwe kisten per jaar, Verwachte omzet, Saldo (verwacht), Nog te factureren, Achterstallig, Revisie omzet/kosten, Contractkosten zonder contractwaarde, Contractmateriaal per jaar, Zendingen (GOB+GVR), Kistregels zonder GOB/GVR, Omzet op kist-/contract-/andere orders (OmzetKlant), Gefactureerd/Credits (Facturen), Nieuwe contracten (aanvullen) en Contractbron kleur (Servicecontracten).
+Verder o.a.: Slijpen B.M., Afkeur SAP, Nieuwe kisten, Verzendkosten M46U, Commissie IKP, Meerkosten extra messen, Kosten per jaar, Afschrijving nieuwe kisten per jaar, Verwachte omzet, Saldo (verwacht), Nog te factureren, Achterstallig, Revisie kosten, Contractkosten zonder contractwaarde, Zendingen (GOB+GVR), Omzet op kist-/contract-/andere orders (OmzetKlant), Gefactureerd/Credits (Facturen), Nieuwe contracten (aanvullen) en Contractbron kleur (Servicecontracten).
 
 Patronen:
 - Toerekening: `IF ( ISFILTERED ( Robots ) || ISFILTERED ( Kisttypen ) || ISFILTERED ( KistRegels ), SUMX ( VALUES ( Klanten[KUNDEN_NR] ), [X] * DIVIDE ( [Calculatiewaarde slijpen], CALCULATE ( [Calculatiewaarde slijpen], REMOVEFILTERS ( Robots ), REMOVEFILTERS ( Kisttypen ), REMOVEFILTERS ( KistRegels ) ) ) ), [X] )`
 - Cut-off: `KEEPFILTERS ( Periodes[Maand] < DATE ( YEAR ( TODAY () ), MONTH ( TODAY () ), 1 ) )`
 - Tabellen zonder relatie met Periodes: `TREATAS ( VALUES ( Periodes[Periode] ), Tabel[Periode] )`.
 - Berekende kolommen/tabellen die andere tabellen lezen: `FILTER ( ALLNOBLANKROW ( … ) )`/`GROUPBY … CURRENTGROUP ()`, geen `CALCULATE` (voorkomt circulaire afhankelijkheden).
+
+## Opschonen (versie 21b)
+Ongebruikte metingen en kolommen zijn verwijderd (22 metingen, 46 kolommen). Criterium: niet in een visual, relatie, sortering, DAX-formule of andere query. Kolommen die Power Query nog nodig heeft voor een berekening blijven in de query en verdwijnen in de laatste stap `Opgeschoond`. Een verwijderde meting terug nodig? Zie de vorige versie (21 of 20) in de LEESMIJ/zip.
 
 ## Rapport (pagina's)
 Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en marge, Nieuw contract, Meerkosten, Per kist (incl. serienummercontrole, zendingen), Afkeur, Slijpservice (contracten, Waarde slijpservice, overige contractkosten, revisie, Bron-kleur), Facturen, Omzet per order, PO's, en transport: Kisten per zending, Controle kistkoppeling, Transport en afleverbonnen, Transport broncontrole. Slicers o.a. Maandstatus (lopende maand selecteerbaar), robot, klant, gewenste marge.
