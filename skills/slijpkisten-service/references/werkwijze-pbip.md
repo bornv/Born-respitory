@@ -76,6 +76,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 41 | Kisthistorie: "laatste per kist" in Oracle via `Table.Group` (List.Max datum) + join terug op (serienummer, datum); alleen laatste bewegingen komen binnen |
 | 42 | Afkeur: Group By (som MENGE per kistregel/artikel/datum) in Oracle vóór de joins met STATPRIJS en PART |
 | 43 | Stap `Kistordernummers` (lijst) + `List.Contains(Kistordernummers, [KD_VORGANGS_NR])` in de filterstap van PAJL/PEKP/PKLK/PKLP (idee Born): IN-lijst in Oracle als vangnet naast de joins |
+| 44 | KPTM-query's ook met vaste lijsten: Kistkosten → Kistordernummers, Omzet en Slijpservice → Kistklantnummers; joins daar vervallen |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
