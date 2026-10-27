@@ -69,6 +69,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 34 | LCV_PKLK.VERSAND_TERMIN is **tekst** ("20231201", "00000000" = leeg): filter als tekst; datumomzetting overal via `Text.From` (werkt voor tekst én getal) |
 | 35 | LCV_PKLP: geen Distinct tussen de joins (beter te folden); fout 0x80040E4E = geannuleerd (timeout of andere tabel faalde) |
 | 36 | LCV_PAJL.DATUM is ook **tekst**: filters `>= "20230701"` / `>= "19000101"` |
+| 37 | LCV_KPTM Omzet: `Text.StartsWith([KOSTENART], "951000")` i.p.v. `Text.Trim(...) =`; kistorder via uitgeklapte left join i.p.v. `Table.IsEmpty([nested])` |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -80,3 +81,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 7. **Elke tabel en expressie** een `///`-omschrijving met de bron (Oracle-view, Excel-tabel, DAX op welke tabellen); vaste lijsten (#table) ook waar de waarden vandaan komen, en per groep een `//`-regel.
 8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
 9. Controleer vóór opleveren elke query op **dubbele stapnamen** (fout "Duplicate initializer named …"): de vaste navigatiestappen heten `Bron` en `LCV_DATA`, gebruik die namen nergens anders.
+10. Folding-vriendelijk: geen `Text.Trim(...) = ` in filters (gebruik `Text.StartsWith`), geen `Table.IsEmpty([geneste kolom])` (klap de join-kolom uit en test op `null`).
