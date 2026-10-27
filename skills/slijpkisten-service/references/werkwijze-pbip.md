@@ -71,6 +71,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 36 | LCV_PAJL.DATUM is ook **tekst**: filters `>= "20230701"` / `>= "19000101"` |
 | 37 | LCV_KPTM Omzet: `Text.StartsWith([KOSTENART], "951000")` i.p.v. `Text.Trim(...) =`; kistorder via uitgeklapte left join i.p.v. `Table.IsEmpty([nested])` |
 | 38 | Filter "ordernummer gevuld" = `Text.StartsWith([KD_VORGANGS_NR], "0")` (LIKE '0%'); Kisthistorie: klant alleen van orders met kistbeweging, vanaf 2018 (las eerst >1 mln rijen) |
+| 39 | Kisthistorie: LCV_PAJL direct gefilterd met `List.Contains(Kistartikelen, [ARTIKEL_NR])` (Kisttypenlijst + .990/.000 → IN-lijst in Oracle), geen KPTM-join voor artikelen (idee Born) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
