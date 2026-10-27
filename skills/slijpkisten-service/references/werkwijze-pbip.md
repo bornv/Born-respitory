@@ -70,10 +70,11 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 35 | LCV_PKLP: geen Distinct tussen de joins (beter te folden); fout 0x80040E4E = geannuleerd (timeout of andere tabel faalde) |
 | 36 | LCV_PAJL.DATUM is ook **tekst**: filters `>= "20230701"` / `>= "19000101"` |
 | 37 | LCV_KPTM Omzet: `Text.StartsWith([KOSTENART], "951000")` i.p.v. `Text.Trim(...) =`; kistorder via uitgeklapte left join i.p.v. `Table.IsEmpty([nested])` |
+| 38 | Filter "ordernummer gevuld" = `Text.StartsWith([KD_VORGANGS_NR], "0")` (LIKE '0%'); Kisthistorie: klant alleen van orders met kistbeweging, vanaf 2018 (las eerst >1 mln rijen) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
-2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (Penta-datums in het type van de view: LCV_PAJL.DATUM is tekst `>= "20230701"`, LCV_PKLK.VERSAND_TERMIN is tekst `>= "20231201"`; `Text.Length(Text.Trim(x)) > 0` voor "niet leeg": `<> ""` werkt niet in Oracle).
+2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (Penta-datums in het type van de view: LCV_PAJL.DATUM is tekst `>= "20230701"`, LCV_PKLK.VERSAND_TERMIN is tekst `>= "20231201"`; `Text.StartsWith([KD_VORGANGS_NR], "0")` voor "ordernummer gevuld" (Penta-ordernummers zijn 10 tekens en beginnen met 0); geen `Text.Length(Text.Trim())` en geen `<> ""`).
 3. Stap `Kistorders` uit dezelfde bron (LCV_KPTM, KIST .990/.000, ISW, vanaf 202401) en `Table.NestedJoin(..., JoinKind.Inner)`; join-kolom en filterkolommen daarna weg.
 4. Pas daarna typen (`Table.TransformColumns`), berekende kolommen en één eindselectie/hernoeming.
 5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
@@ -81,4 +82,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 7. **Elke tabel en expressie** een `///`-omschrijving met de bron (Oracle-view, Excel-tabel, DAX op welke tabellen); vaste lijsten (#table) ook waar de waarden vandaan komen, en per groep een `//`-regel.
 8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
 9. Controleer vóór opleveren elke query op **dubbele stapnamen** (fout "Duplicate initializer named …"): de vaste navigatiestappen heten `Bron` en `LCV_DATA`, gebruik die namen nergens anders.
-10. Folding-vriendelijk: geen `Text.Trim(...) = ` in filters (gebruik `Text.StartsWith`), geen `Table.IsEmpty([geneste kolom])` (klap de join-kolom uit en test op `null`).
+10. Folding-vriendelijk: geen `Text.Trim`/`Text.Length` in filters; hulptabellen (zoals klant per order) altijd eerst inperken met een join op de rijen die je nodig hebt; geen `Text.Trim(...) = ` in filters (gebruik `Text.StartsWith`), geen `Table.IsEmpty([geneste kolom])` (klap de join-kolom uit en test op `null`).
