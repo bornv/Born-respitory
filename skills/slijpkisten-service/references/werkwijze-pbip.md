@@ -64,6 +64,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 29 | MesRobotLijst met bronvermelding (Grinding service calculation – Operational costs: messen + transportbakken; afkeuranalyse LCV_PAJL WAM + LCV_PART) |
 | 30 | Elke tabel een `///`-omschrijving met bron (Oracle-view, Excel-tabel, DAX op welke tabellen, of vaste lijst + herkomst) |
 | 31 | Geen parameters meer: SharePoint-site en bestandsnaam direct in AfsprakenWerkboek (zoals Borns handgemaakte BI) |
+| 32 | AfsprakenWerkboek via `Web.Contents` op het directe bestandsadres (…/Shared%20Documents/General/Slijpkisten_afspraken.xlsx) i.p.v. `SharePoint.Files` (doorzocht de hele site per Excel-tabel: tergend traag) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -73,3 +74,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
 6. Na elke wijziging: View Native Query op de stap na de join. Grijs = folding gebroken = te veel data.
 7. **Elke tabel en expressie** een `///`-omschrijving met de bron (Oracle-view, Excel-tabel, DAX op welke tabellen); vaste lijsten (#table) ook waar de waarden vandaan komen, en per groep een `//`-regel.
+8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
