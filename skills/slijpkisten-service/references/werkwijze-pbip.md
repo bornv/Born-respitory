@@ -74,6 +74,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 39 | Kisthistorie: LCV_PAJL direct gefilterd met `List.Contains(Kistartikelen, [ARTIKEL_NR])` (Kisttypenlijst + .990/.000 → IN-lijst in Oracle), geen KPTM-join voor artikelen (idee Born) |
 | 40 | Journaal gefilterd op kistartikelen; kistartikellijst = Kisttypenlijst ∪ kisttypen uit LCV_KPTM (+ .990/.000) |
 | 41 | Kisthistorie: "laatste per kist" in Oracle via `Table.Group` (List.Max datum) + join terug op (serienummer, datum); alleen laatste bewegingen komen binnen |
+| 42 | Afkeur: Group By (som MENGE per kistregel/artikel/datum) in Oracle vóór de joins met STATPRIJS en PART |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
