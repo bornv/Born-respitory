@@ -80,6 +80,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 45 | Journaal: Group By in Oracle (min/max datum, aantal per kistregel/artikel/code/serienummer) vóór de lokale stappen; serienummer = meeste regels |
 | 46 | Kisthistorie: kistartikellijst alleen uit Kisttypenlijst (bronloos) — een lijst die (deels) uit Oracle komt, ging vermoedelijk niet als IN naar Oracle (2+ mln rijen); kaart "Kisttypes niet in Kisttypenlijst" op Controle kisten |
 | 47 | Kisthistorie als enige query met eigen SQL (filter + KEEP DENSE_RANK LAST + klant uit KPTM in één query): met standaardstappen bleef het 2+ mln rijen (v38-46) |
+| 48 | Geen andere query (Kisttypenlijst) meer in een Oracle-filter: tweede bron → Power BI stuurt het filter niet naar Oracle (ⓘ bij de stappen, gezien door Born). Kisttypen uit LCV_KPTM (subquery / lijst uit dezelfde bron) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -95,5 +96,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 11. "Niets missen" (Born): niet filteren op `WERT_MENGE <> 0` (kistregels met alleen nulboekingen vallen dan weg uit Kistregels), niet op `MENGE <> 0` (Afkeur), niet op periode bij Slijpservice (PLW kan vóór de contractstart geboekt zijn). Een filter heet pas "veilig" als je hebt nagegaan dat geen meting, telling of lijst verandert.
 12. "Laatste per X" nooit door alle detailregels binnen te halen: eerst `Table.Group` met `List.Max` (wordt GROUP BY in Oracle), dan inner join terug op sleutel + datum.
 13. Filter op kistorders altijd ook als vaste lijst: `Kistordernummers = List.Buffer(List.Distinct(KPTMKistregels[KD_VORGANGS_NR]))` en `List.Contains(...)` in de eerste filterstap → `IN (...)` in Oracle. Let op: Oracle staat max. 1000 waarden per IN-lijst toe (nu ±90 kistorders).
-14. Lijsten voor `List.Contains`-filters op grote views (PAJL alle jaren): bij voorkeur uit een bronloze lijst (#table zoals Kisttypenlijst). Een lijst die zelf uit Oracle komt, werd in v40-45 vermoedelijk niet als IN naar Oracle gestuurd. Altijd met View Native Query controleren.
+14. **Nooit een andere query (ook geen bronloze #table zoals Kisttypenlijst) gebruiken in een filter van een Oracle-query.** Power BI scheidt dan de bronnen en voert alles erna zelf uit (ⓘ-icoon bij de stappen). Lijsten voor filters komen uit dezelfde Oracle-bron (bijv. Kistordernummers uit LCV_KPTM). Meerdere views uit LCV_DATA in één query is wél één bron.
 15. Werkt een query na twee pogingen nog niet in Oracle: eerst View Native Query per stap laten opsturen (eerste grijze stap = oorzaak), niet blijven gokken.
