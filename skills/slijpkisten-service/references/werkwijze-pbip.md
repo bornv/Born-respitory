@@ -59,3 +59,12 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 24 | F Afkeur: r[DATUM]/r[MENGE]/r[ARTIKEL_NR] hersteld; tblContracten in de afsprakenlijst t/m kolom H |
 | 25 | Alle 5 functies (fx) verwijderd en in de query's zelf opgenomen; StartPeriode 202410 (2 jaar, vast); KistKosten-lidmaatschap via joins; Betaaltermijnen herschreven |
 | 26 | Pagina Controle kisten: kistregels zonder serienummer + D Kisthistorie (alle kistserienummers, alle jaren, in Oracle per serienummer samengevat; status In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode); 9 Oracle-query's |
+| 27 | Opnieuw opgebouwd met standaardstappen (navigatie → Kolommen kiezen → filters → stap Kistorders → join → typen → eindselectie), geen eigen SQL; namen viewnaam + omschrijving; periode vast 202401 (journaal 20230701); Journaal 1 rij per kistregel; PKLK = kistbonnen + bonnen vanaf 20231201; Kisthistorie via Group By |
+
+## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
+1. `Oracle.Database(OracleServer, [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
+2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (getallen voor Penta-datums, `Text.Length(Text.Trim(x)) > 0` voor "niet leeg": `<> ""` werkt niet in Oracle).
+3. Stap `Kistorders` uit dezelfde bron (LCV_KPTM, KIST .990/.000, ISW, vanaf 202401) en `Table.NestedJoin(..., JoinKind.Inner)`; join-kolom en filterkolommen daarna weg.
+4. Pas daarna typen (`Table.TransformColumns`), berekende kolommen en één eindselectie/hernoeming.
+5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
+6. Na elke wijziging: View Native Query op de stap na de join. Grijs = folding gebroken = te veel data.
