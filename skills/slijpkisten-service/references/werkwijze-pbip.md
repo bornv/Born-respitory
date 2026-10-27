@@ -63,6 +63,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 28 | Parameter OracleServer vervallen; server "lcvpentabi.marel.net" direct in de bronstap (zoals Borns handgemaakte BI) |
 | 29 | MesRobotLijst met bronvermelding (Grinding service calculation – Operational costs: messen + transportbakken; afkeuranalyse LCV_PAJL WAM + LCV_PART) |
 | 30 | Elke tabel een `///`-omschrijving met bron (Oracle-view, Excel-tabel, DAX op welke tabellen, of vaste lijst + herkomst) |
+| 31 | Geen parameters meer: SharePoint-site en bestandsnaam direct in AfsprakenWerkboek (zoals Borns handgemaakte BI) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
