@@ -61,6 +61,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 26 | Pagina Controle kisten: kistregels zonder serienummer + D Kisthistorie (alle kistserienummers, alle jaren, in Oracle per serienummer samengevat; status In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode); 9 Oracle-query's |
 | 27 | Opnieuw opgebouwd met standaardstappen (navigatie → Kolommen kiezen → filters → stap Kistorders → join → typen → eindselectie), geen eigen SQL; namen viewnaam + omschrijving; periode vast 202401 (journaal 20230701); Journaal 1 rij per kistregel; PKLK = kistbonnen + bonnen vanaf 20231201; Kisthistorie via Group By |
 | 28 | Parameter OracleServer vervallen; server "lcvpentabi.marel.net" direct in de bronstap (zoals Borns handgemaakte BI) |
+| 29 | MesRobotLijst met bronvermelding (Grinding service calculation – Operational costs: messen + transportbakken; afkeuranalyse LCV_PAJL WAM + LCV_PART) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -69,3 +70,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 4. Pas daarna typen (`Table.TransformColumns`), berekende kolommen en één eindselectie/hernoeming.
 5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
 6. Na elke wijziging: View Native Query op de stap na de join. Grijs = folding gebroken = te veel data.
+7. Vaste lijsten (#table) altijd met een `///`-omschrijving waar de waarden vandaan komen, en per groep een `//`-regel.
