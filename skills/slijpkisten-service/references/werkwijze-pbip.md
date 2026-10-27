@@ -65,6 +65,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 30 | Elke tabel een `///`-omschrijving met bron (Oracle-view, Excel-tabel, DAX op welke tabellen, of vaste lijst + herkomst) |
 | 31 | Geen parameters meer: SharePoint-site en bestandsnaam direct in AfsprakenWerkboek (zoals Borns handgemaakte BI) |
 | 32 | AfsprakenWerkboek via `Web.Contents` op het directe bestandsadres (…/Shared%20Documents/General/Slijpkisten_afspraken.xlsx) i.p.v. `SharePoint.Files` (doorzocht de hele site per Excel-tabel: tergend traag) |
+| 33 | LCV_PKLK Afleverbonnen: dubbele stapnaam `Bron` (Oracle-bron én Table.Combine) → "Duplicate initializer"; combine-stap heet nu "Alle bonnen" |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -75,3 +76,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 6. Na elke wijziging: View Native Query op de stap na de join. Grijs = folding gebroken = te veel data.
 7. **Elke tabel en expressie** een `///`-omschrijving met de bron (Oracle-view, Excel-tabel, DAX op welke tabellen); vaste lijsten (#table) ook waar de waarden vandaan komen, en per groep een `//`-regel.
 8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
+9. Controleer vóór opleveren elke query op **dubbele stapnamen** (fout "Duplicate initializer named …"): de vaste navigatiestappen heten `Bron` en `LCV_DATA`, gebruik die namen nergens anders.
