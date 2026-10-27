@@ -83,6 +83,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 48 | Geen andere query (Kisttypenlijst) meer in een Oracle-filter: tweede bron → Power BI stuurt het filter niet naar Oracle (ⓘ bij de stappen, gezien door Born). Kisttypen uit LCV_KPTM (subquery / lijst uit dezelfde bron) |
 | 49 | MesRobotLijst in LCV_PAJL Afkeur zelf gezet (record mes → robot); geen Oracle-query verwijst nog naar een andere query |
 | 50 | Betaaltermijnen: geneste tabel met type (datums bleven anders tekst na uitklappen); NC-metingen: kolom met tabelnaam omdat een meting dezelfde naam heeft |
+| 51 | Servicecontracten alleen uit tblContracten (wens Born: geen oude/automatische contractorders); Slijpservice-metingen met TREATAS op tblContracten[ContractId]; signaal nieuwe contracten = boekingen vanaf 202401 niet in Excel |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.

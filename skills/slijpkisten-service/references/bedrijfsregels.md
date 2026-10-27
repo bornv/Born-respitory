@@ -44,3 +44,4 @@
 6. Cut-off: lopende maand niet in jaarcijfers; geen deling door maanden zonder activiteit.
 7. Onwaarschijnlijke marges (bv. > 90 %) zijn bijna altijd een scope- of filterfout, geen echte marge.
 8. Transport gefactureerd terwijl het contract transport uitsluit → signaleren.
+- **Contracten (sinds v51):** alleen de contracten uit de afsprakenlijst (tblContracten) tellen mee. Contractorders in Penta die er niet in staan, verschijnen alleen als signaal "Nieuwe contracten (aanvullen)" als ze boekingen vanaf 202401 hebben.
