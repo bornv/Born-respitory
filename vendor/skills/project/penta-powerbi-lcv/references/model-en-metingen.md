@@ -1,0 +1,68 @@
+# Model, tabellen en metingen
+
+## Gedeelde M-expressies (niet geladen)
+Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist, KPTM_Contract, Journaal_Kist, SqlIn, Bronmodus/Dataflow. Nieuw: KistOrdersSQL/KistKlantenSQL/KistRegelsSQL/VanafJournaal (SQL-tekst), NaarDatum, MesRobotLijst. Zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md#bronlaag-één-query-per-penta-bron-vanaf-versie-21). Sinds versie 25 ook vervallen: de functies NaarDatum, KPTM_Lees, LeesHoofdafleverbon, Opzoek en Bevat.
+
+| Expressie | Doel |
+|---|---|
+| `OracleServer`, `StartPeriode` (jjjjmm, vast; sinds v25 `202410` = 2 jaar terug), `AfsprakenSite`, `AfsprakenBestand` | Parameters |
+| `KistBasis` | Unieke kistregels (eigen lichte SQL) — basis voor bijna alles |
+| `KistOrderLijst`, `KistKlantLijst` | Lijsten uit KistBasis voor `SqlIn` |
+| `Journaal_Kist` | PAJL-regels van de kistorders (datumfilter in M) |
+| `AfsprakenWerkboek`, `NietInSlijpmarge` | Excel op SharePoint |
+| `MesRobotLijst`, `NietInSlijpmarge`, `AfsprakenWerkboek` | Hulplijsten/-tabellen (geen functies; sinds v25 staan datumomzetting, KPTM-inlezen en bundellezen in de query's zelf) |
+
+## Geladen tabellen
+Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).
+
+| Tabel | Inhoud |
+|---|---|
+| KistKosten | Alle ISW-boekingen op kistorders met Categorie, CategorieVolgorde, RegelSoort (Slijpronde / Nieuwe kist / Overige regel), Bedrag (kosten positief), Omschrijving. Bevat de meeste metingen. |
+| KistRegels | Per kistregel: kisttype, robot, GOB/GVR-datum, Zending, serienummer |
+| Kistorders | Kistorder, klant; berekende kolom `Afspraak` (DAX) |
+| Klanten | Klanten met slijpkisten |
+| Afkeur | WAM-uitgifte van messen op slijprondes, met prijs en omschrijving |
+| PO_BM | Inkooporders bij B.M. |
+| Facturen | **Berekende tabel** uit KistKosten (Omzet, netto ≠ 0) per order en periode |
+| Servicecontracten | tblContracten + automatisch gevonden contracten; WaardeSlijpservice, Bron |
+| Slijpservice | PLW/ISW op contractorders met Kostengroep, Artikel, Omschrijving, KUNDEN_NR |
+| ContractKistorder | Contract ↔ kistorder (Excel + automatisch) |
+| Betaalafspraken, Betaaltermijnen, Omzetplanning | Afspraken, termijnen tot einddatum, planning per maand (Bedrag, BedragRevisie) |
+| Robots, Kisttypen, VerwachteKisten, Productie, NC Robots, KlantLand, TransporttariefLand | Tarieven, koppelingen, invoer voor calculatie en nieuw contract |
+| Periodes | **Berekende tabel**: maanden van eerste t/m laatste maand in de data (of t/m vandaag), Maandstatus |
+| OmzetKlant | Alle 951000 van slijpklanten op elke order (Ordertype) |
+| Shipping_PKLK, TransportAfleverbonnen, AfleverbonKistregels, TransportZendingen | Transport en afleverbonnen (controletabellen verwijderd in versie 22) |
+
+Relaties o.a.: KistKosten/KistRegels/Facturen → Kistorders → Klanten; tabellen → Periodes (Periode jjjjmm); Slijpservice → Klanten; OmzetKlant → Klanten en Periodes; transporttabellen → Kistorders/Klanten/Periodes.
+
+## Belangrijke metingen (KistKosten, tenzij anders)
+```dax
+Kosten = CALCULATE ( SUM ( KistKosten[Bedrag] ),
+    KEEPFILTERS ( NOT KistKosten[Categorie] IN { "Omzet", "Revisie (omzet, niet in slijpmarge)", "Revisie (kosten, niet in slijpmarge)" } ),
+    KEEPFILTERS ( KistKosten[Categorie] <> "Overige kosten" || KistKosten[Bedrag] >= 0 ) )
+Omzet = CALCULATE ( SUM ( KistKosten[Bedrag] ), KEEPFILTERS ( KistKosten[Categorie] = "Omzet" ) )
+'Kosten contract' = [Kosten] - [Meerkosten extra messen] + [Kosten zonder kistregel (toegerekend)]
+'Geplande omzet slijpservice' = CALCULATE ( SUM ( Omzetplanning[Bedrag] ) - SUM ( Omzetplanning[BedragRevisie] ), KEEPFILTERS ( Omzetplanning[Maand] <= TODAY () ) )
+'Kosten contractorder' = CALCULATE ( - SUM ( Slijpservice[BedragSAP] ), Slijpservice[Waardesoort] = "ISW",
+    Slijpservice[Kostengroep] <> "Revisie (niet in slijpmarge)", TREATAS ( VALUES ( Periodes[Periode] ), Slijpservice[Periode] ),
+    TREATAS ( CALCULATETABLE ( VALUES ( Omzetplanning[Referentie] ), ALL ( Omzetplanning ), Omzetplanning[Bron] = "Contract" ), Slijpservice[ContractId] ) )
+```
+Verder o.a.: Slijpen B.M., Afkeur SAP, Nieuwe kisten, Verzendkosten M46U, Commissie IKP, Meerkosten extra messen, Kosten per jaar, Afschrijving nieuwe kisten per jaar, Verwachte omzet, Saldo (verwacht), Nog te factureren, Achterstallig, Revisie kosten, Contractkosten zonder contractwaarde, Zendingen (GOB+GVR), Omzet op kist-/contract-/andere orders (OmzetKlant), Gefactureerd/Credits (Facturen), Nieuwe contracten (aanvullen) en Contractbron kleur (Servicecontracten).
+
+Patronen:
+- Toerekening: `IF ( ISFILTERED ( Robots ) || ISFILTERED ( Kisttypen ) || ISFILTERED ( KistRegels ), SUMX ( VALUES ( Klanten[KUNDEN_NR] ), [X] * DIVIDE ( [Calculatiewaarde slijpen], CALCULATE ( [Calculatiewaarde slijpen], REMOVEFILTERS ( Robots ), REMOVEFILTERS ( Kisttypen ), REMOVEFILTERS ( KistRegels ) ) ) ), [X] )`
+- Cut-off: `KEEPFILTERS ( Periodes[Maand] < DATE ( YEAR ( TODAY () ), MONTH ( TODAY () ), 1 ) )`
+- Tabellen zonder relatie met Periodes: `TREATAS ( VALUES ( Periodes[Periode] ), Tabel[Periode] )`.
+- Berekende kolommen/tabellen die andere tabellen lezen: `FILTER ( ALLNOBLANKROW ( … ) )`/`GROUPBY … CURRENTGROUP ()`, geen `CALCULATE` (voorkomt circulaire afhankelijkheden).
+
+## Opschonen (versie 21b)
+Ongebruikte metingen en kolommen zijn verwijderd (22 metingen, 46 kolommen). Criterium: niet in een visual, relatie, sortering, DAX-formule of andere query. Kolommen die Power Query nog nodig heeft voor een berekening blijven in de query en verdwijnen in de laatste stap `Opgeschoond`. Een verwijderde meting terug nodig? Zie de vorige versie (21 of 20) in de LEESMIJ/zip.
+
+## Rapport (pagina's)
+Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en marge, Nieuw contract, Meerkosten, Per kist (incl. serienummercontrole, zendingen), Afkeur, Slijpservice (contracten, Waarde slijpservice, overige contractkosten, revisie, Bron-kleur), Facturen, Omzet per order, PO's, en transport: Kisten per zending, Transport en afleverbonnen. Slicers o.a. Maandstatus (lopende maand selecteerbaar), robot, klant, gewenste marge.
+
+## Betrouwbaarheid kistaantal (sinds v26)
+`Kisten in omloop` = verschillende serienummers op kistregels met kosten sinds StartPeriode. Twee gaten worden zichtbaar gemaakt op de pagina **Controle kisten**:
+- `Kistregels zonder serienummer`: kistregel (.990/.000) zonder CHARGEN_SERIEN_NR in het journaal → telt niet als kist.
+- `D Kisthistorie`: alle kistserienummers uit LCV_PAJL (alle jaren, GOB/GVR, kisttypen uit KistRegelsSQL), per serienummer in Oracle samengevat (laatste datum, laatste order via `KEEP (DENSE_RANK LAST ORDER BY DATUM)`, klant uit LCV_KPTM). Kolom `Status`: In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode.
+StartPeriode vast houden (niet meeschuiven): een meeschuivende periode laat kisten en contractkosten ongemerkt wegvallen.

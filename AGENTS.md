@@ -19,6 +19,8 @@ bronskill en referenties. Laad niet de hele verzameling tegelijk.
 | Canvas Apps en `.pa.yaml` | `canvas-app`, `configure-canvas-mcp` |
 | Power Automate-cloudflows | `power-automate`, `build-flow`, `create-flow`, `browse-flows`, `debug-flow`, `diagnose-flow`, `manage-flows`, `route-environments` |
 | Power BI-modellen, DAX en rapporten | `powerbi-modeling`, `power-bi-dax-optimization`, `power-bi-model-design-review`, `power-bi-performance-troubleshooting`, `power-bi-report-design-consultation` |
+| Power BI/Penta-context, datavalidatie en PBIP-oplevering | `penta-powerbi-lcv`, `data-context-extractor`, `validate-data`, `pbip-delivery-check` |
+| Terugkerende incidenten en herstelstappen | `runbook` |
 | Home Assistant-dashboard | `ha-dashboard-design` |
 | Fouten onderzoeken en afronden met bewijs | `systematic-debugging`, `verification-before-completion` |
 | Webapps testen | `webapp-testing` |

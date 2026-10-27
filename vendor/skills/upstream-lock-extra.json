@@ -355,27 +355,28 @@
       "files": {
         "vendor/skills/awesome-copilot/power-bi-model-design-review/SKILL.md": "bf6268e3d75446533b54887db6263302fde01f516634d4bd60a1cc21928add4c"
       }
+    },
+    {
+      "repository": "bornv/Born-respitory (project-local)",
+      "commit": "workspace-project-skills-2026-10-27",
+      "url": "https://github.com/bornv/Born-respitory",
+      "files": {
+        "vendor/skills/project/data-context-extractor/SKILL.md": "81cdd2bb599deda7ff44b22b282494f50a26e58a22a15b261f5f9c44c8b4c177",
+        "vendor/skills/project/pbip-delivery-check/SKILL.md": "19740845b9a2ee7dbd0a7b1d715a13da36f54a4504aa4701c00fc606d03e0798",
+        "vendor/skills/project/penta-powerbi-lcv/SKILL.md": "c2352d5a671a42093745ad563b24cd072f1a94d2a2665f1f4ede5b3a23630a48",
+        "vendor/skills/project/penta-powerbi-lcv/references/afsprakenlijst-sharepoint.md": "155e77aa9f97aac94fbb912805e03e773ed8464c731ae44902543726406fe7ad",
+        "vendor/skills/project/penta-powerbi-lcv/references/bedrijfsregels.md": "0c441deb79d59bf0046412d16b9e12b6581fdd884cf87f1a456c60dc21db1148",
+        "vendor/skills/project/penta-powerbi-lcv/references/bronnen-lcv-penta.md": "0d438d9f2073889c43b1c83febd489d396ba394e18c41c4cfbebd5caddbb6478",
+        "vendor/skills/project/penta-powerbi-lcv/references/lcv-werkwijze-afstemming.md": "46e35e58e55c04cf7f836cf155b3b75965fc0734155079187ebcad120a7967e6",
+        "vendor/skills/project/penta-powerbi-lcv/references/model-en-metingen.md": "10b4cffa0f49bc43226e4dd17f6bb5c87af9155c9e701ce5ebbe6d3d3b588da8",
+        "vendor/skills/project/penta-powerbi-lcv/references/refresh-en-performance.md": "5834af58f182d0b17b2a85b1175fbf76a77f16264cb976785a70650e30bdc635",
+        "vendor/skills/project/penta-powerbi-lcv/references/werkwijze-pbip.md": "67fed9b0b92dbf0f8564e36d1474a63d4a6ca0e97fb010fab89be14e692d4e64",
+        "vendor/skills/project/runbook/SKILL.md": "64f49745fbcaf86d489c3d6c5a9a24d99e1c6981ee2ff735be4626769da70202",
+        "vendor/skills/project/validate-data/SKILL.md": "17153532dc60ef895fbb556be81d1d3d866033e38f3bdcf239402597b2368387"
+      }
     }
   ],
   "installed_skills": [
-    {
-      "name": "canvas-app",
-      "entrypoint": ".agents/skills/canvas-app/SKILL.md",
-      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/canvas-app/SKILL.md",
-      "claude_entrypoint": ".claude/skills/canvas-app/SKILL.md"
-    },
-    {
-      "name": "configure-canvas-mcp",
-      "entrypoint": ".agents/skills/configure-canvas-mcp/SKILL.md",
-      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/configure-canvas-mcp/SKILL.md",
-      "claude_entrypoint": ".claude/skills/configure-canvas-mcp/SKILL.md"
-    },
-    {
-      "name": "power-automate",
-      "entrypoint": ".agents/skills/power-automate/SKILL.md",
-      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/setup/SKILL.md",
-      "claude_entrypoint": ".claude/skills/power-automate/SKILL.md"
-    },
     {
       "name": "browse-flows",
       "entrypoint": ".agents/skills/browse-flows/SKILL.md",
@@ -389,10 +390,34 @@
       "claude_entrypoint": ".claude/skills/build-flow/SKILL.md"
     },
     {
+      "name": "canvas-app",
+      "entrypoint": ".agents/skills/canvas-app/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/canvas-app/SKILL.md",
+      "claude_entrypoint": ".claude/skills/canvas-app/SKILL.md"
+    },
+    {
+      "name": "configure-canvas-mcp",
+      "entrypoint": ".agents/skills/configure-canvas-mcp/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/canvas-apps/skills/configure-canvas-mcp/SKILL.md",
+      "claude_entrypoint": ".claude/skills/configure-canvas-mcp/SKILL.md"
+    },
+    {
       "name": "create-flow",
       "entrypoint": ".agents/skills/create-flow/SKILL.md",
       "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/create-flow/SKILL.md",
       "claude_entrypoint": ".claude/skills/create-flow/SKILL.md"
+    },
+    {
+      "name": "data-context-extractor",
+      "entrypoint": ".agents/skills/data-context-extractor/SKILL.md",
+      "source": "vendor/skills/project/data-context-extractor/SKILL.md",
+      "claude_entrypoint": ".claude/skills/data-context-extractor/SKILL.md"
+    },
+    {
+      "name": "database-lookup",
+      "entrypoint": ".agents/skills/database-lookup/SKILL.md",
+      "source": "vendor/skills/k-dense/scientific-agent-skills/database-lookup/SKILL.md",
+      "claude_entrypoint": ".claude/skills/database-lookup/SKILL.md"
     },
     {
       "name": "debug-flow",
@@ -407,58 +432,10 @@
       "claude_entrypoint": ".claude/skills/diagnose-flow/SKILL.md"
     },
     {
-      "name": "manage-flows",
-      "entrypoint": ".agents/skills/manage-flows/SKILL.md",
-      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/manage-flows/SKILL.md",
-      "claude_entrypoint": ".claude/skills/manage-flows/SKILL.md"
-    },
-    {
-      "name": "route-environments",
-      "entrypoint": ".agents/skills/route-environments/SKILL.md",
-      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/route-environments/SKILL.md",
-      "claude_entrypoint": ".claude/skills/route-environments/SKILL.md"
-    },
-    {
-      "name": "systematic-debugging",
-      "entrypoint": ".agents/skills/systematic-debugging/SKILL.md",
-      "source": "vendor/skills/obra/superpowers/systematic-debugging/SKILL.md",
-      "claude_entrypoint": ".claude/skills/systematic-debugging/SKILL.md"
-    },
-    {
-      "name": "verification-before-completion",
-      "entrypoint": ".agents/skills/verification-before-completion/SKILL.md",
-      "source": "vendor/skills/obra/superpowers/verification-before-completion/SKILL.md",
-      "claude_entrypoint": ".claude/skills/verification-before-completion/SKILL.md"
-    },
-    {
-      "name": "webapp-testing",
-      "entrypoint": ".agents/skills/webapp-testing/SKILL.md",
-      "source": "vendor/skills/anthropics/webapp-testing/SKILL.md",
-      "claude_entrypoint": ".claude/skills/webapp-testing/SKILL.md"
-    },
-    {
       "name": "ha-dashboard-design",
       "entrypoint": ".agents/skills/ha-dashboard-design/SKILL.md",
       "source": "vendor/skills/aurora-smart-home/ha-dashboard-design/SKILL.md",
       "claude_entrypoint": ".claude/skills/ha-dashboard-design/SKILL.md"
-    },
-    {
-      "name": "victron-modbus",
-      "entrypoint": ".agents/skills/victron-modbus/SKILL.md",
-      "source": "vendor/skills/extsps/victron-modbus-skill/SKILL.md",
-      "claude_entrypoint": ".claude/skills/victron-modbus/SKILL.md"
-    },
-    {
-      "name": "odoo-19",
-      "entrypoint": ".agents/skills/odoo-19/SKILL.md",
-      "source": "vendor/skills/mart337i/odoo-skills/odoo-19.0/SKILL.md",
-      "claude_entrypoint": ".claude/skills/odoo-19/SKILL.md"
-    },
-    {
-      "name": "database-lookup",
-      "entrypoint": ".agents/skills/database-lookup/SKILL.md",
-      "source": "vendor/skills/k-dense/scientific-agent-skills/database-lookup/SKILL.md",
-      "claude_entrypoint": ".claude/skills/database-lookup/SKILL.md"
     },
     {
       "name": "literature-review",
@@ -467,10 +444,34 @@
       "claude_entrypoint": ".claude/skills/literature-review/SKILL.md"
     },
     {
-      "name": "powerbi-modeling",
-      "entrypoint": ".agents/skills/powerbi-modeling/SKILL.md",
-      "source": "vendor/skills/awesome-copilot/powerbi-modeling/SKILL.md",
-      "claude_entrypoint": ".claude/skills/powerbi-modeling/SKILL.md"
+      "name": "manage-flows",
+      "entrypoint": ".agents/skills/manage-flows/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/manage-flows/SKILL.md",
+      "claude_entrypoint": ".claude/skills/manage-flows/SKILL.md"
+    },
+    {
+      "name": "odoo-19",
+      "entrypoint": ".agents/skills/odoo-19/SKILL.md",
+      "source": "vendor/skills/mart337i/odoo-skills/odoo-19.0/SKILL.md",
+      "claude_entrypoint": ".claude/skills/odoo-19/SKILL.md"
+    },
+    {
+      "name": "pbip-delivery-check",
+      "entrypoint": ".agents/skills/pbip-delivery-check/SKILL.md",
+      "source": "vendor/skills/project/pbip-delivery-check/SKILL.md",
+      "claude_entrypoint": ".claude/skills/pbip-delivery-check/SKILL.md"
+    },
+    {
+      "name": "penta-powerbi-lcv",
+      "entrypoint": ".agents/skills/penta-powerbi-lcv/SKILL.md",
+      "source": "vendor/skills/project/penta-powerbi-lcv/SKILL.md",
+      "claude_entrypoint": ".claude/skills/penta-powerbi-lcv/SKILL.md"
+    },
+    {
+      "name": "power-automate",
+      "entrypoint": ".agents/skills/power-automate/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/setup/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-automate/SKILL.md"
     },
     {
       "name": "power-bi-dax-optimization",
@@ -479,10 +480,10 @@
       "claude_entrypoint": ".claude/skills/power-bi-dax-optimization/SKILL.md"
     },
     {
-      "name": "power-bi-report-design-consultation",
-      "entrypoint": ".agents/skills/power-bi-report-design-consultation/SKILL.md",
-      "source": "vendor/skills/awesome-copilot/power-bi-report-design-consultation/SKILL.md",
-      "claude_entrypoint": ".claude/skills/power-bi-report-design-consultation/SKILL.md"
+      "name": "power-bi-model-design-review",
+      "entrypoint": ".agents/skills/power-bi-model-design-review/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-model-design-review/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-model-design-review/SKILL.md"
     },
     {
       "name": "power-bi-performance-troubleshooting",
@@ -491,11 +492,58 @@
       "claude_entrypoint": ".claude/skills/power-bi-performance-troubleshooting/SKILL.md"
     },
     {
-      "name": "power-bi-model-design-review",
-      "entrypoint": ".agents/skills/power-bi-model-design-review/SKILL.md",
-      "source": "vendor/skills/awesome-copilot/power-bi-model-design-review/SKILL.md",
-      "claude_entrypoint": ".claude/skills/power-bi-model-design-review/SKILL.md"
+      "name": "power-bi-report-design-consultation",
+      "entrypoint": ".agents/skills/power-bi-report-design-consultation/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/power-bi-report-design-consultation/SKILL.md",
+      "claude_entrypoint": ".claude/skills/power-bi-report-design-consultation/SKILL.md"
+    },
+    {
+      "name": "powerbi-modeling",
+      "entrypoint": ".agents/skills/powerbi-modeling/SKILL.md",
+      "source": "vendor/skills/awesome-copilot/powerbi-modeling/SKILL.md",
+      "claude_entrypoint": ".claude/skills/powerbi-modeling/SKILL.md"
+    },
+    {
+      "name": "route-environments",
+      "entrypoint": ".agents/skills/route-environments/SKILL.md",
+      "source": "vendor/skills/microsoft/power-platform-skills/power-automate/skills/route-environments/SKILL.md",
+      "claude_entrypoint": ".claude/skills/route-environments/SKILL.md"
+    },
+    {
+      "name": "runbook",
+      "entrypoint": ".agents/skills/runbook/SKILL.md",
+      "source": "vendor/skills/project/runbook/SKILL.md",
+      "claude_entrypoint": ".claude/skills/runbook/SKILL.md"
+    },
+    {
+      "name": "systematic-debugging",
+      "entrypoint": ".agents/skills/systematic-debugging/SKILL.md",
+      "source": "vendor/skills/obra/superpowers/systematic-debugging/SKILL.md",
+      "claude_entrypoint": ".claude/skills/systematic-debugging/SKILL.md"
+    },
+    {
+      "name": "validate-data",
+      "entrypoint": ".agents/skills/validate-data/SKILL.md",
+      "source": "vendor/skills/project/validate-data/SKILL.md",
+      "claude_entrypoint": ".claude/skills/validate-data/SKILL.md"
+    },
+    {
+      "name": "verification-before-completion",
+      "entrypoint": ".agents/skills/verification-before-completion/SKILL.md",
+      "source": "vendor/skills/obra/superpowers/verification-before-completion/SKILL.md",
+      "claude_entrypoint": ".claude/skills/verification-before-completion/SKILL.md"
+    },
+    {
+      "name": "victron-modbus",
+      "entrypoint": ".agents/skills/victron-modbus/SKILL.md",
+      "source": "vendor/skills/extsps/victron-modbus-skill/SKILL.md",
+      "claude_entrypoint": ".claude/skills/victron-modbus/SKILL.md"
+    },
+    {
+      "name": "webapp-testing",
+      "entrypoint": ".agents/skills/webapp-testing/SKILL.md",
+      "source": "vendor/skills/anthropics/webapp-testing/SKILL.md",
+      "claude_entrypoint": ".claude/skills/webapp-testing/SKILL.md"
     }
   ]
 }
-

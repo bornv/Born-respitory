@@ -6,7 +6,7 @@ besproken bouwpakket is geen bevestiging van installatie of productiegebruik.
 
 ## Geïnstalleerde skills
 
-De repository bevat nu 30 lokale skillingangen. De bestaande Home
+De repository bevat nu 35 lokale skillingangen. De bestaande Home
 Assistant-skill is bijgewerkt van versie 49 naar **53**. De eerdere wijzigingen
 aan de warmtepompregeling staan hier los van.
 
@@ -28,6 +28,8 @@ aan de warmtepompregeling staan hier los van.
 | Victron Modbus | [extsps/Victron-Modbus-Skill](https://github.com/extsps/Victron-Modbus-Skill/tree/c17478315bbbfe09c9235645004a473d413215ef) | GPL-3.0-only |
 | Odoo 19 | [mart337i/odoo-skills](https://github.com/mart337i/odoo-skills/tree/634b2db69c0ffb9766a5d16cff09a81ff1df54f4/skills/odoo-19.0) | MIT (package metadata) |
 | Scientific database lookup en literature review | [K-Dense-AI/scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills/tree/5f2bc0341354fd5590aef76a533ada1e1e5b4e62/skills) | MIT |
+| Eigen Penta Power BI LCV-context | [projectskill uit de Fabric-werkwijze](https://github.com/bornv/Born-respitory/tree/main/vendor/skills/project/penta-powerbi-lcv) | Interne projectkennis |
+| Eigen data-context, datavalidatie, PBIP-oplevering en runbook | [projectskills](https://github.com/bornv/Born-respitory/tree/main/vendor/skills/project) | Interne projectkennis |
 
 ## Aanvullingen uit het gezamenlijke projectoverzicht
 
@@ -52,6 +54,11 @@ Power Automate, Power BI Desktop of een doelsysteem.
 | [Victron Modbus](https://github.com/extsps/Victron-Modbus-Skill) | Gericht nuttig | Victron uitlezen of aansturen via Modbus TCP; registerkeuze, unit-ID's, schaalfactoren en gegevenstypen. | **Geïnstalleerd.** Registerdetails moeten tegen apparaat en firmware worden geverifieerd; de eigen MQTT/Node-RED-ESS-aanpak blijft aanvullend nodig. |
 | [Odoo 19 Development](https://github.com/mart337i/odoo-skills/tree/main/skills/odoo-19.0) | Gericht nuttig | Eigen Odoo 19-modules, rapporten, Python/XML en prestatieverbeteringen. | **Geïnstalleerd.** Communityskill; bepaal een aparte Odoo-ontwikkel- en testomgeving vóór databasewijzigingen. |
 | [K-Dense Scientific Agent Skills](https://github.com/K-Dense-AI/scientific-agent-skills) | Hoog voor onderzoeksbriefings | Wetenschappelijke literatuur en trials, waaronder Huntington; zoekfilters en herleidbare bronnen. De ingangen `database-lookup` en `literature-review` zijn opgenomen. | **Geïnstalleerd.** API's, actuele brondekking en eventuele optionele CLI's worden per onderzoek gecontroleerd. |
+| Data Context Extractor | Hoog voor Power BI/Penta | Bronvelden, sleutels, granulariteit, definities en actuele afspraken als controleerbare context vastleggen. | **Geïnstalleerd als projectskill.** Bevestig actuele metadata en eigenaar vóór modelwijzigingen. |
+| Validate Data | Hoog voor analyses | Dubbeltellingen door joins, periode- en filterfouten, sleutelproblemen en niet-aansluitende totalen opsporen. | **Geïnstalleerd als projectskill.** Een controle zonder de actuele bron is geen bewijs van productiedata. |
+| PBIP Delivery Check | Hoog voor oplevering | PBIP-, TMDL-, PBIR- en projectverwijzingen controleren vóór een versie wordt opgeleverd. | **Geïnstalleerd als projectskill.** Desktop-, service-, Oracle- en gatewaycontroles blijven apart nodig. |
+| Runbook | Hoog voor terugkerende problemen | Herhaalbare diagnose- en herstelstappen met baseline, verwachte uitkomst en rollback voor Power BI, Oracle, gateway en energieautomatisering. | **Geïnstalleerd als projectskill.** Live stappen blijven afhankelijk van rechten, scope en actuele gegevens. |
+| Penta Power BI LCV | Zeer hoog voor Slijpkisten Service | LCV/Penta-bronvelden, bedrijfsregels, refreshdiagnose, marge, afspraken en PBIP-oplevering centraal beschikbaar maken. | **Geïnstalleerd als projectskill.** De referenties bevatten geen productie-PBIP, klantdata of Oracle-export. |
 | [Anthropic-documentvaardigheden: XLSX, DOCX, PDF en PPTX](https://github.com/anthropics/skills) | Breed nuttig | Inkoopanalyses, planningen, overeenkomsten, rapporten en presentaties. | Aanbevolen ter vergelijking, nog niet geïnstalleerd. Eigen licentievoorwaarden per documentvaardigheid controleren. Het aangeleverde overzicht meldt vergelijkbare mogelijkheden in ChatGPT; dat bevestigt geen beschikbaarheid in deze cloudomgeving. |
 
 ### Eigen projectskills
@@ -146,7 +153,7 @@ beperkingen. Het oorspronkelijke werkboek blijft intact.
   flowopdracht worden gecontroleerd. Er is geen server of flow gedeployd.
 - Great Expectations en dbt zijn voorbeelden in de datakwaliteitsskill; deze
   frameworks zijn niet nodig om de skill te lezen of controles te ontwerpen.
-- De Fabric/Power BI-projectskills op de andere Git-branch zijn niet samengevoegd.
+- De volledige Fabric-branch is niet samengevoegd; de ontbrekende Penta-context en de vijf aanvullende projectskills zijn wel opgenomen.
 
 ## Bijwerken en herstel
 
@@ -159,9 +166,9 @@ ter beoordeling; publicatie van de cloudomgeving is een afzonderlijke stap.
 
 ## Gecontroleerd bij installatie
 
-- Alle 30 Codex-ingangen voldoen aan de skillmetadata-controle; Claude-ingangen
+- Alle 35 Codex-ingangen voldoen aan de skillmetadata-controle; Claude-ingangen
   en bronverwijzingen zijn aanwezig.
-- Alle 757 overgenomen bronbestanden komen overeen met de vastgelegde SHA-256-controlesommen.
+- Alle 769 overgenomen en projectgebonden bronbestanden komen overeen met de vastgelegde SHA-256-controlesommen.
 - Spreadsheet Auditor: **404 tests geslaagd**, uitgevoerd met vier testprocessen.
   De afzonderlijke praktijktest vond 13 bevindingen in het meegeleverde foutieve
   voorbeeldwerkboek, schreef nieuwe rapporten en liet het origineel ongewijzigd.
