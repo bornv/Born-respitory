@@ -79,13 +79,14 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 44 | KPTM-query's ook met vaste lijsten: Kistkosten → Kistordernummers, Omzet en Slijpservice → Kistklantnummers; joins daar vervallen |
 | 45 | Journaal: Group By in Oracle (min/max datum, aantal per kistregel/artikel/code/serienummer) vóór de lokale stappen; serienummer = meeste regels |
 | 46 | Kisthistorie: kistartikellijst alleen uit Kisttypenlijst (bronloos) — een lijst die (deels) uit Oracle komt, ging vermoedelijk niet als IN naar Oracle (2+ mln rijen); kaart "Kisttypes niet in Kisttypenlijst" op Controle kisten |
+| 47 | Kisthistorie als enige query met eigen SQL (filter + KEEP DENSE_RANK LAST + klant uit KPTM in één query): met standaardstappen bleef het 2+ mln rijen (v38-46) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
 2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (Penta-datums in het type van de view: LCV_PAJL.DATUM is tekst `>= "20230701"`, LCV_PKLK.VERSAND_TERMIN is tekst `>= "20231201"`; `Text.StartsWith([KD_VORGANGS_NR], "0")` voor "ordernummer gevuld" (Penta-ordernummers zijn 10 tekens en beginnen met 0); geen `Text.Length(Text.Trim())` en geen `<> ""`).
 3. Stap `Kistorders` uit dezelfde bron (LCV_KPTM, KIST .990/.000, ISW, vanaf 202401) en `Table.NestedJoin(..., JoinKind.Inner)`; join-kolom en filterkolommen daarna weg.
 4. Pas daarna typen (`Table.TransformColumns`), berekende kolommen en één eindselectie/hernoeming.
-5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
+5. Geen eigen SQL, behalve LCV_PAJL Kisthistorie (zie v47: filter + laatste per kist + opzoeking in een tweede view foldt niet betrouwbaar). Voor de rest: haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.
 6. Na elke wijziging: View Native Query op de stap na de join. Grijs = folding gebroken = te veel data.
 7. **Elke tabel en expressie** een `///`-omschrijving met de bron (Oracle-view, Excel-tabel, DAX op welke tabellen); vaste lijsten (#table) ook waar de waarden vandaan komen, en per groep een `//`-regel.
 8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
@@ -95,3 +96,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 12. "Laatste per X" nooit door alle detailregels binnen te halen: eerst `Table.Group` met `List.Max` (wordt GROUP BY in Oracle), dan inner join terug op sleutel + datum.
 13. Filter op kistorders altijd ook als vaste lijst: `Kistordernummers = List.Buffer(List.Distinct(KPTMKistregels[KD_VORGANGS_NR]))` en `List.Contains(...)` in de eerste filterstap → `IN (...)` in Oracle. Let op: Oracle staat max. 1000 waarden per IN-lijst toe (nu ±90 kistorders).
 14. Lijsten voor `List.Contains`-filters op grote views (PAJL alle jaren): bij voorkeur uit een bronloze lijst (#table zoals Kisttypenlijst). Een lijst die zelf uit Oracle komt, werd in v40-45 vermoedelijk niet als IN naar Oracle gestuurd. Altijd met View Native Query controleren.
+15. Werkt een query na twee pogingen nog niet in Oracle: eerst View Native Query per stap laten opsturen (eerste grijze stap = oorzaak), niet blijven gokken.
