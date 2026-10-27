@@ -45,7 +45,7 @@ Contractorders: `KD_VORGANGS_NR LIKE '00____0000'`; ContractId = teken 3–6 (bv
 `ARTIKEL`, `ACTUEEL` (actuele kostprijs) / `ARTIKEL_NR`, `BEZEICHNUNG_1`, `BEZEICHNUNG_2`.
 
 ### LCV_PKLK — afleverbonkop (Shipping)
-`LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR` (klantorder, soms zonder voorloopnullen), `VERSAND_TERMIN` (Penta-datum JJJJMMDD; `00000000`/0 = leeg), `FRACHT_BETRAG`, `FRACHT_SOLL`, `SPEDITION`, `GESAMTGEWICHT_BRUTTO/NETTO`, `ANLIEFER_ADRESS_NR`, `LAENDER_GRUPPE`, `STAAT`, …, `FELD_3_X35` ("Send with pklk", bv. `Verz. met Afl.bon 267158`), `FELD_5_N8` (Main Slip id, heeft voorrang als > 0).
+`LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR` (klantorder, soms zonder voorloopnullen), `VERSAND_TERMIN` (Penta-datum JJJJMMDD als **tekst**; `00000000` = leeg; filter als tekst: `>= "20231201"`), `FRACHT_BETRAG`, `FRACHT_SOLL`, `SPEDITION`, `GESAMTGEWICHT_BRUTTO/NETTO`, `ANLIEFER_ADRESS_NR`, `LAENDER_GRUPPE`, `STAAT`, …, `FELD_3_X35` ("Send with pklk", bv. `Verz. met Afl.bon 267158`), `FELD_5_N8` (Main Slip id, heeft voorrang als > 0).
 
 ### LCV_PKLP — afleverbonregels (parameter `PKLPView`)
 `LIEFERSCHEIN_NR`, `BEZ_VORGANGS_NR`, `BEZ_POSITIONS_NR` (bevestigd in Penta-schermen), artikelveld via parameter `PKLPArtikelveld` (standaard `ARTIKEL_NR`, nog bevestigen). Voorbeeld ter controle: bon 251609 heeft regels 960, 965, 970, 975, 980 = vijf kisten.
