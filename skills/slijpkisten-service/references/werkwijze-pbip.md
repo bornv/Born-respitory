@@ -67,10 +67,12 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 32 | AfsprakenWerkboek via `Web.Contents` op het directe bestandsadres (…/Shared%20Documents/General/Slijpkisten_afspraken.xlsx) i.p.v. `SharePoint.Files` (doorzocht de hele site per Excel-tabel: tergend traag) |
 | 33 | LCV_PKLK Afleverbonnen: dubbele stapnaam `Bron` (Oracle-bron én Table.Combine) → "Duplicate initializer"; combine-stap heet nu "Alle bonnen" |
 | 34 | LCV_PKLK.VERSAND_TERMIN is **tekst** ("20231201", "00000000" = leeg): filter als tekst; datumomzetting overal via `Text.From` (werkt voor tekst én getal) |
+| 35 | LCV_PKLP: geen Distinct tussen de joins (beter te folden); fout 0x80040E4E = geannuleerd (timeout of andere tabel faalde) |
+| 36 | LCV_PAJL.DATUM is ook **tekst**: filters `>= "20230701"` / `>= "19000101"` |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
-2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (Penta-datums in het type van de view: LCV_PAJL.DATUM is getal `>= 20230701`, LCV_PKLK.VERSAND_TERMIN is tekst `>= "20231201"`; `Text.Length(Text.Trim(x)) > 0` voor "niet leeg": `<> ""` werkt niet in Oracle).
+2. `Removed Other Columns` (Kolommen kiezen) als eerste stap; daarna filters (Penta-datums in het type van de view: LCV_PAJL.DATUM is tekst `>= "20230701"`, LCV_PKLK.VERSAND_TERMIN is tekst `>= "20231201"`; `Text.Length(Text.Trim(x)) > 0` voor "niet leeg": `<> ""` werkt niet in Oracle).
 3. Stap `Kistorders` uit dezelfde bron (LCV_KPTM, KIST .990/.000, ISW, vanaf 202401) en `Table.NestedJoin(..., JoinKind.Inner)`; join-kolom en filterkolommen daarna weg.
 4. Pas daarna typen (`Table.TransformColumns`), berekende kolommen en één eindselectie/hernoeming.
 5. Geen eigen SQL, ook niet voor bundelketens of "laatste per kist": haal iets ruimer op met een gewoon filter (PKLK vanaf 20231201) of laat de server joinen en groepeer in Power Query.

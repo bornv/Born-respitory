@@ -30,7 +30,7 @@ Kistregels: `ARTIKEL_OMSCHRIJVING = 'KIST'` en artikel eindigt op `.990` (slijpr
 Contractorders: `KD_VORGANGS_NR LIKE '00____0000'`; ContractId = teken 3–6 (bv. `00XX990000` → `XX99`). Posities 1000–8999, PLW en ISW. Kostengroep: kostensoort `23…` = Materiaal (over de looptijd verdelen), `1009…` = Eigen uren, rest Overig, revisie-artikel = "Revisie (niet in slijpmarge)".
 
 ### LCV_PAJL — artikeljournaal
-`ARTIKEL_NR`, `DATUM` (**getal JJJJMMDD**, 0 = leeg, zoals alle Penta-datums; vergelijk als getal `DATUM >= 20250401`, nooit met `DATE '…'` → ORA-01861), `KD_VORGANGS_NR`, `POSITIONS_NR`, `MENGE`, `FUNKTIONS_KZ`, `BESTELL_NR`, `CHARGEN_SERIEN_NR` (serienummer; "S/N" eraf halen).
+`ARTIKEL_NR`, `DATUM` (**tekst JJJJMMDD**, `00000000` = leeg; in Power Query filteren als tekst `>= "20230701"`; in eigen SQL werkt `DATUM >= 20250401` alleen door impliciete omzetting; nooit `DATE '…'` → ORA-01861), `KD_VORGANGS_NR`, `POSITIONS_NR`, `MENGE`, `FUNKTIONS_KZ`, `BESTELL_NR`, `CHARGEN_SERIEN_NR` (serienummer; "S/N" eraf halen).
 
 | FUNKTIONS_KZ | Betekenis |
 |---|---|
