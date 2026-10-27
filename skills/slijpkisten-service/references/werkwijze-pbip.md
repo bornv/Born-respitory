@@ -78,6 +78,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 43 | Stap `Kistordernummers` (lijst) + `List.Contains(Kistordernummers, [KD_VORGANGS_NR])` in de filterstap van PAJL/PEKP/PKLK/PKLP (idee Born): IN-lijst in Oracle als vangnet naast de joins |
 | 44 | KPTM-query's ook met vaste lijsten: Kistkosten → Kistordernummers, Omzet en Slijpservice → Kistklantnummers; joins daar vervallen |
 | 45 | Journaal: Group By in Oracle (min/max datum, aantal per kistregel/artikel/code/serienummer) vóór de lokale stappen; serienummer = meeste regels |
+| 46 | Kisthistorie: kistartikellijst alleen uit Kisttypenlijst (bronloos) — een lijst die (deels) uit Oracle komt, ging vermoedelijk niet als IN naar Oracle (2+ mln rijen); kaart "Kisttypes niet in Kisttypenlijst" op Controle kisten |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -93,3 +94,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 11. "Niets missen" (Born): niet filteren op `WERT_MENGE <> 0` (kistregels met alleen nulboekingen vallen dan weg uit Kistregels), niet op `MENGE <> 0` (Afkeur), niet op periode bij Slijpservice (PLW kan vóór de contractstart geboekt zijn). Een filter heet pas "veilig" als je hebt nagegaan dat geen meting, telling of lijst verandert.
 12. "Laatste per X" nooit door alle detailregels binnen te halen: eerst `Table.Group` met `List.Max` (wordt GROUP BY in Oracle), dan inner join terug op sleutel + datum.
 13. Filter op kistorders altijd ook als vaste lijst: `Kistordernummers = List.Buffer(List.Distinct(KPTMKistregels[KD_VORGANGS_NR]))` en `List.Contains(...)` in de eerste filterstap → `IN (...)` in Oracle. Let op: Oracle staat max. 1000 waarden per IN-lijst toe (nu ±90 kistorders).
+14. Lijsten voor `List.Contains`-filters op grote views (PAJL alle jaren): bij voorkeur uit een bronloze lijst (#table zoals Kisttypenlijst). Een lijst die zelf uit Oracle komt, werd in v40-45 vermoedelijk niet als IN naar Oracle gestuurd. Altijd met View Native Query controleren.
