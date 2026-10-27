@@ -12,6 +12,7 @@ werkwijze, met de bewuste afwijkingen hieronder.
 | `CommandTimeout` 3 uur | Ja, op alle Oracle-query's |
 | Alleen benodigde kolommen | Ja, expliciete kolomlijsten in de SQL (geen `SELECT *`) |
 | Feiten `F `, dimensies `D `, hulptabellen zonder prefix | Ja (zie tabel hieronder) |
+| **Voorkeur Born (eigen opbouw, okt 2026):** query = originele viewnaam + wat het is, bijv. `LCV_KPTM Kistkosten`, `LCV_KPTM Slijpservice`, `LCV_PAJL Journaal`. Afgeleide DAX-tabellen zonder viewnaam (`Klanten`, `Kistregels`). | Gaat vóór F/D bij nieuwe opbouw |
 | Metingen in lege tabel `Calculations` | Ja; alleen de waardemetingen van what-if-parameters blijven bij hun parameter |
 | Tabel `Last refresh date` + kaart "Refresh date" op elke pagina | Ja (rechtsboven, x 1075, y 10) |
 | Sterschema, veel-op-één, enkele richting, geen veel-op-veel | Ja (gecontroleerd in relationships.tmdl) |
