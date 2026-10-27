@@ -72,6 +72,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 37 | LCV_KPTM Omzet: `Text.StartsWith([KOSTENART], "951000")` i.p.v. `Text.Trim(...) =`; kistorder via uitgeklapte left join i.p.v. `Table.IsEmpty([nested])` |
 | 38 | Filter "ordernummer gevuld" = `Text.StartsWith([KD_VORGANGS_NR], "0")` (LIKE '0%'); Kisthistorie: klant alleen van orders met kistbeweging, vanaf 2018 (las eerst >1 mln rijen) |
 | 39 | Kisthistorie: LCV_PAJL direct gefilterd met `List.Contains(Kistartikelen, [ARTIKEL_NR])` (Kisttypenlijst + .990/.000 → IN-lijst in Oracle), geen KPTM-join voor artikelen (idee Born) |
+| 40 | Journaal gefilterd op kistartikelen; kistartikellijst = Kisttypenlijst ∪ kisttypen uit LCV_KPTM (+ .990/.000) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -84,3 +85,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 8. Excel op SharePoint: altijd `Web.Contents("<direct bestandsadres>")` + `Excel.Workbook`, nooit `SharePoint.Files` (die somt alle bestanden van de site op, per query). Deellink omzetten: `/:x:/r/` en alles na `?` weghalen.
 9. Controleer vóór opleveren elke query op **dubbele stapnamen** (fout "Duplicate initializer named …"): de vaste navigatiestappen heten `Bron` en `LCV_DATA`, gebruik die namen nergens anders.
 10. Folding-vriendelijk: geen `Text.Trim`/`Text.Length` in filters; hulptabellen (zoals klant per order) altijd eerst inperken met een join op de rijen die je nodig hebt; geen `Text.Trim(...) = ` in filters (gebruik `Text.StartsWith`), geen `Table.IsEmpty([geneste kolom])` (klap de join-kolom uit en test op `null`).
+11. "Niets missen" (Born): niet filteren op `WERT_MENGE <> 0` (kistregels met alleen nulboekingen vallen dan weg uit Kistregels), niet op `MENGE <> 0` (Afkeur), niet op periode bij Slijpservice (PLW kan vóór de contractstart geboekt zijn). Een filter heet pas "veilig" als je hebt nagegaan dat geen meting, telling of lijst verandert.
