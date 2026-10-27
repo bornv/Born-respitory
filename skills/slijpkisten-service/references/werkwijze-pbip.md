@@ -82,6 +82,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 47 | Kisthistorie als enige query met eigen SQL (filter + KEEP DENSE_RANK LAST + klant uit KPTM in één query): met standaardstappen bleef het 2+ mln rijen (v38-46) |
 | 48 | Geen andere query (Kisttypenlijst) meer in een Oracle-filter: tweede bron → Power BI stuurt het filter niet naar Oracle (ⓘ bij de stappen, gezien door Born). Kisttypen uit LCV_KPTM (subquery / lijst uit dezelfde bron) |
 | 49 | MesRobotLijst in LCV_PAJL Afkeur zelf gezet (record mes → robot); geen Oracle-query verwijst nog naar een andere query |
+| 50 | Betaaltermijnen: geneste tabel met type (datums bleven anders tekst na uitklappen); NC-metingen: kolom met tabelnaam omdat een meting dezelfde naam heeft |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -99,3 +100,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 13. Filter op kistorders altijd ook als vaste lijst: `Kistordernummers = List.Buffer(List.Distinct(KPTMKistregels[KD_VORGANGS_NR]))` en `List.Contains(...)` in de eerste filterstap → `IN (...)` in Oracle. Let op: Oracle staat max. 1000 waarden per IN-lijst toe (nu ±90 kistorders).
 14. **Nooit een andere query (ook geen bronloze #table zoals Kisttypenlijst) gebruiken in een filter van een Oracle-query.** Power BI scheidt dan de bronnen en voert alles erna zelf uit (ⓘ-icoon bij de stappen). Lijsten voor filters komen uit dezelfde Oracle-bron (bijv. Kistordernummers uit LCV_KPTM). Meerdere views uit LCV_DATA in één query is wél één bron.
 15. Werkt een query na twee pogingen nog niet in Oracle: eerst View Native Query per stap laten opsturen (eerste grijze stap = oorzaak), niet blijven gokken.
+16. Een kolom die via `Table.AddColumn(..., each <tabel>)` + `ExpandTableColumn` ontstaat, krijgt geen type mee: geef `Table.AddColumn` een `type table [...]` mee, anders zet Desktop de kolom bij de refresh om naar tekst ("Schema synchronized").
+17. Verwijs in DAX altijd met tabelnaam naar een kolom (`'NC Varkens'[Varkens per week]`): bestaat er een meting met dezelfde naam, dan pakt `[naam]` de meting.
