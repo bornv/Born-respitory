@@ -75,6 +75,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 40 | Journaal gefilterd op kistartikelen; kistartikellijst = Kisttypenlijst ∪ kisttypen uit LCV_KPTM (+ .990/.000) |
 | 41 | Kisthistorie: "laatste per kist" in Oracle via `Table.Group` (List.Max datum) + join terug op (serienummer, datum); alleen laatste bewegingen komen binnen |
 | 42 | Afkeur: Group By (som MENGE per kistregel/artikel/datum) in Oracle vóór de joins met STATPRIJS en PART |
+| 43 | Stap `Kistordernummers` (lijst) + `List.Contains(Kistordernummers, [KD_VORGANGS_NR])` in de filterstap van PAJL/PEKP/PKLK/PKLP (idee Born): IN-lijst in Oracle als vangnet naast de joins |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -89,3 +90,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 10. Folding-vriendelijk: geen `Text.Trim`/`Text.Length` in filters; hulptabellen (zoals klant per order) altijd eerst inperken met een join op de rijen die je nodig hebt; geen `Text.Trim(...) = ` in filters (gebruik `Text.StartsWith`), geen `Table.IsEmpty([geneste kolom])` (klap de join-kolom uit en test op `null`).
 11. "Niets missen" (Born): niet filteren op `WERT_MENGE <> 0` (kistregels met alleen nulboekingen vallen dan weg uit Kistregels), niet op `MENGE <> 0` (Afkeur), niet op periode bij Slijpservice (PLW kan vóór de contractstart geboekt zijn). Een filter heet pas "veilig" als je hebt nagegaan dat geen meting, telling of lijst verandert.
 12. "Laatste per X" nooit door alle detailregels binnen te halen: eerst `Table.Group` met `List.Max` (wordt GROUP BY in Oracle), dan inner join terug op sleutel + datum.
+13. Filter op kistorders altijd ook als vaste lijst: `Kistordernummers = List.Buffer(List.Distinct(KPTMKistregels[KD_VORGANGS_NR]))` en `List.Contains(...)` in de eerste filterstap → `IN (...)` in Oracle. Let op: Oracle staat max. 1000 waarden per IN-lijst toe (nu ±90 kistorders).
