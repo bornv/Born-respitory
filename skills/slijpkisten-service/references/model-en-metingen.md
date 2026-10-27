@@ -10,7 +10,7 @@ Vanaf versie 21 vervallen: KistBasis, KistOrderLijst, KistKlantLijst, KPTM_Kist,
 | `KistOrderLijst`, `KistKlantLijst` | Lijsten uit KistBasis voor `SqlIn` |
 | `Journaal_Kist` | PAJL-regels van de kistorders (datumfilter in M) |
 | `AfsprakenWerkboek`, `NietInSlijpmarge` | Excel op SharePoint |
-| `MesRobotLijst`, `NietInSlijpmarge`, `AfsprakenWerkboek` | Hulplijsten/-tabellen (geen functies; sinds v25 staan datumomzetting, KPTM-inlezen en bundellezen in de query's zelf) |
+| `NietInSlijpmarge`, `AfsprakenWerkboek` | Hulplijsten/-tabellen (geen functies; sinds v25 staan datumomzetting, KPTM-inlezen en bundellezen in de query's zelf) |
 
 ## Geladen tabellen
 Vanaf versie 20 met prefix: feiten `F `, dimensies `D ` (bv. `F KistKosten`, `D Klanten`, `D KistRegels`); alle metingen in `Calculations`; tabel `Last refresh date`. Namen hieronder zonder prefix; zie [lcv-werkwijze-afstemming.md](lcv-werkwijze-afstemming.md).

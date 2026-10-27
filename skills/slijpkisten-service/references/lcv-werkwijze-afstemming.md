@@ -74,7 +74,7 @@ dimensies met een relatie terug via `ALLNOBLANKROW(...)` of `LOOKUPVALUE`; geen 
 | AfleverbonKistregels | F AfleverbonKistregels | | Shipping_PKLK | D Shipping_PKLK |
 | TransportZendingen | F TransportZendingen | | Periodes, Calculations, Last refresh date, what-if-tabellen, TransportBroncontrole, PKLPControle | zonder prefix |
 
-M-verwijzingen gebruiken `#"F KistKosten"`, DAX `'F KistKosten'`. M-expressies (KistOrdersSQL, VanafJournaal, MesRobotLijst, …) zijn geen tabellen en hebben geen prefix. Sinds v25 geen functies (fx).
+M-verwijzingen gebruiken `#"F KistKosten"`, DAX `'F KistKosten'`. M-expressies (KistOrdersSQL, VanafJournaal, …) zijn geen tabellen en hebben geen prefix. Sinds v25 geen functies (fx).
 
 ## Hernoemen: hoe (voor volgende keren)
 - Vervang tabelnamen alleen buiten tekstliterals en buiten `[...]` (kolomnamen); in M als `#"..."`, in DAX als `'...'`.

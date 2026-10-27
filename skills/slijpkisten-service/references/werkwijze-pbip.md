@@ -81,6 +81,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 46 | Kisthistorie: kistartikellijst alleen uit Kisttypenlijst (bronloos) — een lijst die (deels) uit Oracle komt, ging vermoedelijk niet als IN naar Oracle (2+ mln rijen); kaart "Kisttypes niet in Kisttypenlijst" op Controle kisten |
 | 47 | Kisthistorie als enige query met eigen SQL (filter + KEEP DENSE_RANK LAST + klant uit KPTM in één query): met standaardstappen bleef het 2+ mln rijen (v38-46) |
 | 48 | Geen andere query (Kisttypenlijst) meer in een Oracle-filter: tweede bron → Power BI stuurt het filter niet naar Oracle (ⓘ bij de stappen, gezien door Born). Kisttypen uit LCV_KPTM (subquery / lijst uit dezelfde bron) |
+| 49 | MesRobotLijst in LCV_PAJL Afkeur zelf gezet (record mes → robot); geen Oracle-query verwijst nog naar een andere query |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
