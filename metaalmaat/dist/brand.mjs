@@ -1,6 +1,6 @@
-// Toont het JBT Marel-logo uit dist/brand/ zodra dat bestand er staat; anders blijft de tekstnaam zichtbaar.
+// Toont het witte JBT Marel-logo uit dist/brand/; ontbreekt het bestand, dan blijft de tekstnaam zichtbaar.
 const img=document.querySelector('.company-logo');
-const sources=['./brand/jbtmarel-logo-wit.svg','./brand/jbtmarel-logo-wit.png'];
+const sources=['./brand/jbtmarel-logo-wit.png'];
 function tryNext(i){
  if(!img||i>=sources.length)return;
  img.onload=()=>{img.hidden=false;document.querySelector('.brand-company').hidden=true;};

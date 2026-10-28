@@ -11,7 +11,7 @@ if(!app.requestSingleInstanceLock())app.quit();
 else {
  app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.focus();}});
  app.whenReady().then(()=>{
-  win=new BrowserWindow({width:1440,height:940,minWidth:1000,minHeight:720,backgroundColor:'#f4f6f9',show:false,title:'Materiaalprijs Converter — JBT Marel',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
+  win=new BrowserWindow({width:1440,height:940,minWidth:1000,minHeight:720,backgroundColor:'#f4f6f9',show:false,icon:path.join(__dirname,'icon.png'),title:'Materiaalprijs Converter — JBT Marel',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
   win.once('ready-to-show',()=>win.show());
   const external=url=>{try{const u=new URL(url);if(u.protocol==='https:')shell.openExternal(u.href);}catch{}};
   win.webContents.setWindowOpenHandler(({url})=>{external(url);return {action:'deny'};});

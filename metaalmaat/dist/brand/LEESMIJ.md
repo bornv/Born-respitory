@@ -1,9 +1,9 @@
 # JBT Marel-logo
 
-Plaats hier het officiële logo in een **witte (negatieve) versie**, want het staat op de donkerblauwe zijbalk:
+Afgeleid van het officiële logo dat Born heeft aangeleverd (blauw `#3771FF` op wit):
 
-- `jbtmarel-logo-wit.svg` (voorkeur), of
-- `jbtmarel-logo-wit.png` (minimaal 400 px breed, transparante achtergrond)
+- `jbtmarel-logo-wit.png`: witte versie met transparante achtergrond voor de donkerblauwe zijbalk.
+- `jbtmarel-logo-blauw.png`: blauwe versie met transparante achtergrond voor de footer.
+- `../../desktop/icon.png`: vensterpictogram met het plusteken uit het logo.
 
-De app toont het logo automatisch boven de appnaam. Zonder bestand verschijnt de tekst "JBT Marel".
-Gebruik alleen het logo uit de officiële JBT Marel-huisstijlbibliotheek (Marketing/Brand Center).
+Vervang bij een nieuwe huisstijlversie de PNG-bestanden met dezelfde naam.
