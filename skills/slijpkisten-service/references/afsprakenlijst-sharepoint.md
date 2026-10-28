@@ -9,6 +9,7 @@ Bestand `Slijpkisten_afspraken.xlsx` op `https://jbtmarel.sharepoint.com/sites/L
 | Contracten | `tblContracten` | ContractId, Contractorder (`00xxxx0000`), Klant, Start, Eind, KistStartPeriode (jjjjmm), BedragServiceTabel, **WaardeSlijpservice** |
 | ContractKistorders | `tblContractKistorders` | ContractId, Klantorder |
 | NietInSlijpmarge (optioneel) | `tblNietInSlijpmarge` | Artikel (volledig nummer of stam vóór de punt) |
+| KostenUitsluiten | `tblKostenUitsluiten` | Order (zonder voorloopnullen), Periode (jjjjmm, tekst), Bedrag (zoals in het rapport, negatief = kostenverlaging), Reden |
 
 Regels:
 - Kolommen die het model zelf toevoegt (KUNDEN_NR, Bron, KD_VORGANGS_NR, Afspraak, TermijnVolgorde) mogen in de Excel staan; ze worden eerst verwijderd ("Het veld … bestaat al" voorkomen).
@@ -20,4 +21,3 @@ Fouten:
 - `405 Method Not Allowed`: deellink (`/:x:/r/…`) als site ingevuld → alleen het site-adres.
 - "dynamic data source" in de service: site-URL berekend in M → vaste parameter + `SharePoint.Files(AfsprakenSite, [ApiVersion = 15])`.
 - "Afsprakenlijst niet gevonden": bestandsnaam wijkt af van `AfsprakenBestand`.
-| KostenUitsluiten | `tblKostenUitsluiten` | Order (zonder voorloopnullen), Periode (jjjjmm, tekst), Bedrag (zoals in het rapport, negatief = kostenverlaging), Reden |
