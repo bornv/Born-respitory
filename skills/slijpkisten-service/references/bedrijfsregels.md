@@ -64,7 +64,8 @@
 - Gecontroleerd en akkoord gelaten (keuzes): negatieve Overige kosten buiten Kosten; afkeurnorm = gemiddelde alle klanten; Nieuwe kisten doorbelasten = kosten / (1 − 0,3) zoals de Excel-calculatie; Contractwaarde (Klantafspraken) telt Bedrag in de oorspronkelijke valuta (nu alles EUR); lopende maand telt in "t/m nu" volledig mee aan de omzetkant.
 
 ## Besluiten Born (v59)
-- **Nieuwe kisten**: afschrijven over 3 jaar (36 maanden vanaf de boekingsmaand), zodat er ruimte is om beschadigde kisten te vervangen. Kistomzet (klant betaalt voor een kist) wordt over dezelfde 36 maanden verdeeld. Geldt in Kosten contract en alles wat daarop bouwt; [Kosten] en [Nieuwe kisten] blijven de geboekte aanschaf. Nieuw contract: kisten / 3 per jaar, ongeacht de looptijd.
+- **Nieuwe kisten (sinds v60)**: alleen het **bakdeel** afschrijven over 3 jaar; de eerste set messen/zaagbladen direct als kosten. Verdeling volgens de Excel-stuklijst per robot (bak / (bak + stuks × prijs nieuw mes)), bij onbekende robot het gemiddelde. Messen daarna: vervanging via afkeur (werkelijk gemiddelde per ronde, alle klanten; < 20 rondes de Excel-kostprijs).
+- **Nieuwe kisten (v59)**: afschrijven over 3 jaar (36 maanden vanaf de boekingsmaand), zodat er ruimte is om beschadigde kisten te vervangen. Kistomzet (klant betaalt voor een kist) wordt over dezelfde 36 maanden verdeeld. Geldt in Kosten contract en alles wat daarop bouwt; [Kosten] en [Nieuwe kisten] blijven de geboekte aanschaf. Nieuw contract: kisten / 3 per jaar, ongeacht de looptijd.
 - **Negatieve Overige kosten**: blijven buiten de marge, maar staan per order en kostensoort op de pagina Controle kosten.
 - **Open maand**: lopende maand altijd zichtbaar gemarkeerd ("(niet afgesloten)" in Maandnaam, melding bovenaan de pagina).
 - **Alleen slijpmarge** tonen; geen marge van het hele contract (plan) op de contractpagina.
