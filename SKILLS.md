@@ -6,7 +6,7 @@ besproken bouwpakket is geen bevestiging van installatie of productiegebruik.
 
 ## Geïnstalleerde skills
 
-De repository bevat nu 35 lokale skillingangen. De bestaande Home
+De repository bevat nu 39 lokale skillingangen. De bestaande Home
 Assistant-skill is bijgewerkt van versie 49 naar **53**. De eerdere wijzigingen
 aan de warmtepompregeling staan hier los van.
 
@@ -178,3 +178,32 @@ ter beoordeling; publicatie van de cloudomgeving is een afzonderlijke stap.
 - De actieve clientcatalogus vernieuwde niet tijdens deze sessie. De ingangen
   zijn direct via bestanden leesbaar; automatische ontdekking in een nieuwe taak
   is niet in deze sessie getest.
+
+
+## Metaalmaat: coderen, testen en opleveren
+
+Vier repository-lokale projectskills zijn toegevoegd. Dit zijn zelfstandig
+opgestelde werkinstructies, geen gekopieerde installatie van de cloudplugin
+`codex-engineering-guardrails` en geen nieuwe externe appverbinding.
+
+| Skill | Gebruik |
+|---|---|
+| [code-work](.agents/skills/code-work/SKILL.md) | Gericht implementeren en repareren met passende controles. |
+| [code-verification](.agents/skills/code-verification/SKILL.md) | Code en tests beoordelen met aantoonbare resultaten; standaard alleen-lezen. |
+| [metaalmaat-rekenregels](.agents/skills/metaalmaat-rekenregels/SKILL.md) | Leveranciers-Excel, dichtheid, geometrie, prijsbasis, valuta en referentieberekeningen. |
+| [windows-release](.agents/skills/windows-release/SKILL.md) | Windows-build, gebruikstest, ZIP, GitHub-release en werkende download. |
+
+Gebruik daarnaast de reeds geïnstalleerde `webapp-testing`,
+`systematic-debugging`, `verification-before-completion`, `spreadsheet-auditor`
+en `data-quality-frameworks` wanneer hun onderwerp van toepassing is.
+
+De Metaalmaat-app staat op de branch `metaalmaat-windows` in `metaalmaat/`.
+Dezelfde skilltoevoegingen staan op `main` en `metaalmaat-windows`, zodat ze
+ook bij het werken aan de app beschikbaar zijn. De appcode blijft op de appbranch.
+Claude-ingangen delen via symlinks dezelfde Codex-ingangen. De projectbronnen,
+referenties en twaalf voorbeeldtestvragen staan onder `vendor/skills/project/`.
+
+Metadata, bronnen, verwijzingen en controlesommen worden met de bestaande
+registratiecontrole gevalideerd. De voorbeeldvragen zijn evaluatiemateriaal,
+geen claim dat modelvergelijkingen of een Windows-smoketest zijn uitgevoerd.
+Een nieuwe clientsessie kan nodig zijn voor automatische skillherkenning.

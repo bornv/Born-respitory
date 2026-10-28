@@ -1,0 +1,23 @@
+{
+  "skill_name": "metaalmaat-rekenregels",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Reken 120 EUR per 100 kg om voor platstaf 40x8, dichtheid 7850, naar EUR/m.",
+      "expected_output": "3,0144 EUR/m; prijsbasis precies eenmaal toegepast.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Mijn leverancier vult voor een onbekend materiaal rho 1000 in bij rondstaf diameter 20 mm. Wat is kg/m?",
+      "expected_output": "0,314159265358979 kg/m; geen stille fallback naar staal.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Voor diameter 20 staal is het leveranciersgewicht 3 kg/m. Welke waarde telt?",
+      "expected_output": "3 kg/m krijgt voorrang; herleidbaarheid en theoretisch alternatief worden onderscheiden.",
+      "files": []
+    }
+  ]
+}
