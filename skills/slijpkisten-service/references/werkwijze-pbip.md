@@ -84,6 +84,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 49 | MesRobotLijst in LCV_PAJL Afkeur zelf gezet (record mes → robot); geen Oracle-query verwijst nog naar een andere query |
 | 50 | Betaaltermijnen: geneste tabel met type (datums bleven anders tekst na uitklappen); NC-metingen: kolom met tabelnaam omdat een meting dezelfde naam heeft |
 | 51 | Servicecontracten alleen uit tblContracten (wens Born: geen oude/automatische contractorders); Slijpservice-metingen met TREATAS op tblContracten[ContractId]; signaal nieuwe contracten = boekingen vanaf 202401 niet in Excel |
+| 52 | Metingen op Kistregels krijgen `'LCV_KPTM Kistkosten'` of TREATAS naar Kistregels[OrderRegel] als filter (filter op Kistkosten bereikt Kistregels niet: Unieke kisten = 267 bij elke klant); "Verwacht per jaar" → "Afspraak per jaar" |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -103,3 +104,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 15. Werkt een query na twee pogingen nog niet in Oracle: eerst View Native Query per stap laten opsturen (eerste grijze stap = oorzaak), niet blijven gokken.
 16. Een kolom die via `Table.AddColumn(..., each <tabel>)` + `ExpandTableColumn` ontstaat, krijgt geen type mee: geef `Table.AddColumn` een `type table [...]` mee, anders zet Desktop de kolom bij de refresh om naar tekst ("Schema synchronized").
 17. Verwijs in DAX altijd met tabelnaam naar een kolom (`'NC Varkens'[Varkens per week]`): bestaat er een meting met dezelfde naam, dan pakt `[naam]` de meting.
+18. Telt een meting in een dimensie (Kistregels) terwijl de filters op de feitentabel (Kistkosten) staan: geef de feitentabel als filter mee (`CALCULATE(..., 'LCV_KPTM Kistkosten')`) of `TREATAS` naar de sleutel van de dimensie. Controleer per klant of het getal verschilt.
