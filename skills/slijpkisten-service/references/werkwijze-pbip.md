@@ -90,6 +90,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 55 | Kalender weer t/m einde afspraken; kolom Periodes[TotHuidigJaar] als visualfilter op de jaar/maandslicers (niet op Betalingen); slicers multi-select (selection.singleSelect = false); labels "verwacht" → "volgens afspraak" |
 | 56 | Pagina "Contract van start tot eind": contractslicer (enkele keuze, Servicecontracten[Contract]); metingen map "Contract van start tot eind" (looptijd, t/m nu, verwacht einde = kostentempo × looptijd, marge volgens plan) |
 | 57 | Info-tooltip (visualHeaderTooltip + visualHeader.showTooltipButton) bij elke visual, opgebouwd uit de ///-omschrijvingen (berekening + "Waarom"); contractpagina: afkeur, kosten = Kosten contract, plan-marge uit PLW |
+| 58 | Boekhoudkundige controle per meting: Nog te ontvangen vs "Gefactureerd op afspraken" (zelfde scope), vooruit gefactureerd (klant en contract), termijnfacturen FIFO t/m vandaag, contractfacturering tegen hele contractwaarde, kistverkoop in contractomzet, prognose op afgesloten maanden en maandtelling dagen/30,4375, Kostengroep "Omzet" op contractorders (geen kostenvermindering), kisten: betaald deel direct / rest afschrijven, Transportbudget op Transportrondes, NC meerprijs met commissie |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -113,3 +114,6 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 19. **Filtercontrole vóór opleveren:** per visual nagaan of de rij-/kolomvelden en de slicers op de pagina via de relaties (één → veel) de tabellen bereiken waarin elke meting telt. Melding = fout, tenzij bewust (REMOVEFILTERS, afspraak per jaar, tarieven). Expanded-table-filters (`CALCULATE(..., 'Feitentabel')`) en TREATAS tellen als bereikt.
 20. Elke meting een `///`-omschrijving: wat (berekening) + "Waarom: …". De info-knop van elke visual wordt hieruit gegenereerd (script b57t): na elke wijziging opnieuw draaien.
 21. Omzet en kosten in één marge moeten bij hetzelfde contractonderdeel horen (slijpservicedeel ↔ kosten kistorders zonder extra messen); plan met plan, werkelijk met werkelijk.
+22. Facturering vergelijken met de scope die gefactureerd wordt (hele contractwaarde, termijnen), marge met de scope van de dienst (slijpdeel). Altijd beide kanten tonen: nog niet gefactureerd én vooruit gefactureerd.
+23. Kosten en omzet uit SAP scheiden op kostensoort/kostengroep, nooit op het teken (creditboekingen op kosten en omzet op dezelfde order lopen anders door elkaar).
+24. Prognoses en jaartempo alleen op afgesloten maanden; maandtelling gelijk aan de omzetplanning.

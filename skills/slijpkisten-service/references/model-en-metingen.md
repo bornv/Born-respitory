@@ -71,6 +71,7 @@ StartPeriode vast houden (niet meeschuiven): een meeschuivende periode laat kist
 Eén contract kiezen (slicer Servicecontracten[Contract]); de metingen werken met SELECTEDVALUE op ContractId/Start/Eind/Contractorder/KistStartPeriode:
 - omzet volgens afspraak = Omzetplanning (Bron "Contract", Referentie = ContractId), looptijd of t/m vandaag;
 - gefactureerd = LCV_KPTM Omzet op de contractorder + omzet kistorders contract;
-- kosten t/m nu = Werkelijk totaal slijpservice (kistorders vanaf KistStartPeriode + contractorder ISW);
-- verwachte kosten tot einde = kosten t/m nu ÷ verstreken maanden × maanden looptijd (na het einde: werkelijk);
-- marge volgens plan = (omzet looptijd − Plan kosten slijpservice) ÷ omzet looptijd.
+- kosten t/m nu = Kosten contract op de kistorders van het contract vanaf KistStartPeriode (contractorderkosten horen bij andere contractonderdelen, sinds v57);
+- verwachte kosten tot einde = kosten afgesloten maanden ÷ afgesloten maanden × looptijd in maanden (dagen/30,4375; na het einde: werkelijk);
+- marge volgens plan = (Plan omzet − Plan kosten) ÷ Plan omzet op de contractorder (hele contract, niet alleen slijpdeel);
+- nog niet / vooruit gefactureerd = hele contractwaarde t/m nu + kisten tegenover gefactureerd (v58).

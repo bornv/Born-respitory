@@ -52,3 +52,13 @@
 - Kosten = ISW-boekingen in SAP per boekingsperiode (toerekening via het grootboek).
 - Marge op de verkoopprijs, overal gelijk.
 - Open punten voor de controller: (1) "Nog niet gefactureerd" is eenzijdig (vooruit gefactureerd ontbreekt); (2) nieuwe kisten: direct als kosten of activeren/afschrijven, afhankelijk van of ze verkocht of in de prijs begrepen zijn; (3) verwacht verlies op een contract moet direct genomen worden (voorziening); (4) twee omzetbronnen (KPTM 951000 en facturen) periodiek aansluiten; (5) vreemde valuta handmatig omgerekend, koersverschillen niet zichtbaar.
+
+## Boekhoudkundige controle per meting (v58)
+- **Nog te ontvangen (afspraken)** = per klant Geplande omzet (afspraken) − **Gefactureerd op afspraken** (≥ 0). Gefactureerd op afspraken = 951000 op kistorders met een afspraak (incl. revisie, zonder kistverkoop) + 951000 op de contractorders uit tblContracten. **Vooruit gefactureerd (afspraken)** = het omgekeerde (≥ 0).
+- **Gefactureerd op termijnen**: facturen op de termijnorder vanaf de eerste termijn t/m vandaag, min de verwachte bedragen van termijnen vóór de selectie (FIFO).
+- **Contract**: facturering tegen de hele contractwaarde (`Contract: te factureren volgens afspraak t/m nu` = Omzetplanning Bedrag + apart gefactureerde kisten); marge tegen het slijpdeel + kistverkoop. `Contract: vooruit gefactureerd` toont het omgekeerde.
+- **Contract: verwachte kosten tot einde** = kosten afgesloten maanden ÷ afgesloten maanden (vanaf de laatste van contractstart en KistStartPeriode) × looptijd (dagen + 1) / 30,4375.
+- **Slijpservice Kostengroep**: `Omzet` (951000), `Revisie omzet (niet in slijpmarge)`, `Revisie (niet in slijpmarge)`, `Materiaal`, `Eigen uren`, `Overig`. Werkelijke kosten = ISW zonder de omzetgroepen (alle tekens). Plan blijft op teken (PLW > 0 omzet, < 0 kosten).
+- **Kisten in de calculatie**: deel van de kistkosten tot de kistomzet direct (matching), rest per klant over 3 jaar afschrijven.
+- **Transportbudget** = Transportrondes (zonder FSC) × PrijsPerKist.
+- Gecontroleerd en akkoord gelaten (keuzes): negatieve Overige kosten buiten Kosten; afkeurnorm = gemiddelde alle klanten; Nieuwe kisten doorbelasten = kosten / (1 − 0,3) zoals de Excel-calculatie; Contractwaarde (Klantafspraken) telt Bedrag in de oorspronkelijke valuta (nu alles EUR); lopende maand telt in "t/m nu" volledig mee aan de omzetkant.
