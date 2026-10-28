@@ -89,6 +89,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 54 | Filtercontrole over alle visuals; Servicecontracten krijgt KUNDEN_NR (uit Slijpservice), relatie Servicecontracten → Klanten (i.p.v. Slijpservice → Klanten) zodat de klantslicer de contractlijst filtert |
 | 55 | Kalender weer t/m einde afspraken; kolom Periodes[TotHuidigJaar] als visualfilter op de jaar/maandslicers (niet op Betalingen); slicers multi-select (selection.singleSelect = false); labels "verwacht" → "volgens afspraak" |
 | 56 | Pagina "Contract van start tot eind": contractslicer (enkele keuze, Servicecontracten[Contract]); metingen map "Contract van start tot eind" (looptijd, t/m nu, verwacht einde = kostentempo × looptijd, marge volgens plan) |
+| 57 | Info-tooltip (visualHeaderTooltip + visualHeader.showTooltipButton) bij elke visual, opgebouwd uit de ///-omschrijvingen (berekening + "Waarom"); contractpagina: afkeur, kosten = Kosten contract, plan-marge uit PLW |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -110,3 +111,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 17. Verwijs in DAX altijd met tabelnaam naar een kolom (`'NC Varkens'[Varkens per week]`): bestaat er een meting met dezelfde naam, dan pakt `[naam]` de meting.
 18. Telt een meting in een dimensie (Kistregels) terwijl de filters op de feitentabel (Kistkosten) staan: geef de feitentabel als filter mee (`CALCULATE(..., 'LCV_KPTM Kistkosten')`) of `TREATAS` naar de sleutel van de dimensie. Controleer per klant of het getal verschilt.
 19. **Filtercontrole vóór opleveren:** per visual nagaan of de rij-/kolomvelden en de slicers op de pagina via de relaties (één → veel) de tabellen bereiken waarin elke meting telt. Melding = fout, tenzij bewust (REMOVEFILTERS, afspraak per jaar, tarieven). Expanded-table-filters (`CALCULATE(..., 'Feitentabel')`) en TREATAS tellen als bereikt.
+20. Elke meting een `///`-omschrijving: wat (berekening) + "Waarom: …". De info-knop van elke visual wordt hieruit gegenereerd (script b57t): na elke wijziging opnieuw draaien.
+21. Omzet en kosten in één marge moeten bij hetzelfde contractonderdeel horen (slijpservicedeel ↔ kosten kistorders zonder extra messen); plan met plan, werkelijk met werkelijk.

@@ -46,3 +46,9 @@
 8. Transport gefactureerd terwijl het contract transport uitsluit → signaleren.
 - **Contracten (sinds v51):** alleen de contracten uit de afsprakenlijst (tblContracten) tellen mee. Contractorders in Penta die er niet in staan, verschijnen alleen als signaal "Nieuwe contracten (aanvullen)" als ze boekingen vanaf 202401 hebben.
 - **"Volgens afspraak" (sinds v55, eerder "verwacht"):** omzet die volgens de afspraken bij een periode hoort (contractwaarde verdeeld over de looptijd + verkochte kisten), los van de factuurdatum. Geen voorspelling; voor een afgesloten jaar het resultaat volgens afspraak. "Nog niet gefactureerd (afspraak)" = per klant afspraak − gefactureerd (≥ 0).
+
+## Boekhoudkundige toets (v57)
+- Omzet volgens afspraak = toerekening naar tijd (contractwaarde gelijk over de looptijd): past bij het matchingprincipe en bij omzet "over de tijd" voor diensten (RJ 270 / IFRS 15), mits de dienst ongeveer gelijkmatig geleverd wordt.
+- Kosten = ISW-boekingen in SAP per boekingsperiode (toerekening via het grootboek).
+- Marge op de verkoopprijs, overal gelijk.
+- Open punten voor de controller: (1) "Nog niet gefactureerd" is eenzijdig (vooruit gefactureerd ontbreekt); (2) nieuwe kisten: direct als kosten of activeren/afschrijven, afhankelijk van of ze verkocht of in de prijs begrepen zijn; (3) verwacht verlies op een contract moet direct genomen worden (voorziening); (4) twee omzetbronnen (KPTM 951000 en facturen) periodiek aansluiten; (5) vreemde valuta handmatig omgerekend, koersverschillen niet zichtbaar.
