@@ -86,6 +86,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 51 | Servicecontracten alleen uit tblContracten (wens Born: geen oude/automatische contractorders); Slijpservice-metingen met TREATAS op tblContracten[ContractId]; signaal nieuwe contracten = boekingen vanaf 202401 niet in Excel |
 | 52 | Metingen op Kistregels krijgen `'LCV_KPTM Kistkosten'` of TREATAS naar Kistregels[OrderRegel] als filter (filter op Kistkosten bereikt Kistregels niet: Unieke kisten = 267 bij elke klant); "Verwacht per jaar" → "Afspraak per jaar" |
 | 53 | Periodes t/m december van het huidige jaar (wens Born; was t/m einde langste afspraak = 2029) |
+| 54 | Filtercontrole over alle visuals; Servicecontracten krijgt KUNDEN_NR (uit Slijpservice), relatie Servicecontracten → Klanten (i.p.v. Slijpservice → Klanten) zodat de klantslicer de contractlijst filtert |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -106,3 +107,4 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 16. Een kolom die via `Table.AddColumn(..., each <tabel>)` + `ExpandTableColumn` ontstaat, krijgt geen type mee: geef `Table.AddColumn` een `type table [...]` mee, anders zet Desktop de kolom bij de refresh om naar tekst ("Schema synchronized").
 17. Verwijs in DAX altijd met tabelnaam naar een kolom (`'NC Varkens'[Varkens per week]`): bestaat er een meting met dezelfde naam, dan pakt `[naam]` de meting.
 18. Telt een meting in een dimensie (Kistregels) terwijl de filters op de feitentabel (Kistkosten) staan: geef de feitentabel als filter mee (`CALCULATE(..., 'LCV_KPTM Kistkosten')`) of `TREATAS` naar de sleutel van de dimensie. Controleer per klant of het getal verschilt.
+19. **Filtercontrole vóór opleveren:** per visual nagaan of de rij-/kolomvelden en de slicers op de pagina via de relaties (één → veel) de tabellen bereiken waarin elke meting telt. Melding = fout, tenzij bewust (REMOVEFILTERS, afspraak per jaar, tarieven). Expanded-table-filters (`CALCULATE(..., 'Feitentabel')`) en TREATAS tellen als bereikt.
