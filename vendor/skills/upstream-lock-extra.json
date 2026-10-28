@@ -372,7 +372,17 @@
         "vendor/skills/project/penta-powerbi-lcv/references/refresh-en-performance.md": "5834af58f182d0b17b2a85b1175fbf76a77f16264cb976785a70650e30bdc635",
         "vendor/skills/project/penta-powerbi-lcv/references/werkwijze-pbip.md": "67fed9b0b92dbf0f8564e36d1474a63d4a6ca0e97fb010fab89be14e692d4e64",
         "vendor/skills/project/runbook/SKILL.md": "64f49745fbcaf86d489c3d6c5a9a24d99e1c6981ee2ff735be4626769da70202",
-        "vendor/skills/project/validate-data/SKILL.md": "17153532dc60ef895fbb556be81d1d3d866033e38f3bdcf239402597b2368387"
+        "vendor/skills/project/validate-data/SKILL.md": "17153532dc60ef895fbb556be81d1d3d866033e38f3bdcf239402597b2368387",
+        "vendor/skills/project/code-work/SKILL.md": "003936de2007d6a0c46426be264db2b7c6550b36952b356d20fe1b065c9a8d79",
+        "vendor/skills/project/code-work/evals/evals.json": "b56311d0ff9fb8954d6535a23c456755c3d904918bac36c1129073ea5b81bffd",
+        "vendor/skills/project/code-verification/SKILL.md": "4732376c236fcd2ede3043c57fab2aa02da1bd4bb053ab57f650029e19e76573",
+        "vendor/skills/project/code-verification/evals/evals.json": "5f77c393c2c366931a9228d23476b9e531c4e491e79868190f119819e2b88134",
+        "vendor/skills/project/metaalmaat-rekenregels/SKILL.md": "59dd8b2fa4e669b0d4f9234d9ad05105f7517326ec49b8e29137ada50f08043d",
+        "vendor/skills/project/metaalmaat-rekenregels/references/rekenen.md": "adfeda7db504edd2ba057b89195d2d516d21284d8494fac1eabfd2232a3fa150",
+        "vendor/skills/project/metaalmaat-rekenregels/evals/evals.json": "24623c718d6a8667785650ee50ec279ab11b7342801c33948d11e9c92b44e88f",
+        "vendor/skills/project/windows-release/SKILL.md": "e2c3324d92503973840cff8ed38cf9a69c344f006832a883d0c78a206ab17b19",
+        "vendor/skills/project/windows-release/references/oplevering.md": "07f8992372109496539244b1bf850605011f0f89412e5e3a8cc17e196a76cd4a",
+        "vendor/skills/project/windows-release/evals/evals.json": "10da4260824ec2208cff89b5cb2352e8ee049a5a12f771851fed69820b2f4481"
       }
     }
   ],
@@ -544,6 +554,30 @@
       "entrypoint": ".agents/skills/webapp-testing/SKILL.md",
       "source": "vendor/skills/anthropics/webapp-testing/SKILL.md",
       "claude_entrypoint": ".claude/skills/webapp-testing/SKILL.md"
+    },
+    {
+      "name": "code-work",
+      "entrypoint": ".agents/skills/code-work/SKILL.md",
+      "source": "vendor/skills/project/code-work/SKILL.md",
+      "claude_entrypoint": ".claude/skills/code-work/SKILL.md"
+    },
+    {
+      "name": "code-verification",
+      "entrypoint": ".agents/skills/code-verification/SKILL.md",
+      "source": "vendor/skills/project/code-verification/SKILL.md",
+      "claude_entrypoint": ".claude/skills/code-verification/SKILL.md"
+    },
+    {
+      "name": "metaalmaat-rekenregels",
+      "entrypoint": ".agents/skills/metaalmaat-rekenregels/SKILL.md",
+      "source": "vendor/skills/project/metaalmaat-rekenregels/SKILL.md",
+      "claude_entrypoint": ".claude/skills/metaalmaat-rekenregels/SKILL.md"
+    },
+    {
+      "name": "windows-release",
+      "entrypoint": ".agents/skills/windows-release/SKILL.md",
+      "source": "vendor/skills/project/windows-release/SKILL.md",
+      "claude_entrypoint": ".claude/skills/windows-release/SKILL.md"
     }
   ]
 }
