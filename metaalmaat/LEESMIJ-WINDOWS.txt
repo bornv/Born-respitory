@@ -1,0 +1,28 @@
+METAALMAAT DESKTOP — WINDOWS 10/11 64-BIT
+
+Pak de ZIP volledig uit en start Metaalmaat-2.0.0-Windows.exe.
+Installatie en een ChatGPT-account zijn niet nodig. De eerste start kan even duren.
+De app is niet digitaal ondertekend; Windows kan een melding tonen.
+
+1. Laat je leverancier het bijgevoegde Excel-invulformat invullen, of gebruik
+   diens bestaande .xlsx-, .csv- of .tsv-prijslijst. Laat de leverancier
+   per artikel ook Dichtheid (kg/m3) invullen, passend bij de legering.
+   Gebruik kg/m³: bijvoorbeeld 7850 voor staal, niet 7,85 g/cm³.
+2. Open de app en kies het ingevulde leveranciersbestand.
+3. Controleer prijskolom, bron-eenheid, prijsbasis, valuta en materiaal/maten.
+4. Kies de uitvoer: kg, ton, meter, m² of stuk.
+5. Controleer gemarkeerde regels en exporteer het resultaat naar Excel of CSV.
+
+De prijzen komen uit het geüploade Excelbestand. De app haalt geen metaalprijzen
+op van internet. Alleen valutakoersen worden op verzoek online opgehaald via
+Frankfurter/ECB. Bij gelijke valuta is internet niet nodig.
+
+Je Excel wordt lokaal verwerkt. Export bevat bronwaarden en omrekeningen.
+Een prijsbasis van 100 betekent bijvoorbeeld een prijs per 100 kg, geen prijs
+per kg. Controleer dit aan de hand van de offerte. Bekende leveranciersgewichten
+hebben voorrang op theoretische gewichten. Ontbrekende maten/koersen worden
+niet verzonnen. Sla resultaten op voordat je de app afsluit.
+
+De voorbeeldgegevens in de screenshots zijn uitsluitend demonstratiegegevens.
+De app is op Linux gebouwd en de reken-/export-/opslagtests slagen.
+Starten op Windows zelf is nog niet getest.

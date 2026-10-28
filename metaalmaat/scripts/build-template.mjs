@@ -1,0 +1,12 @@
+import {createRequire} from 'node:module';
+import {writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {templateHeaders,demoRows,templateHelp} from '../dist/format.mjs';
+import {createXlsx} from '../dist/excel.mjs';
+const require=createRequire(import.meta.url);
+globalThis.JSZip=require('jszip');
+const rows=[templateHeaders,...Array.from({length:20},()=>templateHeaders.map(()=>''))];
+const file=await createXlsx([{name:'Materialen',rows},{name:'Voorbeelden',rows:[templateHeaders,...demoRows]},{name:'Uitleg',rows:templateHelp}]);
+const path=fileURLToPath(new URL('../dist/Metaalmaat-invulformat.xlsx',import.meta.url));
+await writeFile(path,Buffer.from(await file.arrayBuffer()));
+console.log('Excel-format opgebouwd ('+file.size+' bytes).');

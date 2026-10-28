@@ -1,0 +1,40 @@
+{
+  "name": "metaalmaat",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs tests/*.test.cjs",
+    "desktop": "electron .",
+    "build:windows": "electron-builder --win portable --x64"
+  },
+  "version": "2.0.0",
+  "description": "Metaalmaat Desktop \u2014 metaalprijzen en eenheden omrekenen",
+  "author": "Metaalmaat",
+  "main": "desktop/main.cjs",
+  "build": {
+    "appId": "nl.metaalmaat.desktop",
+    "productName": "Metaalmaat",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "desktop/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "Metaalmaat-2.0.0-Windows.exe",
+      "requestExecutionLevel": "user",
+      "useZip": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.1.0",
+    "electron-builder": "^26.15.3",
+    "jszip": "^3.10.1"
+  }
+}

@@ -1,0 +1,51 @@
+import {presentDownload} from './file-save.mjs?v=save-2';
+const tags=(el,name)=>Array.from(el.getElementsByTagNameNS('*',name));
+function xml(s){if(/<!DOCTYPE/i.test(s))throw Error('XML met een DOCTYPE wordt niet ondersteund.');const doc=new DOMParser().parseFromString(s,'application/xml');if(tags(doc,'parsererror').length)throw Error('Dit Excelbestand bevat onleesbare XML.');return doc;}
+const colIndex=s=>[...s.toUpperCase()].reduce((n,c)=>n*26+c.charCodeAt(0)-64,0)-1;
+export function colName(n){let s='';for(n++;n;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s;}
+const pathResolve=(base,target)=>{const parts=(target.startsWith('/')?target.slice(1):base+'/'+target).split('/');const out=[];for(const p of parts){if(p==='..')out.pop();else if(p&&p!=='.')out.push(p);}return out.join('/');};
+function parseCSV(text,delimiter){
+ if(!delimiter){const line=text.split(/\r?\n/)[0];delimiter=[';','\t',','].sort((a,b)=>line.split(b).length-line.split(a).length)[0];}
+ const rows=[];let row=[],cell='',quoted=false;
+ for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(c===delimiter&&!quoted){row.push(cell);cell='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell='';}else cell+=c;}
+ if(quoted)throw Error('CSV bevat een niet-afgesloten tekstveld.');if(cell||row.length){row.push(cell);rows.push(row);}return rows;
+}
+export async function readFile(file){
+ if(file.size>25*1024*1024)throw Error('Het bestand is groter dan 25 MB. Splits het bestand in kleinere delen.');
+ const ext=file.name.split('.').pop().toLowerCase();if(['csv','tsv'].includes(ext))return {sheets:[{name:'Gegevens',rows:parseCSV((await file.text()).replace(/^\uFEFF/,''),ext==='tsv'?'\t':null)}]};
+ if(ext!=='xlsx')throw Error('Kies een .xlsx-, .csv- of .tsv-bestand. Sla oudere .xls-bestanden eerst als .xlsx op.');
+ if(!globalThis.JSZip)throw Error('Excelondersteuning is niet geladen. Vernieuw de pagina.');
+ const zip=await JSZip.loadAsync(await file.arrayBuffer());let readBytes=0;
+ const read=async name=>{const entry=zip.file(name);if(!entry)return '';const data=await entry.async('string');readBytes+=data.length;if(readBytes>100*1024*1024)throw Error('De uitgepakte werkmap is te groot (maximaal 100 MB).');return data;};
+ const wbText=await read('xl/workbook.xml');if(!wbText)throw Error('Geen geldige Excelwerkmap gevonden.');const wb=xml(wbText),rels=xml(await read('xl/_rels/workbook.xml.rels'));
+ const relMap=Object.fromEntries(tags(rels,'Relationship').map(r=>[r.getAttribute('Id'),r.getAttribute('Target')]));
+ const ssText=await read('xl/sharedStrings.xml');const strings=ssText?tags(xml(ssText),'si').map(si=>tags(si,'t').map(t=>t.textContent).join('')):[];
+ const stylesText=await read('xl/styles.xml');let dateStyles=new Set();
+ if(stylesText){const styles=xml(stylesText),formats=Object.fromEntries(tags(styles,'numFmt').map(f=>[f.getAttribute('numFmtId'),f.getAttribute('formatCode')]));const cellXfs=tags(styles,'cellXfs')[0];if(cellXfs)Array.from(cellXfs.children).forEach((xf,i)=>{const id=Number(xf.getAttribute('numFmtId'));const f=(formats[id]??'').replace(/"[^"]*"|\[[^\]]*\]/g,'');if((id>=14&&id<=22)||(id>=45&&id<=47)||(/[yd]/i.test(f)&&/[md]/i.test(f)))dateStyles.add(i);});}
+ const date1904=tags(wb,'workbookPr')[0]?.getAttribute('date1904')==='1';const sheets=[];let total=0;
+ for(const s of tags(wb,'sheet')){
+  const id=s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')??s.getAttribute('r:id');const target=relMap[id];if(!target)continue;
+  const text=await read(pathResolve('xl',target));if(!text)continue;const doc=xml(text),rows=[];
+  for(const row of tags(doc,'row')){const ri=Number(row.getAttribute('r'))-1;if(ri<0||ri>=50000)throw Error('Maximaal 50.000 rijen per tabblad.');const arr=[];
+   for(const c of Array.from(row.children)){if(c.localName!=='c')continue;const address=c.getAttribute('r')??'';const ci=colIndex(address.replace(/\d/g,''));if(ci<0||ci>=1000)throw Error('Maximaal 1.000 kolommen per tabblad.');const type=c.getAttribute('t');const v=tags(c,'v')[0]?.textContent;let value='';
+    if(type==='s')value=strings[Number(v)]??'';else if(type==='inlineStr')value=tags(c,'t').map(t=>t.textContent).join('');else if(type==='b')value=v==='1';else if(type==='str'||type==='e')value=v??'';else if(v!==undefined&&v!==''){value=Number(v);if(!Number.isFinite(value))value=v;else if(dateStyles.has(Number(c.getAttribute('s')??0))){const epoch=date1904?Date.UTC(1904,0,1):Date.UTC(1899,11,30);const date=new Date(epoch+value*86400000);if(Number.isFinite(date.getTime()))value=date.toISOString().slice(0,10);}}
+    arr[ci]=value;
+   }rows[ri]=arr;total++;if(total>100000)throw Error('Maximaal 100.000 rijen per werkmap.');
+  }sheets.push({name:s.getAttribute('name')??'Gegevens',rows});
+ }if(!sheets.length)throw Error('De werkmap bevat geen leesbare tabbladen.');return {sheets};
+}
+const escapeXML=v=>String(v??'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+export async function createXlsx(sheets){
+ const zip=new JSZip();const main='http://schemas.openxmlformats.org/spreadsheetml/2006/main';const rel='http://schemas.openxmlformats.org/officeDocument/2006/relationships';const names=new Set();
+ const safeSheets=sheets.map(s=>{let name=String(s.name).replace(/[\\/*?:\[\]]/g,' ').slice(0,31)||'Gegevens';const base=name;let i=1;while(names.has(name))name=base.slice(0,26)+' '+(++i);names.add(name);return {...s,name};});
+ zip.file('[Content_Types].xml',`<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${safeSheets.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`);
+ zip.file('_rels/.rels',`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${rel}/officeDocument" Target="xl/workbook.xml"/></Relationships>`);
+ zip.file('xl/workbook.xml',`<?xml version="1.0" encoding="UTF-8"?><workbook xmlns="${main}" xmlns:r="${rel}"><sheets>${safeSheets.map((s,i)=>`<sheet name="${escapeXML(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets></workbook>`);
+ zip.file('xl/_rels/workbook.xml.rels',`<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${safeSheets.map((_,i)=>`<Relationship Id="rId${i+1}" Type="${rel}/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${safeSheets.length+1}" Type="${rel}/styles" Target="styles.xml"/></Relationships>`);
+ zip.file('xl/styles.xml',`<?xml version="1.0"?><styleSheet xmlns="${main}"><numFmts count="2"><numFmt numFmtId="164" formatCode="#,##0.00"/><numFmt numFmtId="165" formatCode="0.0000"/></numFmts><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF173E35"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="165" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`);
+ safeSheets.forEach((s,i)=>{const width=Math.max(1,...s.rows.map(r=>r?.length??0));const body=s.rows.map((r,ri)=>{if(!r)return '';return `<row r="${ri+1}">${Array.from(r).map((v,ci)=>{if(v===null||v===undefined||v==='')return '';const head=s.rows[0]?.[ci]??'';const style=ri===0?1:typeof v==='number'&&/(?:€|[A-Z]{3})\//.test(String(head))?2:typeof v==='number'&&/kg\//.test(head)?3:0;const ref=colName(ci)+(ri+1);if(typeof v==='number'&&Number.isFinite(v))return `<c r="${ref}" s="${style}"><v>${v}</v></c>`;if(typeof v==='boolean')return `<c r="${ref}" t="b" s="${style}"><v>${v?1:0}</v></c>`;return `<c r="${ref}" t="inlineStr" s="${style}"><is><t xml:space="preserve">${escapeXML(v)}</t></is></c>`;}).join('')}</row>`;}).join('');
+ zip.file(`xl/worksheets/sheet${i+1}.xml`,`<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="${main}"><dimension ref="A1:${colName(width-1)}${Math.max(1,s.rows.length)}"/><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="${width}" width="21" customWidth="1"/></cols><sheetData>${body}</sheetData>${s.rows.length?`<autoFilter ref="A1:${colName(width-1)}${s.rows.length}"/>`:''}</worksheet>`);
+ });return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',compression:'DEFLATE'});
+}
+export function download(blob,name,options){presentDownload(blob,name,options);}
+export function createCSV(rows){const cell=v=>{let s=String(v??'');if(typeof v==='string'&&/^[\s]*[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';};return new Blob(['\ufeff'+rows.map(r=>r.map(cell).join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});}
