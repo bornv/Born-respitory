@@ -93,6 +93,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 58 | Boekhoudkundige controle per meting: Nog te ontvangen vs "Gefactureerd op afspraken" (zelfde scope), vooruit gefactureerd (klant en contract), termijnfacturen FIFO t/m vandaag, contractfacturering tegen hele contractwaarde, kistverkoop in contractomzet, prognose op afgesloten maanden en maandtelling dagen/30,4375, Kostengroep "Omzet" op contractorders (geen kostenvermindering), kisten: betaald deel direct / rest afschrijven, Transportbudget op Transportrondes, NC meerprijs met commissie |
 | 59 | Kisten afschrijven over 36 maanden (tabel Kistafschrijving, ook kistomzet verdeeld) in Kosten contract; pagina Controle kosten (negatieve Overige kosten per order/kostensoort, kolom Kostensoort); Maandnaam "(niet afgesloten)"/"(toekomst)" + melding open maand per pagina; contractpagina alleen slijpmarge |
 | 60 | Nieuwe kist gesplitst via Excel-stuklijst (Robots KistBak/KistMessen): bak 36 mnd afschrijven, messen direct; relatie Kistafschrijving→Kistregels vervangen door TREATAS (kringverwijzing via Kisttypen/Robots voorkomen); NC: bakken/3, eerste set messen/looptijd |
+| 61 | Afkeur per 10.000 varkens per jaar (Productie, afgesloten maanden, gewogen totaal) op Afkeur (nieuwe tabel per klant) en Meerkosten |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
