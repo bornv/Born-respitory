@@ -1,4 +1,4 @@
-const {app,BrowserWindow,Menu,ipcMain,dialog,shell,net}=require('electron');
+const {app,BrowserWindow,Menu,ipcMain,dialog,shell}=require('electron');
 const path=require('node:path');
 const fs=require('node:fs/promises');
 
@@ -22,7 +22,7 @@ else {
    {label:'Bestand',submenu:[{label:'Afsluiten',role:'quit'}]},
    {label:'Bewerken',submenu:[{role:'undo',label:'Ongedaan maken'},{role:'redo',label:'Opnieuw'}, {type:'separator'},{role:'cut',label:'Knippen'},{role:'copy',label:'Kopiëren'},{role:'paste',label:'Plakken'},{role:'selectAll',label:'Alles selecteren'}]},
    {label:'Beeld',submenu:[{role:'resetZoom',label:'Werkelijke grootte'},{role:'zoomIn',label:'Inzoomen'},{role:'zoomOut',label:'Uitzoomen'},{role:'togglefullscreen',label:'Volledig scherm'}]},
-   {label:'Help',submenu:[{label:'Over Materiaalprijs Converter',click:()=>dialog.showMessageBox(win,{type:'info',title:'Materiaalprijs Converter',message:'JBT Marel Materiaalprijs Converter 2.0.0',detail:'Leveranciers-Excel omrekenen · lokale verwerking · valutaomrekening'})}]}
+   {label:'Help',submenu:[{label:'Over Materiaalprijs Converter',click:()=>dialog.showMessageBox(win,{type:'info',title:'Materiaalprijs Converter',message:'JBT Marel Materiaalprijs Converter '+app.getVersion(),detail:'Leveranciers-Excel omrekenen · lokale verwerking · valutaomrekening'})}]}
   ]));
   ipcMain.handle('file:save',async(e,{name,bytes})=>{
    if(!trusted(e))throw Error('Geen toegang.');

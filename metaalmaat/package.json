@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/*.test.mjs tests/*.test.cjs",
+    "test": "node --test tests/*.test.mjs",
     "desktop": "electron .",
-    "build:windows": "electron-builder --win portable --x64"
+    "build:windows": "electron-builder --win portable --x64",
+    "test:windows": "node scripts/smoke-test.cjs"
   },
-  "version": "2.0.0",
-  "description": "JBT Marel Materiaalprijs Converter \u2014 metaalprijzen en eenheden omrekenen",
+  "version": "2.0.1",
+  "description": "JBT Marel Materiaalprijs Converter — metaalprijzen en eenheden omrekenen",
   "author": "JBT Marel",
   "main": "desktop/main.cjs",
   "build": {
@@ -24,10 +25,11 @@
     ],
     "win": {
       "target": "portable",
-      "signAndEditExecutable": false
+      "icon": "desktop/icon.png",
+      "signExecutable": false
     },
     "portable": {
-      "artifactName": "Materiaalprijs-Converter-2.0.0-Windows.exe",
+      "artifactName": "Materiaalprijs-Converter-${version}-Windows.exe",
       "requestExecutionLevel": "user",
       "useZip": true
     }
@@ -35,6 +37,7 @@
   "devDependencies": {
     "electron": "^45.1.0",
     "electron-builder": "^26.15.3",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "playwright-core": "1.62.1"
   }
 }

@@ -6,26 +6,33 @@ export function exchangeRate(from,to,rates){
  if(!from||!to)return null;if(from===to)return 1;
  const a=from==='EUR'?1:number(rates[from]),b=to==='EUR'?1:number(rates[to]);return a>0&&b>0?b/a:null;
 }
-export function number(v){
+export function number(v,format='general'){
  if(typeof v==='number')return Number.isFinite(v)?v:null;
  if(v===null||v===undefined)return null;
  let s=String(v).trim().replace(/[€\s\u00a0]/g,'');if(!s)return null;
+ // Imported text uses an explicit locale; numeric Excel cells bypass text parsing.
+ if(format==='nl'||format==='international'){
+  const pattern=format==='nl'?/^[+-]?(?:(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d*)?|,\d+)(?:e[+-]?\d+)?$/i:/^[+-]?(?:(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
+  if(!pattern.test(s))return null;
+  s=format==='nl'?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');
+  const n=Number(s);return Number.isFinite(n)?n:null;
+ }
  if(s.includes(',')&&s.includes('.'))s=s.lastIndexOf(',')>s.lastIndexOf('.')?s.replace(/\./g,'').replace(',','.'):s.replace(/,/g,'');
  else if(s.includes(','))s=s.replace(',','.');
  if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(s))return null;
  const n=Number(s);return Number.isFinite(n)?n:null;
 }
 export const norm=v=>String(v??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/²/g,'2').replace(/[^a-z0-9]/g,'');
-export function parseUnit(v){
+export function parseUnit(v,format='general'){
  if(typeof v==='number')return null;
  const s=String(v??'').toLowerCase().trim().replace(/€/g,'').replace(/^\s*(per|\/)\s*/,'').replace(/\s+/g,'').replace(/²/g,'2');
  const m=s.match(/^(\d+(?:[.,]\d+)?)?(kg|kgs|kilogram|kilogrammen|kilo|ton|tonne|t|m|m1|mtr|meter|meters|m2|m\^2|stuk|stuks|st|pcs|plaat|staaf|hk)$/);
- if(!m)return null;let basis=m[1]?number(m[1]):1;let unit=m[2];
+ if(!m)return null;let basis=m[1]?number(m[1],format):1;let unit=m[2];
  if(['kg','kgs','kilogram','kilogrammen','kilo'].includes(unit))unit='kg';else if(['ton','tonne','t'].includes(unit))unit='t';else if(['m','m1','mtr','meter','meters'].includes(unit))unit='m';else if(['m2','m^2'].includes(unit))unit='m2';else if(unit==='hk'){unit='kg';basis*=100;}else unit='stuk';
  return basis>0?{unit,basis}:null;
 }
-export function priceBasis(raw,encoded,fallback){
- const present=raw!==undefined&&raw!==null&&String(raw).trim()!=='';const n=present?number(raw):null;
+export function priceBasis(raw,encoded,fallback,format='general'){
+ const present=raw!==undefined&&raw!==null&&String(raw).trim()!=='';const n=present?number(raw,format):null;
  if(present&&!(n>0))return {basis:null,issue:'Prijsbasis ontbreekt, is ongeldig of is niet groter dan nul.'};
  if(encoded>1&&n!==null&&n!==1&&n!==encoded)return {basis:null,issue:'Tegenstrijdige prijsbasis in eenheid en prijsbasis-kolom.'};
  return {basis:encoded>1?encoded:n??number(fallback),issue:''};
@@ -61,6 +68,7 @@ export function parseDimensions(type,text){
 const pos=v=>typeof v==='number'&&Number.isFinite(v)&&v>0;
 export function physical(p){
  let kgm=null,kgm2=null,piece=null;const issues=[],notes=[];const rho=number(p.density);const get=k=>number(p[k]);const d=get('diameter'),b=get('width'),h=get('height'),t=get('thickness'),wall=get('wall'),length=get('length');let area=null;
+ if(pos(rho)&&rho<100)issues.push('Dichtheid is lager dan 100 kg/m³. Controleer de eenheid: vul kg/m³ in, geen g/cm³ (bijvoorbeeld 7850, niet 7,85).');
  if(pos(rho)){
   if(p.type==='round'&&pos(d))area=Math.PI*d*d/4;
   if(p.type==='square'&&pos(b))area=b*b;

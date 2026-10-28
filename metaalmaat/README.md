@@ -1,6 +1,6 @@
 # JBT Marel Materiaalprijs Converter
 
-Voorheen Metaalmaat. Map, branch en releasetag heten nog `metaalmaat`.
+Voorheen Metaalmaat. De appmap heet nog `metaalmaat`; uitgaven vanaf 2.0.1 gebruiken de nieuwe productnaam.
 
 Browsertool voor materiaalprijzen en hoeveelheden tussen kg, ton, meter, m² en stuk, met Excel-import, invulformat, export en valutaomrekening.
 
@@ -55,3 +55,18 @@ npm run build:windows
 De portable x64-exe staat in `release/`. Deze is niet digitaal ondertekend.
 Starten op Windows zelf is nog niet getest. JSZip wordt als ontwikkelafhankelijkheid
 geïnstalleerd voor de exporttests.
+
+
+## Tekstgetallen en dichtheid
+
+De importinstelling **Notatie tekstgetallen** staat standaard op Nederlands:
+`1.200` betekent 1200 en `1,200` betekent 1,2. Kies Internationaal voor bronnen
+waarin `1.200` 1,2 betekent en `1,200` 1200. De instelling geldt voor expliciete
+numerieke velden uit CSV en Excel-tekstcellen; echte Excel-getalcellen blijven
+ongewijzigd. Omschrijvingen blijven via de bestaande maatherkenning lopen;
+controleer herkende maten en gebruik expliciete maatkolommen bij twijfel.
+
+Dichtheid onder 100 kg/m³ levert een controlepunt op en geen theoretisch gewicht.
+De app past geen automatische x1000-correctie toe. CSV-export gebruikt `;` en
+decimale komma’s voor numerieke uitvoer; bronvelden die tekst zijn blijven tekst.
+Gebruik .xlsx voor expliciet getypeerde getalcellen.
