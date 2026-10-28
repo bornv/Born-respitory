@@ -66,3 +66,11 @@ Samenvatting, Betalingen, Afspraken, Per klant, Kisten per klant, Calculatie en 
 - `Kistregels zonder serienummer`: kistregel (.990/.000) zonder CHARGEN_SERIEN_NR in het journaal → telt niet als kist.
 - `D Kisthistorie`: alle kistserienummers uit LCV_PAJL (alle jaren, GOB/GVR, kisttypen uit KistRegelsSQL), per serienummer in Oracle samengevat (laatste datum, laatste order via `KEEP (DENSE_RANK LAST ORDER BY DATUM)`, klant uit LCV_KPTM). Kolom `Status`: In rapport / Beweging zonder kistregel / Niet langs sinds StartPeriode.
 StartPeriode vast houden (niet meeschuiven): een meeschuivende periode laat kisten en contractkosten ongemerkt wegvallen.
+
+## Contract van start tot eind (sinds v56)
+Eén contract kiezen (slicer Servicecontracten[Contract]); de metingen werken met SELECTEDVALUE op ContractId/Start/Eind/Contractorder/KistStartPeriode:
+- omzet volgens afspraak = Omzetplanning (Bron "Contract", Referentie = ContractId), looptijd of t/m vandaag;
+- gefactureerd = LCV_KPTM Omzet op de contractorder + omzet kistorders contract;
+- kosten t/m nu = Werkelijk totaal slijpservice (kistorders vanaf KistStartPeriode + contractorder ISW);
+- verwachte kosten tot einde = kosten t/m nu ÷ verstreken maanden × maanden looptijd (na het einde: werkelijk);
+- marge volgens plan = (omzet looptijd − Plan kosten slijpservice) ÷ omzet looptijd.

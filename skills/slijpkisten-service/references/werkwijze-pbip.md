@@ -88,6 +88,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 53 | Periodes t/m december van het huidige jaar (wens Born; was t/m einde langste afspraak = 2029) |
 | 54 | Filtercontrole over alle visuals; Servicecontracten krijgt KUNDEN_NR (uit Slijpservice), relatie Servicecontracten → Klanten (i.p.v. Slijpservice → Klanten) zodat de klantslicer de contractlijst filtert |
 | 55 | Kalender weer t/m einde afspraken; kolom Periodes[TotHuidigJaar] als visualfilter op de jaar/maandslicers (niet op Betalingen); slicers multi-select (selection.singleSelect = false); labels "verwacht" → "volgens afspraak" |
+| 56 | Pagina "Contract van start tot eind": contractslicer (enkele keuze, Servicecontracten[Contract]); metingen map "Contract van start tot eind" (looptijd, t/m nu, verwacht einde = kostentempo × looptijd, marge volgens plan) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
