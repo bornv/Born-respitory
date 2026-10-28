@@ -87,6 +87,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 52 | Metingen op Kistregels krijgen `'LCV_KPTM Kistkosten'` of TREATAS naar Kistregels[OrderRegel] als filter (filter op Kistkosten bereikt Kistregels niet: Unieke kisten = 267 bij elke klant); "Verwacht per jaar" → "Afspraak per jaar" |
 | 53 | Periodes t/m december van het huidige jaar (wens Born; was t/m einde langste afspraak = 2029) |
 | 54 | Filtercontrole over alle visuals; Servicecontracten krijgt KUNDEN_NR (uit Slijpservice), relatie Servicecontracten → Klanten (i.p.v. Slijpservice → Klanten) zodat de klantslicer de contractlijst filtert |
+| 55 | Kalender weer t/m einde afspraken; kolom Periodes[TotHuidigJaar] als visualfilter op de jaar/maandslicers (niet op Betalingen); slicers multi-select (selection.singleSelect = false); labels "verwacht" → "volgens afspraak" |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
