@@ -1,4 +1,4 @@
-name: Metaalmaat Windows ZIP
+name: Materiaalprijs Converter Windows ZIP
 on:
   push:
     branches: [metaalmaat-windows]
@@ -37,14 +37,14 @@ jobs:
       - name: Package distributable ZIP
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force release/Metaalmaat-Windows | Out-Null
-          Copy-Item release/Metaalmaat-2.0.0-Windows.exe release/Metaalmaat-Windows/
-          Copy-Item dist/Metaalmaat-invulformat.xlsx release/Metaalmaat-Windows/
-          Copy-Item LEESMIJ-WINDOWS.txt release/Metaalmaat-Windows/
-          Compress-Archive -Path release/Metaalmaat-Windows -DestinationPath release/Metaalmaat-Windows.zip -CompressionLevel Fastest -Force
-          $zip = Get-Item release/Metaalmaat-Windows.zip
+          New-Item -ItemType Directory -Force release/Materiaalprijs-Converter-Windows | Out-Null
+          Copy-Item release/Materiaalprijs-Converter-2.0.0-Windows.exe release/Materiaalprijs-Converter-Windows/
+          Copy-Item dist/Materiaalprijs-Converter-invulformat.xlsx release/Materiaalprijs-Converter-Windows/
+          Copy-Item LEESMIJ-WINDOWS.txt release/Materiaalprijs-Converter-Windows/
+          Compress-Archive -Path release/Materiaalprijs-Converter-Windows -DestinationPath release/Materiaalprijs-Converter-Windows.zip -CompressionLevel Fastest -Force
+          $zip = Get-Item release/Materiaalprijs-Converter-Windows.zip
           if ($zip.Length -lt 1000000) { throw 'ZIP ontbreekt of is onvolledig' }
-          Get-FileHash release/Metaalmaat-Windows.zip -Algorithm SHA256 | Format-List
+          Get-FileHash release/Materiaalprijs-Converter-Windows.zip -Algorithm SHA256 | Format-List
       - name: Publish downloadable ZIP
         env:
           GH_TOKEN: ${{ github.token }}
@@ -54,8 +54,8 @@ jobs:
           $tag = 'metaalmaat-v2.0.0'
           gh release view $tag *> $null
           if ($LASTEXITCODE -eq 0) {
-            gh release upload $tag release/Metaalmaat-Windows.zip --clobber
+            gh release upload $tag release/Materiaalprijs-Converter-Windows.zip --clobber
           } else {
-            gh release create $tag release/Metaalmaat-Windows.zip --target $env:GITHUB_SHA --title 'Metaalmaat Desktop 2.0 — Windows' --notes-file RELEASE-NOTES.md
+            gh release create $tag release/Materiaalprijs-Converter-Windows.zip --target $env:GITHUB_SHA --title 'JBT Marel Materiaalprijs Converter 2.0 — Windows' --notes-file RELEASE-NOTES.md
           }
           if ($LASTEXITCODE -ne 0) { throw 'Publiceren van de ZIP is mislukt' }

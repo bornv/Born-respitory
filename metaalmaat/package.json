@@ -8,12 +8,12 @@
     "build:windows": "electron-builder --win portable --x64"
   },
   "version": "2.0.0",
-  "description": "Metaalmaat Desktop \u2014 metaalprijzen en eenheden omrekenen",
+  "description": "JBT Marel Materiaalprijs Converter \u2014 metaalprijzen en eenheden omrekenen",
   "author": "JBT Marel",
   "main": "desktop/main.cjs",
   "build": {
     "appId": "nl.metaalmaat.desktop",
-    "productName": "Metaalmaat",
+    "productName": "Materiaalprijs Converter",
     "directories": {
       "output": "release"
     },
@@ -27,7 +27,7 @@
       "signAndEditExecutable": false
     },
     "portable": {
-      "artifactName": "Metaalmaat-2.0.0-Windows.exe",
+      "artifactName": "Materiaalprijs-Converter-2.0.0-Windows.exe",
       "requestExecutionLevel": "user",
       "useZip": true
     }

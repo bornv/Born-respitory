@@ -6,12 +6,12 @@ let win;
 const entry=path.join(__dirname,'../dist/index.html');
 const trusted=e=>e.sender===win?.webContents && e.senderFrame===win.webContents.mainFrame && e.senderFrame.url.startsWith('file://');
 
-app.setName('Metaalmaat');
+app.setName('Materiaalprijs Converter');
 if(!app.requestSingleInstanceLock())app.quit();
 else {
  app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.focus();}});
  app.whenReady().then(()=>{
-  win=new BrowserWindow({width:1440,height:940,minWidth:1000,minHeight:720,backgroundColor:'#f4f6f9',show:false,title:'Metaalmaat Desktop — JBT Marel',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
+  win=new BrowserWindow({width:1440,height:940,minWidth:1000,minHeight:720,backgroundColor:'#f4f6f9',show:false,title:'Materiaalprijs Converter — JBT Marel',webPreferences:{preload:path.join(__dirname,'preload.cjs'),nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
   win.once('ready-to-show',()=>win.show());
   const external=url=>{try{const u=new URL(url);if(u.protocol==='https:')shell.openExternal(u.href);}catch{}};
   win.webContents.setWindowOpenHandler(({url})=>{external(url);return {action:'deny'};});
@@ -22,7 +22,7 @@ else {
    {label:'Bestand',submenu:[{label:'Afsluiten',role:'quit'}]},
    {label:'Bewerken',submenu:[{role:'undo',label:'Ongedaan maken'},{role:'redo',label:'Opnieuw'}, {type:'separator'},{role:'cut',label:'Knippen'},{role:'copy',label:'Kopiëren'},{role:'paste',label:'Plakken'},{role:'selectAll',label:'Alles selecteren'}]},
    {label:'Beeld',submenu:[{role:'resetZoom',label:'Werkelijke grootte'},{role:'zoomIn',label:'Inzoomen'},{role:'zoomOut',label:'Uitzoomen'},{role:'togglefullscreen',label:'Volledig scherm'}]},
-   {label:'Help',submenu:[{label:'Over Metaalmaat',click:()=>dialog.showMessageBox(win,{type:'info',title:'Metaalmaat Desktop',message:'Metaalmaat 2.0.0 — JBT Marel',detail:'Leveranciers-Excel omrekenen · lokale verwerking · valutaomrekening'})}]}
+   {label:'Help',submenu:[{label:'Over Materiaalprijs Converter',click:()=>dialog.showMessageBox(win,{type:'info',title:'Materiaalprijs Converter',message:'JBT Marel Materiaalprijs Converter 2.0.0',detail:'Leveranciers-Excel omrekenen · lokale verwerking · valutaomrekening'})}]}
   ]));
   ipcMain.handle('file:save',async(e,{name,bytes})=>{
    if(!trusted(e))throw Error('Geen toegang.');

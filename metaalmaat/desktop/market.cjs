@@ -12,7 +12,7 @@ function parseQuote(data, instrument, now=Date.now()) {
  return {...instrument,usd:m.regularMarketPrice,usdKg:m.regularMarketPrice/instrument.kg,timestamp,contract:String(m.shortName||instrument.symbol),stale:now-timestamp>4*86400000};
 }
 async function getJSON(url, fetcher=fetch) {
- const response=await fetcher(url,{headers:{'User-Agent':'Metaalmaat Desktop/2.0','Accept':'application/json'},signal:AbortSignal.timeout(15000)});
+ const response=await fetcher(url,{headers:{'User-Agent':'JBT-Marel-Materiaalprijs-Converter/2.0','Accept':'application/json'},signal:AbortSignal.timeout(15000)});
  if(!response.ok) throw Error(`Prijsbron antwoordt met HTTP ${response.status}.`);
  return response.json();
 }

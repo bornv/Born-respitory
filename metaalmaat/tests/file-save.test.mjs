@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {saveCapabilities,saveNativeFile} from '../dist/file-save.mjs';
-const file=new File(['example Excel bytes'],'Metaalmaat-invulformat.xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+const file=new File(['example Excel bytes'],'Materiaalprijs-Converter-invulformat.xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
 test('Windows: opslagvenster opent direct in dezelfde klik; bytes worden geschreven en afgesloten',async()=>{
  const events=[];let received;
  const env={isSecureContext:true,showSaveFilePicker(options){events.push('picker');assert.equal(options.suggestedName,file.name);assert.deepEqual(options.types[0].accept[file.type],['.xlsx']);return Promise.resolve({async createWritable(){events.push('writer');return {async write(data){received=data;events.push('write');},async close(){events.push('close');}};}});}};

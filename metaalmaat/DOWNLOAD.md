@@ -1,8 +1,8 @@
-# Metaalmaat voor Windows
+# JBT Marel Materiaalprijs Converter voor Windows
 
 De broncode staat in deze map. GitHub Actions bouwt en test de Windows-app na wijzigingen op de branch `metaalmaat-windows`.
 
-Na een geslaagde build vind je **Metaalmaat-Windows.zip** bij de assets van [Metaalmaat Desktop 2.0](https://github.com/bornv/Born-respitory/releases/tag/metaalmaat-v2.0.0).
+Na een geslaagde build vind je **Materiaalprijs-Converter-Windows.zip** bij de assets van [Materiaalprijs Converter 2.0](https://github.com/bornv/Born-respitory/releases/tag/metaalmaat-v2.0.0).
 
 [Volg de Windows-build](https://github.com/bornv/Born-respitory/actions?query=branch%3Ametaalmaat-windows).
 

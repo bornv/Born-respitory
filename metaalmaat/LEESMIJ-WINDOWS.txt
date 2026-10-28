@@ -1,6 +1,6 @@
-METAALMAAT DESKTOP — WINDOWS 10/11 64-BIT
+JBT MAREL MATERIAALPRIJS CONVERTER — WINDOWS 10/11 64-BIT
 
-Pak de ZIP volledig uit en start Metaalmaat-2.0.0-Windows.exe.
+Pak de ZIP volledig uit en start Materiaalprijs-Converter-2.0.0-Windows.exe.
 Installatie en een ChatGPT-account zijn niet nodig. De eerste start kan even duren.
 De app is niet digitaal ondertekend; Windows kan een melding tonen.
 

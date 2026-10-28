@@ -1,4 +1,6 @@
-# Metaalmaat
+# JBT Marel Materiaalprijs Converter
+
+Voorheen Metaalmaat. Map, branch en releasetag heten nog `metaalmaat`.
 
 Browsertool voor materiaalprijzen en hoeveelheden tussen kg, ton, meter, m² en stuk, met Excel-import, invulformat, export en valutaomrekening.
 

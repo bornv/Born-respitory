@@ -7,6 +7,6 @@ const require=createRequire(import.meta.url);
 globalThis.JSZip=require('jszip');
 const rows=[templateHeaders,...Array.from({length:20},()=>templateHeaders.map(()=>''))];
 const file=await createXlsx([{name:'Materialen',rows},{name:'Voorbeelden',rows:[templateHeaders,...demoRows]},{name:'Uitleg',rows:templateHelp}]);
-const path=fileURLToPath(new URL('../dist/Metaalmaat-invulformat.xlsx',import.meta.url));
+const path=fileURLToPath(new URL('../dist/Materiaalprijs-Converter-invulformat.xlsx',import.meta.url));
 await writeFile(path,Buffer.from(await file.arrayBuffer()));
 console.log('Excel-format opgebouwd ('+file.size+' bytes).');

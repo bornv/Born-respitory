@@ -1,4 +1,4 @@
-Download **Metaalmaat-Windows.zip** hieronder bij Assets. Pak de ZIP uit en start de exe.
+Download **Materiaalprijs-Converter-Windows.zip** hieronder bij Assets. Pak de ZIP uit en start de exe.
 
 De ZIP bevat de Windows-app, een Excel-invulformat voor je leverancier en een handleiding.
 
