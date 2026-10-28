@@ -11,7 +11,8 @@
 - **Kosten** (sinds v63) = alle kostencategorieën op kistorders **netto** (creditnota's tellen mee), zonder Omzet, zonder revisie-categorieën en zonder regels op de uitsluitlijst `tblKostenUitsluiten` (overboekingen/foutboekingen, match order + periode + bedrag ±1, reden verplicht). Omzet, nieuwe kisten en revisie kunnen niet uitgesloten worden.
 - **Kosten contract** (slijpmarge) = Kosten − Meerkosten extra messen + Kosten zonder kistregel (toegerekend). Kosten op de contractorder zelf tellen **niet** mee (alleen informatie: "Kosten contractorder").
 - **Meerkosten extra messen**: slijpkosten boven `Robots[StandaardSlijpPerKist]` worden via een serviceorder gefactureerd → buiten contractprijs en saldo.
-- **Afkeur-norm** = gemiddelde afkeur per ronde over alle klanten per robot; daarboven = kandidaat voor doorbelasting. Norm blijft per ronde (slijtage per kist).
+- **Afkeur-norm** (sinds v64 dubbel): norm per ronde én norm per 10.000 varkens (gewogen gemiddelde klanten met Productie-opgave), per robot. Doorbelasten alleen boven beide normen: bedrag = MIN(afkeur − norm×rondes, afkeur × (1 − norm/klantwaarde per varken)). Zonder slachtopgave alleen per ronde.
+- **Extra messen** (besluit Born): altijd markeren en via serviceorder factureren, los van afkeur en slachtingen.
 - **Afkeur per 10.000 varkens per jaar** (sinds v61): extra kijk op slachtvolume; afkeur afgesloten maanden ÷ maanden actief × 12 ÷ (varkens per week / 10.000), alleen klanten met Productie-opgave.
 - **Toerekening naar robot/kisttype**: kosten zonder kistregel (transport, commissie, overig) naar rato van `Calculatiewaarde slijpen`, alleen als Robots/Kisttypen/KistRegels gefilterd is (`ISFILTERED` + `REMOVEFILTERS`).
 - **Kosten per jaar** = per klant (kosten contract − nieuwe kisten in afgesloten maanden) / Maanden actief × 12 + afschrijving nieuwe kisten (3 jaar). Cut-off: `Periodes[Maand] < eerste dag huidige maand`.
