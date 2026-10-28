@@ -1,0 +1,23 @@
+{
+  "skill_name": "windows-release",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Zet deze app in een ZIP op GitHub. De exe is alleen op Linux gebouwd.",
+      "expected_output": "Controleert toestemming en bouwt/verifieert Windows waar mogelijk; noemt interactief Windows-gebruik apart onbewezen.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "De /workspace-downloadlink werkt bij mijn klant niet.",
+      "expected_output": "Behandelt interne padlink niet als bijlage; controleert een echte release-download.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "De build is groen maar opslaan geeft toegang geweigerd. Mag ik publiceren?",
+      "expected_output": "Rapporteert dat opslaan faalt; maakt van de groene build geen geslaagde gebruikstest en publiceert niet als gereed.",
+      "files": []
+    }
+  ]
+}

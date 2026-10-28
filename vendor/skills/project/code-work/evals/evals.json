@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-work",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "De Excel-import crasht op een lege prijskolom. Los dat op zonder de export te veranderen.",
+      "expected_output": "Reproduceert de fout, volgt de mapping en wijzigt gericht; controleert import en bestaande export.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Voeg een filter op leverancier toe aan de resultaatlijst.",
+      "expected_output": "Leest huidige UI en tests, implementeert binnen scope en controleert de interactie.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Bekijk alleen of deze diff goed is; pas nog niets aan.",
+      "expected_output": "Routeert naar code-verification en verandert geen productiecode.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-verification",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Controleer of een groene build genoeg is om deze Windows-app klaar te noemen.",
+      "expected_output": "Onderscheidt build, interactief Windows-gebruik, ZIP en download.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Review deze berekening: prijs per 100 kg wordt twee keer gedeeld door 100.",
+      "expected_output": "Toont het concrete prijsbasisprobleem met onafhankelijk voorbeeld zonder ongevraagde reparatie.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Beoordeel een falende test waarvan de echte databron offline is.",
+      "expected_output": "Onderscheidt netwerkbeperking van een bewezen productfout en meldt het ontbrekende bewijs.",
+      "files": []
+    }
+  ]
+}

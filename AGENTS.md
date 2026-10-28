@@ -23,6 +23,10 @@ bronskill en referenties. Laad niet de hele verzameling tegelijk.
 | Terugkerende incidenten en herstelstappen | `runbook` |
 | Home Assistant-dashboard | `ha-dashboard-design` |
 | Fouten onderzoeken en afronden met bewijs | `systematic-debugging`, `verification-before-completion` |
+| Software schrijven, bugs oplossen en refactoren | `code-work` |
+| Code review, tests beoordelen en implementaties verifiëren | `code-verification` |
+| Metaalmaat: leveranciers-Excel, dichtheid en eenheden | `metaalmaat-rekenregels` |
+| Windows-exe, ZIP en GitHub-release | `windows-release` |
 | Webapps testen | `webapp-testing` |
 | Victron-registers | `victron-modbus` |
 | Odoo 19 | `odoo-19` |
