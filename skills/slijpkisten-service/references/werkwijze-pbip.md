@@ -91,6 +91,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 56 | Pagina "Contract van start tot eind": contractslicer (enkele keuze, Servicecontracten[Contract]); metingen map "Contract van start tot eind" (looptijd, t/m nu, verwacht einde = kostentempo × looptijd, marge volgens plan) |
 | 57 | Info-tooltip (visualHeaderTooltip + visualHeader.showTooltipButton) bij elke visual, opgebouwd uit de ///-omschrijvingen (berekening + "Waarom"); contractpagina: afkeur, kosten = Kosten contract, plan-marge uit PLW |
 | 58 | Boekhoudkundige controle per meting: Nog te ontvangen vs "Gefactureerd op afspraken" (zelfde scope), vooruit gefactureerd (klant en contract), termijnfacturen FIFO t/m vandaag, contractfacturering tegen hele contractwaarde, kistverkoop in contractomzet, prognose op afgesloten maanden en maandtelling dagen/30,4375, Kostengroep "Omzet" op contractorders (geen kostenvermindering), kisten: betaald deel direct / rest afschrijven, Transportbudget op Transportrondes, NC meerprijs met commissie |
+| 59 | Kisten afschrijven over 36 maanden (tabel Kistafschrijving, ook kistomzet verdeeld) in Kosten contract; pagina Controle kosten (negatieve Overige kosten per order/kostensoort, kolom Kostensoort); Maandnaam "(niet afgesloten)"/"(toekomst)" + melding open maand per pagina; contractpagina alleen slijpmarge |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -117,3 +118,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 22. Facturering vergelijken met de scope die gefactureerd wordt (hele contractwaarde, termijnen), marge met de scope van de dienst (slijpdeel). Altijd beide kanten tonen: nog niet gefactureerd én vooruit gefactureerd.
 23. Kosten en omzet uit SAP scheiden op kostensoort/kostengroep, nooit op het teken (creditboekingen op kosten en omzet op dezelfde order lopen anders door elkaar).
 24. Prognoses en jaartempo alleen op afgesloten maanden; maandtelling gelijk aan de omzetplanning.
+25. `ref table` in model.tmdl moet exact zo geschreven zijn als de tabelnaam in de tabel (zonder aanhalingstekens als de naam die niet heeft), anders TomInternalException bij het openen.
+26. Een filter op een kolom van LCV_KPTM Kistkosten werkt niet door naar Kistafschrijving: bij contractfilters ook `Kistafschrijving[AankoopPeriode] >= p0` zetten; afschrijving niet in [Kosten] stoppen (die wordt met categoriefilters aangeroepen) maar in [Kosten contract].
