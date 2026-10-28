@@ -94,6 +94,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 59 | Kisten afschrijven over 36 maanden (tabel Kistafschrijving, ook kistomzet verdeeld) in Kosten contract; pagina Controle kosten (negatieve Overige kosten per order/kostensoort, kolom Kostensoort); Maandnaam "(niet afgesloten)"/"(toekomst)" + melding open maand per pagina; contractpagina alleen slijpmarge |
 | 60 | Nieuwe kist gesplitst via Excel-stuklijst (Robots KistBak/KistMessen): bak 36 mnd afschrijven, messen direct; relatie Kistafschrijving→Kistregels vervangen door TREATAS (kringverwijzing via Kisttypen/Robots voorkomen); NC: bakken/3, eerste set messen/looptijd |
 | 61 | Afkeur per 10.000 varkens per jaar (Productie, afgesloten maanden, gewogen totaal) op Afkeur (nieuwe tabel per klant) en Meerkosten |
+| 62 | report.json settings.useStylableVisualContainerHeader = true: zonder moderne visualkop toont Desktop de help-tooltip (visualHeaderTooltip) niet |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -115,7 +116,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 17. Verwijs in DAX altijd met tabelnaam naar een kolom (`'NC Varkens'[Varkens per week]`): bestaat er een meting met dezelfde naam, dan pakt `[naam]` de meting.
 18. Telt een meting in een dimensie (Kistregels) terwijl de filters op de feitentabel (Kistkosten) staan: geef de feitentabel als filter mee (`CALCULATE(..., 'LCV_KPTM Kistkosten')`) of `TREATAS` naar de sleutel van de dimensie. Controleer per klant of het getal verschilt.
 19. **Filtercontrole vóór opleveren:** per visual nagaan of de rij-/kolomvelden en de slicers op de pagina via de relaties (één → veel) de tabellen bereiken waarin elke meting telt. Melding = fout, tenzij bewust (REMOVEFILTERS, afspraak per jaar, tarieven). Expanded-table-filters (`CALCULATE(..., 'Feitentabel')`) en TREATAS tellen als bereikt.
-20. Elke meting een `///`-omschrijving: wat (berekening) + "Waarom: …". De info-knop van elke visual wordt hieruit gegenereerd (script b57t): na elke wijziging opnieuw draaien.
+20. (Info-knop werkt alleen met `settings.useStylableVisualContainerHeader: true` in report.json.) Elke meting een `///`-omschrijving: wat (berekening) + "Waarom: …". De info-knop van elke visual wordt hieruit gegenereerd (script b57t): na elke wijziging opnieuw draaien.
 21. Omzet en kosten in één marge moeten bij hetzelfde contractonderdeel horen (slijpservicedeel ↔ kosten kistorders zonder extra messen); plan met plan, werkelijk met werkelijk.
 22. Facturering vergelijken met de scope die gefactureerd wordt (hele contractwaarde, termijnen), marge met de scope van de dienst (slijpdeel). Altijd beide kanten tonen: nog niet gefactureerd én vooruit gefactureerd.
 23. Kosten en omzet uit SAP scheiden op kostensoort/kostengroep, nooit op het teken (creditboekingen op kosten en omzet op dezelfde order lopen anders door elkaar).
