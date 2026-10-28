@@ -9,7 +9,7 @@
   },
   "version": "2.0.0",
   "description": "Metaalmaat Desktop \u2014 metaalprijzen en eenheden omrekenen",
-  "author": "Metaalmaat",
+  "author": "JBT Marel",
   "main": "desktop/main.cjs",
   "build": {
     "appId": "nl.metaalmaat.desktop",

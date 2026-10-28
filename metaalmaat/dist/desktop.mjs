@@ -1,5 +1,5 @@
 if(window.metaalmaatDesktop){
- document.title='Metaalmaat Desktop';
+ document.title='Metaalmaat Desktop — JBT Marel';
  document.querySelector('.version').textContent='METAALMAAT DESKTOP / 2.0';
  document.querySelector('.heading h1').innerHTML='Jouw leveranciersprijzen.<br>In de juiste eenheid<span>.</span>';
  document.querySelector('.heading p').textContent='Importeer de ingevulde Excel van je leverancier en reken om naar kg, meter, m² of stuk.';
