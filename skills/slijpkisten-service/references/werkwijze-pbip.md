@@ -85,6 +85,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 50 | Betaaltermijnen: geneste tabel met type (datums bleven anders tekst na uitklappen); NC-metingen: kolom met tabelnaam omdat een meting dezelfde naam heeft |
 | 51 | Servicecontracten alleen uit tblContracten (wens Born: geen oude/automatische contractorders); Slijpservice-metingen met TREATAS op tblContracten[ContractId]; signaal nieuwe contracten = boekingen vanaf 202401 niet in Excel |
 | 52 | Metingen op Kistregels krijgen `'LCV_KPTM Kistkosten'` of TREATAS naar Kistregels[OrderRegel] als filter (filter op Kistkosten bereikt Kistregels niet: Unieke kisten = 267 bij elke klant); "Verwacht per jaar" → "Afspraak per jaar" |
+| 53 | Periodes t/m december van het huidige jaar (wens Born; was t/m einde langste afspraak = 2029) |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
