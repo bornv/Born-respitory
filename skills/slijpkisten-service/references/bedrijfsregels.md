@@ -8,7 +8,7 @@
 - Velden per kisttype in de calculatie zijn grijs voor robots die niet geselecteerd zijn. Kistkosten uit de stuklijst (bak + messen).
 
 ## Kosten en marge
-- **Kosten** = alle kostencategorieën op kistorders, zonder Omzet, zonder revisie-categorieën, zonder negatieve Overige kosten.
+- **Kosten** (sinds v63) = alle kostencategorieën op kistorders **netto** (creditnota's tellen mee), zonder Omzet, zonder revisie-categorieën en zonder regels op de uitsluitlijst `tblKostenUitsluiten` (overboekingen/foutboekingen, match order + periode + bedrag ±1, reden verplicht). Omzet, nieuwe kisten en revisie kunnen niet uitgesloten worden.
 - **Kosten contract** (slijpmarge) = Kosten − Meerkosten extra messen + Kosten zonder kistregel (toegerekend). Kosten op de contractorder zelf tellen **niet** mee (alleen informatie: "Kosten contractorder").
 - **Meerkosten extra messen**: slijpkosten boven `Robots[StandaardSlijpPerKist]` worden via een serviceorder gefactureerd → buiten contractprijs en saldo.
 - **Afkeur-norm** = gemiddelde afkeur per ronde over alle klanten per robot; daarboven = kandidaat voor doorbelasting. Norm blijft per ronde (slijtage per kist).
@@ -67,6 +67,6 @@
 ## Besluiten Born (v59)
 - **Nieuwe kisten (sinds v60)**: alleen het **bakdeel** afschrijven over 3 jaar; de eerste set messen/zaagbladen direct als kosten. Verdeling volgens de Excel-stuklijst per robot (bak / (bak + stuks × prijs nieuw mes)), bij onbekende robot het gemiddelde. Messen daarna: vervanging via afkeur (werkelijk gemiddelde per ronde, alle klanten; < 20 rondes de Excel-kostprijs).
 - **Nieuwe kisten (v59)**: afschrijven over 3 jaar (36 maanden vanaf de boekingsmaand), zodat er ruimte is om beschadigde kisten te vervangen. Kistomzet (klant betaalt voor een kist) wordt over dezelfde 36 maanden verdeeld. Geldt in Kosten contract en alles wat daarop bouwt; [Kosten] en [Nieuwe kisten] blijven de geboekte aanschaf. Nieuw contract: kisten / 3 per jaar, ongeacht de looptijd.
-- **Negatieve Overige kosten**: blijven buiten de marge, maar staan per order en kostensoort op de pagina Controle kosten.
+- **Negatieve Overige kosten** (besluit Born, v63): tellen mee in de marge; alleen aantoonbare overboekingen/foutboekingen via de uitsluitlijst eruit. Te controleren bij Finance: SBAG € −30.000 op 5700992 (apr 2026, kostensoort 437300).
 - **Open maand**: lopende maand altijd zichtbaar gemarkeerd ("(niet afgesloten)" in Maandnaam, melding bovenaan de pagina).
 - **Alleen slijpmarge** tonen; geen marge van het hele contract (plan) op de contractpagina.

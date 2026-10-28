@@ -20,3 +20,4 @@ Fouten:
 - `405 Method Not Allowed`: deellink (`/:x:/r/…`) als site ingevuld → alleen het site-adres.
 - "dynamic data source" in de service: site-URL berekend in M → vaste parameter + `SharePoint.Files(AfsprakenSite, [ApiVersion = 15])`.
 - "Afsprakenlijst niet gevonden": bestandsnaam wijkt af van `AfsprakenBestand`.
+| KostenUitsluiten | `tblKostenUitsluiten` | Order (zonder voorloopnullen), Periode (jjjjmm, tekst), Bedrag (zoals in het rapport, negatief = kostenverlaging), Reden |

@@ -95,6 +95,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 60 | Nieuwe kist gesplitst via Excel-stuklijst (Robots KistBak/KistMessen): bak 36 mnd afschrijven, messen direct; relatie Kistafschrijving→Kistregels vervangen door TREATAS (kringverwijzing via Kisttypen/Robots voorkomen); NC: bakken/3, eerste set messen/looptijd |
 | 61 | Afkeur per 10.000 varkens per jaar (Productie, afgesloten maanden, gewogen totaal) op Afkeur (nieuwe tabel per klant) en Meerkosten |
 | 62 | report.json settings.useStylableVisualContainerHeader = true: zonder moderne visualkop toont Desktop de help-tooltip (visualHeaderTooltip) niet |
+| 63 | Negatieve Overige kosten tellen mee (netto); uitsluiten alleen via Excel tblKostenUitsluiten (Order, Periode, Bedrag, Reden) → DAX-kolommen Kistkosten[UitgeslotenReden]/[Kostenstatus] (Oracle-query blijft één bron); Controle kosten met status en tikfout-teller |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
