@@ -63,7 +63,7 @@ globalThis.JSZip=JSZip;
   assert.match(await page.locator('#calcIssues').innerText(),/100 kg\/m³/);checks.push('Losse calculator toont dezelfde dichtheidscontrole');
   assert.deepEqual(errors,[]);checks.push('Geen JavaScript-fouten tijdens de gebruikstest');
   await page.screenshot({path:path.join(out,'converter-smoke.png'),fullPage:true});
-  const report={version:require('../package.json').version,platform:process.platform,runtime:app?(process.env.CONVERTER_EXE?'Electron verpakte Windows-app':'Electron bronapp'):'Chromium renderer',checks,limitations:app?'Native bestandskeuze wordt nagebootst; werkelijke IPC en bestandsbytes zijn gecontroleerd. Geen handmatige acceptatietest.':'Geen Electron- of Windows-test.'};
+  const report={appPath:app?await app.evaluate(({app})=>app.getAppPath()):null,userDataDirectory:app?await app.evaluate(({app})=>app.getPath('userData')):null,version:require('../package.json').version,platform:process.platform,runtime:app?(process.env.CONVERTER_EXE?'Electron verpakte Windows-app':'Electron bronapp'):'Chromium renderer',checks,limitations:app?'Native bestandskeuze wordt nagebootst; werkelijke IPC en bestandsbytes zijn gecontroleerd. Geen handmatige acceptatietest.':'Geen Electron- of Windows-test.'};
   await fs.writeFile(path.join(out,'smoke.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  }finally{await app?.close();await browser?.close();await fs.rm(temp,{recursive:true,force:true});}
 })().catch(e=>{console.error(e);process.exitCode=1;});

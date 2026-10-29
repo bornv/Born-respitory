@@ -1,36 +1,49 @@
-JBT MAREL MATERIAALPRIJS CONVERTER — WINDOWS 10/11 64-BIT
+JBT MAREL MATERIAALPRIJS CONVERTER 2.1.0 — WINDOWS 10/11 64-BIT
 
-Pak de ZIP volledig uit en start Materiaalprijs-Converter-2.0.1-Windows.exe.
-Installatie is niet nodig. De eerste start kan even duren.
-De app is niet digitaal ondertekend; Windows kan een melding tonen.
+INSTALLEREN
+Pak de ZIP uit en start Materiaalprijs-Converter-Setup-2.1.0-x64.exe.
+De wizard kiest Nederlands of Engels op basis van je Windows-taal.
+Kies installatie voor jezelf (standaard), of voor alle gebruikers met
+administratorrechten. Je kunt de installatiemap aanpassen. De setup maakt
+een snelkoppeling in Start > JBT Marel en op het bureaublad.
+Op het laatste scherm kun je kiezen om de app direct te starten.
 
+Start de app daarna via de snelkoppeling Materiaalprijs Converter.
+De handleiding en het leveranciersformat staan ook in de installatiemap.
+De app is niet digitaal ondertekend; Windows kan een melding tonen over
+een onbekende uitgever. Er wordt geen automatische update ingesteld.
+
+GEBRUIK
 1. Laat je leverancier het bijgevoegde Excel-invulformat invullen, of gebruik
    diens bestaande .xlsx-, .csv- of .tsv-prijslijst. Laat de leverancier
-   per artikel ook Dichtheid (kg/m3) invullen, passend bij de legering.
+   per artikel Dichtheid (kg/m3) invullen, passend bij de legering.
    Gebruik kg/m³: bijvoorbeeld 7850 voor staal, niet 7,85 g/cm³.
 2. Open de app en kies het ingevulde leveranciersbestand.
 3. Controleer prijskolom, bron-eenheid, prijsbasis, valuta en materiaal/maten.
-   Kies bij Notatie tekstgetallen Nederlands (1.200,50) of Internationaal
-   (1,200.50), passend bij CSV en Excelcellen die tekst bevatten. Numerieke
-   Excelcellen worden niet opnieuw als tekst geïnterpreteerd.
-   Een dichtheid onder 100 kg/m³ krijgt Controle nodig; er is geen automatische
-   vermenigvuldiging met 1000. Corrigeer de invoer aan de hand van de leverancier.
+   Kies Notatie tekstgetallen: Nederlands (1.200,50) of Internationaal
+   (1,200.50) voor CSV en Excel-tekstcellen. Getalcellen blijven ongewijzigd.
+   Dichtheid onder 100 kg/m³ krijgt Controle nodig, zonder automatische correctie.
 4. Kies de uitvoer: kg, ton, meter, m² of stuk.
-5. Controleer gemarkeerde regels en exporteer het resultaat naar Excel of CSV.
-   CSV gebruikt puntkomma’s en decimale komma’s voor Nederlandse Excel.
-   Gebruik .xlsx voor ondubbelzinnige numerieke Excelcellen en alle tabbladen.
+5. Controleer gemarkeerde regels en exporteer naar Excel of CSV.
+   CSV gebruikt puntkomma's en decimale komma's. Gebruik .xlsx voor expliciete
+   getalcellen en het bewaren van alle tabbladen.
 
-De prijzen komen uit het geüploade Excelbestand. De app haalt geen metaalprijzen
-op van internet. Alleen valutakoersen worden op verzoek online opgehaald via
-Frankfurter/ECB. Bij gelijke valuta is internet niet nodig.
+Prijzen komen uit je leveranciersbestand. Alleen valutakoersen worden op
+verzoek opgehaald via Frankfurter/ECB. Met gelijke valuta is internet niet nodig.
+Bestanden worden lokaal verwerkt. Sla resultaten op voordat je de app sluit.
+Een prijsbasis van 100 betekent bijvoorbeeld per 100 kg. Bekende leveranciers-
+gewichten gaan voor theoretische gewichten. Ontbrekende waarden worden niet verzonnen.
 
-Je Excel wordt lokaal verwerkt. Export bevat bronwaarden en omrekeningen.
-Een prijsbasis van 100 betekent bijvoorbeeld een prijs per 100 kg, geen prijs
-per kg. Controleer dit aan de hand van de offerte. Bekende leveranciersgewichten
-hebben voorrang op theoretische gewichten. Ontbrekende maten/koersen worden
-niet verzonnen. Sla resultaten op voordat je de app afsluit.
+BIJWERKEN EN VERWIJDEREN
+Sluit de app voordat je een nieuwe setup uitvoert. Een nieuwe installatie
+kan dezelfde installatie bijwerken. Verwijderen kan via Windows > Instellingen
+> Apps > Geïnstalleerde apps > JBT Marel Materiaalprijs Converter.
+De verwijderfunctie wist appbestanden en snelkoppelingen. Gebruikersinstellingen
+worden standaard bewaard. Bewaar je leveranciersbestanden en exports in je
+Documenten-map of een eigen werkmap, buiten de installatiemap.
 
-De voorbeeldgegevens in de screenshots zijn uitsluitend demonstratiegegevens.
-De release wordt op Windows gebouwd en automatisch getest op starten,
-leveranciersimport, omrekening, export en opslaan/annuleren.
-Een handmatige gebruikstest op je eigen Windows-pc blijft aanbevolen.
+CONTROLE
+De setup wordt op Windows automatisch getest op installatie, snelkoppelingen,
+appgebruik, opnieuw installeren, verwijderen en behoud van testgebruikersdata.
+De gebruikstest bootst de native bestandskeuze na en controleert de werkelijk
+opgeslagen bytes. Een handmatige test op je eigen Windows-pc blijft aanbevolen.

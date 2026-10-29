@@ -1,13 +1,14 @@
-# JBT Marel Materiaalprijs Converter 2.0.1
+# JBT Marel Materiaalprijs Converter 2.1.0 — Windows Setup
 
-Download **Materiaalprijs-Converter-Windows.zip** hieronder bij Assets. Pak de ZIP uit en start de exe.
+Download **Materiaalprijs-Converter-Setup-2.1.0-x64.exe**, of download de ZIP met setup, Excel-invulformat en handleiding.
 
-De ZIP bevat de Windows-app met de nieuwe naam, het JBT Marel-logo en de bijbehorende kleuren, het leveranciersformat en de handleiding.
+- Installatiewizard in Nederlands en Engels, met keuze van installatiemap.
+- Standaard voor de huidige gebruiker; optioneel voor alle gebruikers met administratorrechten.
+- JBT Marel-programmagroep in Start, bureaubladsnelkoppeling en verwijderfunctie in Windows.
+- Handleiding en leveranciersformat worden ook meegeïnstalleerd.
+- Automatische Windows-controle van installatie, snelkoppelingen, import/export, opnieuw installeren en verwijderen.
+- Gebruikersdata worden standaard behouden bij verwijderen. Bewaar werkbestanden buiten de installatiemap.
 
-- Nederlandse tekstgetallen: 1.200 betekent 1200. Kies expliciet Internationaal voor bronnen met decimale punten. Echte Excel-getalcellen blijven ongewijzigd.
-- Dichtheid onder 100 kg/m³ krijgt Controle nodig; er is geen automatische x1000-correctie.
-- CSV-export gebruikt puntkomma’s en decimale komma’s. Bronvelden die tekst zijn blijven behouden.
-- De ongebruikte Yahoo-marktprijscode is verwijderd. Prijzen komen uit de leveranciers-Excel.
-- Reken-, export- en opslagtests, plus een automatische Windows-gebruikstest, draaien vóór publicatie.
-
-De app is niet digitaal ondertekend. Windows kan een melding over een onbekende uitgever tonen. Automatische Windows-controles vervangen geen handmatige acceptatietest op je eigen pc.
+De rekenregels en de correcties uit 2.0.1 blijven behouden. Geen automatische updates.
+De setup is niet digitaal ondertekend; Windows kan een melding over een onbekende uitgever tonen.
+De test bedient de setup stil; er is geen handmatige beoordeling van de wizard. Native bestandskeuze tijdens de app-test wordt nagebootst.

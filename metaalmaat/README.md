@@ -70,3 +70,19 @@ Dichtheid onder 100 kg/m³ levert een controlepunt op en geen theoretisch gewich
 De app past geen automatische x1000-correctie toe. CSV-export gebruikt `;` en
 decimale komma’s voor numerieke uitvoer; bronvelden die tekst zijn blijven tekst.
 Gebruik .xlsx voor expliciet getypeerde getalcellen.
+
+
+## Windows Setup 2.1.0
+
+`npm run build:windows -- --publish never` bouwt een NSIS-installatiewizard.
+`npm run build:portable -- --publish never` blijft beschikbaar voor een portable exe.
+De standaardinstallatie is per gebruiker; de wizard ondersteunt ook alle gebruikers
+met administratorrechten. De installatiemap is aanpasbaar. App-ID en gebruikersdata
+blijven compatibel met de eerdere versie. Geen automatische updates.
+
+De Windows-CI voert `scripts/test-setup.ps1` uit: stille installatie in een tijdelijke
+map, versienummer, snelkoppelingen, Windows-verwijderregistratie, de bestaande
+gebruikstest op de geïnstalleerde exe, opnieuw installeren en verwijderen met behoud
+van testgebruikersdata. Het bedient de wizard niet handmatig en test geen elevatie
+naar installatie voor alle gebruikers. De appgebruikstest bootst de native
+bestandskeuze na. Testresultaten en broncommit zitten in de ZIP.
