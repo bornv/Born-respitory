@@ -38,7 +38,9 @@ try {
     Check (@(Get-AppRegistration).Count -eq 0) 'Geen bestaande gebruikersinstallatie in de testomgeving'
     Run-SetupProcess $setup @('/S', '/currentuser', "/D=$installDir")
     Check (Test-Path $appExe) 'Setup installeert de app in de gekozen map'
-    Check ((Get-Item $appExe).VersionInfo.ProductVersion -eq $version) 'Geinstalleerde exe heeft de juiste versie'
+    # Windows bewaart de productversie in vier delen (2.1.0 wordt 2.1.0.0).
+    $installedVersion = (Get-Item $appExe).VersionInfo.ProductVersion
+    Check ($installedVersion -eq $version -or $installedVersion -eq "$version.0") "Geinstalleerde exe heeft de juiste versie ($installedVersion)"
     Check (Test-Path (Join-Path $installDir 'LEESMIJ-WINDOWS.txt')) 'Handleiding is meegeinstalleerd'
     Check (Test-Path (Join-Path $installDir 'Materiaalprijs-Converter-invulformat.xlsx')) 'Leveranciersformat is meegeinstalleerd'
     Check (Test-Path $uninstaller) 'Verwijderprogramma is aanwezig'
