@@ -1,0 +1,115 @@
+{
+  "commit": "e4c13da559c5f0660524aeeb2563d7e5052d6af3",
+  "files": [
+    {
+      "path": "cli-tool/components/agents/data-ai/power-platform-expert.md",
+      "git_blob": "c570c3fc0f6c6fb1bf334bf8c11d0da723125872",
+      "sha256": "1fd93364a574750e798d9bdd35bab3e060185bd24500c6a68063bc38ceed62d5"
+    },
+    {
+      "path": "cli-tool/components/agents/development-team/fullstack-developer.md",
+      "git_blob": "c213379ff987ee13f32c1d655952ee27ffb27a59",
+      "sha256": "fe82338b04bf13de755652b02355a9922a1189a16e50631b7744bcd7bcf74736"
+    },
+    {
+      "path": "cli-tool/components/agents/development-tools/code-reviewer.md",
+      "git_blob": "a3c26a5a87adf3e34b52011336277a8c880e19ef",
+      "sha256": "970643dc8c5ecd3810654ad7cc2dce012420f54eef81ecefe72236f9403f5635"
+    },
+    {
+      "path": "cli-tool/components/agents/development-tools/debugger.md",
+      "git_blob": "ffaef373d10cbcefe9d7b94de4081c521ba131c1",
+      "sha256": "a0350253df28653978d4d1bc8593b33748502350f0de6a101ed9dc8d5621e720"
+    },
+    {
+      "path": "cli-tool/components/skills/creative-design/frontend-design/LICENSE.txt",
+      "git_blob": "f433b1a53f5b830a205fd2df78e2b34974656c7b",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "cli-tool/components/skills/creative-design/frontend-design/SKILL.md",
+      "git_blob": "a5333457c414d20d625f307df945842c0952ecc3",
+      "sha256": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+    },
+    {
+      "path": "cli-tool/components/skills/development/python-pro/SKILL.md",
+      "git_blob": "6fc4fae50bc13fdaf61e30fb6bdaccae9965ab4b",
+      "sha256": "1364b20d9d87c2f93a11d9aab5fec9b6e938b03c72df594bb4d67088ec1880ab"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/LICENSE.txt",
+      "git_blob": "4f881c52d1f72f4cfb720e339e2d35c3058d01a9",
+      "sha256": "bc6b3af2f331cbc7fb0da1344efb2cbe5877a31498b4d70dbc7000f3405a1362"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/SKILL.md",
+      "git_blob": "4726215301db64a0cc4d41fc3219c61f37a30f4a",
+      "sha256": "51b7349e77ec63b7744a6f63647e7566a0b4d2e301121cc10e8c2113af6556a2"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/examples/console_logging.py",
+      "git_blob": "9329b5e232ed53d944bfe95e750070117d31b9ab",
+      "sha256": "ea46877289acb82da7e7ce59d0bc37c8977cd57e2a006d0c88d7a1c625bf95da"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/examples/element_discovery.py",
+      "git_blob": "917ba72f52421a1b324f93ae8e38af72010a87b9",
+      "sha256": "d63c89604a22f8845d724e95dda45db49b1bf57c25ce0a83afbb7b8da3d402f0"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/examples/static_html_automation.py",
+      "git_blob": "90bbedcc08cdb345c74fb938ebad02c0baf56603",
+      "sha256": "9d533aafb875ee3ab8b8ebf8f5b9003ac8d999da3d09b285cce252e623140064"
+    },
+    {
+      "path": "cli-tool/components/skills/development/webapp-testing/scripts/with_server.py",
+      "git_blob": "431f2eba16b268b7f3e2ae4daae9db41c0289b6d",
+      "sha256": "b0dcf4918935b795f4eda9821579b9902119235ff4447f687a30286e7d0925fd"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/LICENSE.txt",
+      "git_blob": "13e25df86ce06eb6488e6a6bc5c5847f5dedc352",
+      "sha256": "4dd13869245e356246a5b770723247bbb80a8f07a181d1d3d873a1734297cdb9"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/SKILL.md",
+      "git_blob": "9dda205d39821917fc96597a6d00b56bec1d415c",
+      "sha256": "16be1863b9b46eed01a2b56ed1a5ae1a208a628b76fa380ab852e4b0cc232637"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/agents/openai.yaml",
+      "git_blob": "c6949d1e1bea09ae05d38a7c6f025696532cce29",
+      "sha256": "356498c8144c8b657b5f032ae87b7d889a3eeaf13ed408fa2de43a2cc177a63a"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/assets/spreadsheet-small.svg",
+      "git_blob": "1f3b91b105fa5b4841c594ade8d49ddeac0dc89c",
+      "sha256": "ce9fa495e1a24033cc78e31f397102a8a93d11fe172c3f1a8c1190a1cee21ae7"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/assets/spreadsheet.png",
+      "git_blob": "bd24ca40f69f48fcaabaa23570848cdfa3c9de7e",
+      "sha256": "a5771930cd28ff46e6ed53aa8a08a25902ed71178d1cac642c178f659638d7aa"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/references/examples/openpyxl/create_basic_spreadsheet.py",
+      "git_blob": "b4c58898ab6e82a1a5bc2207c02b84d64377b45e",
+      "sha256": "7c291b6230c9809145c8f7f216fd2b7d099b16b89d3fae0ab4d5a3d990c05418"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/references/examples/openpyxl/create_spreadsheet_with_styling.py",
+      "git_blob": "7ff951cded66b498190f1639e160671b1b4d6c9e",
+      "sha256": "fbfd41b9eca17f0f274f4ce7bd8ead6bc9292d764fe3bc325a1fca57dbe954ea"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/references/examples/openpyxl/read_existing_spreadsheet.py",
+      "git_blob": "fd0df4085c10d9d4006ba33c522317d7e4628d23",
+      "sha256": "cf2f24d90174d92bd9044e95035ab4cf2e34a5faa355a2fa1898e49088e9ad02"
+    },
+    {
+      "path": "cli-tool/components/skills/document-processing/spreadsheet/references/examples/openpyxl/styling_spreadsheet.py",
+      "git_blob": "37dacdfb874f9a4fa9bf033d7904fa14cd172371",
+      "sha256": "5427ca11beb2b408a5dede6af1fa868fa131ad2a435d40bb88e52c4a8de7bc67"
+    }
+  ]
+}
