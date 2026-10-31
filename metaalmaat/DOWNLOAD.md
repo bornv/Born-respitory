@@ -1,6 +1,6 @@
 # JBT Marel Materiaalprijs Converter voor Windows
 
-Download [Setup 2.1.0](https://github.com/bornv/Born-respitory/releases/tag/jbt-marel-converter-v2.1.0) en start de .exe.
+Download [Setup 2.1.1](https://github.com/bornv/Born-respitory/releases/tag/jbt-marel-converter-v2.1.1) en start de .exe.
 Dezelfde release bevat een ZIP om de setup samen met het leveranciersformat en de handleiding te versturen.
 
 De setup biedt een installatiewizard, snelkoppelingen en verwijderen via Windows.

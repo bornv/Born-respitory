@@ -24,6 +24,19 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: metaalmaat/package-lock.json
+      - name: Read version and stop if it is already published
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Ongeldige versie in package.json: $version" }
+          gh release view "jbt-marel-converter-v$version" *> $null
+          if ($LASTEXITCODE -eq 0) { throw "Versie $version is al gepubliceerd. Verhoog version in metaalmaat/package.json (en package-lock.json) voordat je deze wijziging pusht." }
+          $global:LASTEXITCODE = 0
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          Write-Host "Versie $version wordt gebouwd en gepubliceerd."
       - name: Install dependencies
         run: npm ci
       - name: Verify calculations, Excel export and file saving
@@ -36,17 +49,17 @@ jobs:
         run: npm run build:windows -- --publish never
       - name: Test installation, installed app, reinstall and uninstall
         shell: pwsh
-        run: ./scripts/test-setup.ps1 -SetupPath release/Materiaalprijs-Converter-Setup-2.1.0-x64.exe
+        run: ./scripts/test-setup.ps1 -SetupPath "release/Materiaalprijs-Converter-Setup-$env:VERSION-x64.exe"
       - name: Package distributable ZIP
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force release/Materiaalprijs-Converter-Windows | Out-Null
-          Copy-Item release/Materiaalprijs-Converter-Setup-2.1.0-x64.exe release/Materiaalprijs-Converter-Windows/
+          Copy-Item "release/Materiaalprijs-Converter-Setup-$env:VERSION-x64.exe" release/Materiaalprijs-Converter-Windows/
           Copy-Item dist/Materiaalprijs-Converter-invulformat.xlsx release/Materiaalprijs-Converter-Windows/
           Copy-Item LEESMIJ-WINDOWS.txt release/Materiaalprijs-Converter-Windows/
           Copy-Item release/qa/smoke.json release/Materiaalprijs-Converter-Windows/WINDOWS-TEST.json
           Copy-Item release/qa/setup-test.json release/Materiaalprijs-Converter-Windows/SETUP-TEST.json
-          "Versie: 2.1.0`nCommit: $env:GITHUB_SHA`nRun: https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" | Set-Content release/Materiaalprijs-Converter-Windows/BUILD-INFO.txt
+          "Versie: $env:VERSION`nCommit: $env:GITHUB_SHA`nRun: https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID" | Set-Content release/Materiaalprijs-Converter-Windows/BUILD-INFO.txt
           Compress-Archive -Path release/Materiaalprijs-Converter-Windows -DestinationPath release/Materiaalprijs-Converter-Windows.zip -CompressionLevel Fastest -Force
           $zip = Get-Item release/Materiaalprijs-Converter-Windows.zip
           if ($zip.Length -lt 1000000) { throw 'ZIP ontbreekt of is onvolledig' }
@@ -57,9 +70,9 @@ jobs:
               $stream = $entry.Open()
               try { $stream.CopyTo([IO.Stream]::Null) } finally { $stream.Dispose() }
             }
-            if (-not ($archive.Entries.FullName -match 'Materiaalprijs-Converter-Setup-2.1.0-x64.exe')) { throw 'Exe ontbreekt in ZIP' }
+            if (-not ($archive.Entries.FullName -match [regex]::Escape("Materiaalprijs-Converter-Setup-$env:VERSION-x64.exe"))) { throw 'Exe ontbreekt in ZIP' }
           } finally { $archive.Dispose() }
-          @('Materiaalprijs-Converter-Windows.zip', 'Materiaalprijs-Converter-Setup-2.1.0-x64.exe') | ForEach-Object {
+          @('Materiaalprijs-Converter-Windows.zip', "Materiaalprijs-Converter-Setup-$env:VERSION-x64.exe") | ForEach-Object {
             $hash = (Get-FileHash (Join-Path release $_) -Algorithm SHA256).Hash.ToLower()
             "$hash  $_"
           } | Set-Content -Encoding ascii release/SHA256SUMS.txt
@@ -70,5 +83,5 @@ jobs:
           GH_REPO: ${{ github.repository }}
         shell: pwsh
         run: |
-          gh release create jbt-marel-converter-v2.1.0 release/Materiaalprijs-Converter-Setup-2.1.0-x64.exe release/Materiaalprijs-Converter-Windows.zip release/SHA256SUMS.txt --target $env:GITHUB_SHA --title 'JBT Marel Materiaalprijs Converter 2.1.0 — Windows Setup' --notes-file RELEASE-NOTES.md
+          gh release create "jbt-marel-converter-v$env:VERSION" "release/Materiaalprijs-Converter-Setup-$env:VERSION-x64.exe" release/Materiaalprijs-Converter-Windows.zip release/SHA256SUMS.txt --target $env:GITHUB_SHA --title "JBT Marel Materiaalprijs Converter $env:VERSION — Windows Setup" --notes-file RELEASE-NOTES.md
           if ($LASTEXITCODE -ne 0) { throw 'Publiceren van de nieuwe ZIP is mislukt; bestaande assets worden niet overschreven' }

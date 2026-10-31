@@ -10,7 +10,7 @@
     "build:portable": "electron-builder --win portable --x64",
     "test:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-setup.ps1"
   },
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "JBT Marel Materiaalprijs Converter — metaalprijzen en eenheden omrekenen",
   "author": "JBT Marel",
   "main": "desktop/main.cjs",

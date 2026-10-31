@@ -1,6 +1,7 @@
-param([string]$SetupPath = 'release/Materiaalprijs-Converter-Setup-2.1.0-x64.exe')
+param([string]$SetupPath = '')
 $ErrorActionPreference = 'Stop'
 $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+if (-not $SetupPath) { $SetupPath = "release/Materiaalprijs-Converter-Setup-$version-x64.exe" }
 $setup = (Resolve-Path $SetupPath).Path
 $installDir = Join-Path $env:RUNNER_TEMP ('ConverterSetupQA-' + [guid]::NewGuid().ToString('N'))
 $appExe = Join-Path $installDir 'Materiaalprijs Converter.exe'

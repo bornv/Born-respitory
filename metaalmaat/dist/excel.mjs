@@ -10,27 +10,31 @@ function parseCSV(text,delimiter){
  for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(c===delimiter&&!quoted){row.push(cell);cell='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell='';}else cell+=c;}
  if(quoted)throw Error('CSV bevat een niet-afgesloten tekstveld.');if(cell||row.length){row.push(cell);rows.push(row);}return rows;
 }
+// 50.000 rijen per tabblad inclusief kopregel; vooraf geteld zodat een te groot bestand direct wordt gemeld.
+const MAX_ROWS=50000;
+const tooManyRows=(n,sheet)=>Error(`${sheet?`Tabblad ‘${sheet}’ heeft`:'Dit bestand heeft'} ${n.toLocaleString('nl-NL')} rijen; de app verwerkt maximaal ${(MAX_ROWS-1).toLocaleString('nl-NL')} regels plus een kopregel per tabblad. Splits het bestand in kleinere delen.`);
+function countSheetRows(text){let count=0,last=0;for(const m of text.matchAll(/<(?:\w+:)?row(?=[\s>\/])([^>]*)>/g)){count++;const r=/\br="(\d+)"/.exec(m[1]);if(r)last=Math.max(last,Number(r[1]));}return Math.max(count,last);}
 export async function readFile(file){
  if(file.size>25*1024*1024)throw Error('Het bestand is groter dan 25 MB. Splits het bestand in kleinere delen.');
- const ext=file.name.split('.').pop().toLowerCase();if(['csv','tsv'].includes(ext))return {sheets:[{name:'Gegevens',rows:parseCSV((await file.text()).replace(/^\uFEFF/,''),ext==='tsv'?'\t':null)}]};
+ const ext=file.name.split('.').pop().toLowerCase();if(['csv','tsv'].includes(ext)){const rows=parseCSV((await file.text()).replace(/^\uFEFF/,''),ext==='tsv'?'\t':null);if(rows.length>MAX_ROWS)throw tooManyRows(rows.length);return {sheets:[{name:'Gegevens',rows}]};}
  if(ext!=='xlsx')throw Error('Kies een .xlsx-, .csv- of .tsv-bestand. Sla oudere .xls-bestanden eerst als .xlsx op.');
  if(!globalThis.JSZip)throw Error('Excelondersteuning is niet geladen. Vernieuw de pagina.');
  const zip=await JSZip.loadAsync(await file.arrayBuffer());let readBytes=0;
- const read=async name=>{const entry=zip.file(name);if(!entry)return '';const data=await entry.async('string');readBytes+=data.length;if(readBytes>100*1024*1024)throw Error('De uitgepakte werkmap is te groot (maximaal 100 MB).');return data;};
+ const read=async name=>{const entry=zip.file(name);if(!entry)return '';const declared=entry._data?.uncompressedSize;if(declared>0&&readBytes+declared>100*1024*1024)throw Error('De uitgepakte werkmap is te groot (maximaal 100 MB). Splits het bestand in kleinere delen.');const data=await entry.async('string');readBytes+=data.length;if(readBytes>100*1024*1024)throw Error('De uitgepakte werkmap is te groot (maximaal 100 MB). Splits het bestand in kleinere delen.');return data;};
  const wbText=await read('xl/workbook.xml');if(!wbText)throw Error('Geen geldige Excelwerkmap gevonden.');const wb=xml(wbText),rels=xml(await read('xl/_rels/workbook.xml.rels'));
  const relMap=Object.fromEntries(tags(rels,'Relationship').map(r=>[r.getAttribute('Id'),r.getAttribute('Target')]));
  const ssText=await read('xl/sharedStrings.xml');const strings=ssText?tags(xml(ssText),'si').map(si=>tags(si,'t').map(t=>t.textContent).join('')):[];
  const stylesText=await read('xl/styles.xml');let dateStyles=new Set();
  if(stylesText){const styles=xml(stylesText),formats=Object.fromEntries(tags(styles,'numFmt').map(f=>[f.getAttribute('numFmtId'),f.getAttribute('formatCode')]));const cellXfs=tags(styles,'cellXfs')[0];if(cellXfs)Array.from(cellXfs.children).forEach((xf,i)=>{const id=Number(xf.getAttribute('numFmtId'));const f=(formats[id]??'').replace(/"[^"]*"|\[[^\]]*\]/g,'');if((id>=14&&id<=22)||(id>=45&&id<=47)||(/[yd]/i.test(f)&&/[md]/i.test(f)))dateStyles.add(i);});}
- const date1904=tags(wb,'workbookPr')[0]?.getAttribute('date1904')==='1';const sheets=[];let total=0;
+ const date1904=tags(wb,'workbookPr')[0]?.getAttribute('date1904')==='1';const sheets=[];let total=0,counted=0;
  for(const s of tags(wb,'sheet')){
   const id=s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')??s.getAttribute('r:id');const target=relMap[id];if(!target)continue;
-  const text=await read(pathResolve('xl',target));if(!text)continue;const doc=xml(text),rows=[];
-  for(const row of tags(doc,'row')){const ri=Number(row.getAttribute('r'))-1;if(ri<0||ri>=50000)throw Error('Maximaal 50.000 rijen per tabblad.');const arr=[];
-   for(const c of Array.from(row.children)){if(c.localName!=='c')continue;const address=c.getAttribute('r')??'';const ci=colIndex(address.replace(/\d/g,''));if(ci<0||ci>=1000)throw Error('Maximaal 1.000 kolommen per tabblad.');const type=c.getAttribute('t');const v=tags(c,'v')[0]?.textContent;let value='';
+  const text=await read(pathResolve('xl',target));if(!text)continue;const rowCount=countSheetRows(text);if(rowCount>MAX_ROWS)throw tooManyRows(rowCount,s.getAttribute('name'));counted+=rowCount;if(counted>100000)throw Error(`De tabbladen hebben samen meer dan 100.000 rijen (al ${counted.toLocaleString('nl-NL')} geteld); de app verwerkt maximaal 100.000 rijen per werkmap. Splits het bestand in kleinere delen.`);const doc=xml(text),rows=[];
+  for(const row of tags(doc,'row')){const rowRef=row.getAttribute('r');const ri=rowRef?Number(rowRef)-1:rows.length;if(ri<0||ri>=MAX_ROWS)throw tooManyRows(ri+1,s.getAttribute('name'));const arr=[];
+   for(const c of Array.from(row.children)){if(c.localName!=='c')continue;const address=c.getAttribute('r')??'';const ci=address?colIndex(address.replace(/\d/g,'')):arr.length;if(ci<0||ci>=1000)throw Error('Maximaal 1.000 kolommen per tabblad.');const type=c.getAttribute('t');const v=tags(c,'v')[0]?.textContent;let value='';
     if(type==='s')value=strings[Number(v)]??'';else if(type==='inlineStr')value=tags(c,'t').map(t=>t.textContent).join('');else if(type==='b')value=v==='1';else if(type==='str'||type==='e')value=v??'';else if(v!==undefined&&v!==''){value=Number(v);if(!Number.isFinite(value))value=v;else if(dateStyles.has(Number(c.getAttribute('s')??0))){const epoch=date1904?Date.UTC(1904,0,1):Date.UTC(1899,11,30);const date=new Date(epoch+value*86400000);if(Number.isFinite(date.getTime()))value=date.toISOString().slice(0,10);}}
     arr[ci]=value;
-   }rows[ri]=arr;total++;if(total>100000)throw Error('Maximaal 100.000 rijen per werkmap.');
+   }rows[ri]=arr;total++;if(total>100000)throw Error('De app verwerkt maximaal 100.000 rijen per werkmap. Splits het bestand in kleinere delen.');
   }sheets.push({name:s.getAttribute('name')??'Gegevens',rows});
  }if(!sheets.length)throw Error('De werkmap bevat geen leesbare tabbladen.');return {sheets};
 }

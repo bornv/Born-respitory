@@ -1,7 +1,7 @@
-JBT MAREL MATERIAALPRIJS CONVERTER 2.1.0 — WINDOWS 10/11 64-BIT
+JBT MAREL MATERIAALPRIJS CONVERTER 2.1.1 — WINDOWS 10/11 64-BIT
 
 INSTALLEREN
-Pak de ZIP uit en start Materiaalprijs-Converter-Setup-2.1.0-x64.exe.
+Pak de ZIP uit en start Materiaalprijs-Converter-Setup-2.1.1-x64.exe.
 De wizard kiest Nederlands of Engels op basis van je Windows-taal.
 Kies installatie voor jezelf (standaard), of voor alle gebruikers met
 administratorrechten. Je kunt de installatiemap aanpassen. De setup maakt
