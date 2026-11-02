@@ -1,0 +1,10 @@
+{
+  "type": "dataOnly",
+  "commitMode": "partialBatch",
+  "maxParallelism": 4,
+  "applyRefreshPolicy": false,
+  "objects": [
+    {"table": "FactSales"},
+    {"table": "FactInventory"}
+  ]
+}
