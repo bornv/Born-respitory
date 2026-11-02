@@ -97,6 +97,7 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 | 62 | report.json settings.useStylableVisualContainerHeader = true: zonder moderne visualkop toont Desktop de help-tooltip (visualHeaderTooltip) niet |
 | 63 | Negatieve Overige kosten tellen mee (netto); uitsluiten alleen via Excel tblKostenUitsluiten (Order, Periode, Bedrag, Reden) → DAX-kolommen Kistkosten[UitgeslotenReden]/[Kostenstatus] (Oracle-query blijft één bron); Controle kosten met status en tikfout-teller |
 | 64 | Dubbele afkeurnorm (per ronde + per 10.000 varkens); Afkeur boven norm = MIN van beide (alleen boven beide), anders per ronde; Afkeur toets; NC: afkeur per 10.000 varkens en afkeur per jaar via slachtingen |
+| 65 | tblKostenUitsluiten met `try … otherwise` lege tabel + `MissingField.UseNull`: nieuwe (optionele) Excel-tabellen mogen het vernieuwen nooit breken |
 
 ## Opbouw sinds versie 27 (zoals Born het zelf bouwt)
 1. `Oracle.Database("lcvpentabi.marel.net", [HierarchicalNavigation = true, CommandTimeout = 3 uur])` → `LCV_DATA` → view.
@@ -125,4 +126,5 @@ Niet lokaal te testen: Oracle-SQL, refresh, DAX-uitvoering, service. Dat altijd 
 24. Prognoses en jaartempo alleen op afgesloten maanden; maandtelling gelijk aan de omzetplanning.
 25. `ref table` in model.tmdl moet exact zo geschreven zijn als de tabelnaam in de tabel (zonder aanhalingstekens als de naam die niet heeft), anders TomInternalException bij het openen.
 26. Een filter op een kolom van LCV_KPTM Kistkosten werkt niet door naar Kistafschrijving: bij contractfilters ook `Kistafschrijving[AankoopPeriode] >= p0` zetten; afschrijving niet in [Kosten] stoppen (die wordt met categoriefilters aangeroepen) maar in [Kosten contract].
+28. Nieuwe Excel-tabellen altijd optioneel inlezen (`try AfsprakenWerkboek{[Item = …]}[Data] otherwise #table(...)`), want Born moet ze eerst zelf in de SharePoint-Excel zetten.
 27. Een berekende tabel die een andere tabel opzoekt (LOOKUPVALUE/FILTER op Kisttypen, Robots) mag geen relatie hebben naar een tabel waar die opgezochte tabel van afhangt (Kistregels): kringverwijzing. Gebruik dan TREATAS in de meting.
